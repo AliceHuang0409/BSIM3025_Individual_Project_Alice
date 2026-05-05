@@ -1,0 +1,2146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>take a break</title>
+  <meta
+    name="description"
+    content="take a break - a calming desktop prototype with a homepage, calm down hub, watch birds, meme quotes, chatbox, and support pages."
+  />
+  <style>
+    :root {
+      --bg-dark: #091116;
+      --bg-panel: rgba(18, 28, 35, 0.72);
+      --bg-panel-strong: rgba(13, 23, 29, 0.88);
+      --bg-soft: rgba(255, 255, 255, 0.08);
+      --line: rgba(255, 255, 255, 0.12);
+      --line-soft: rgba(255, 255, 255, 0.08);
+      --text: #f5fbfb;
+      --muted: rgba(245, 251, 251, 0.78);
+      --muted-2: rgba(245, 251, 251, 0.58);
+      --accent: #d6f3ea;
+      --accent-2: #8cd3be;
+      --accent-3: #4da58f;
+      --gold: #f0d9a5;
+      --danger: #ffd7d7;
+      --shadow: 0 24px 64px rgba(0, 0, 0, 0.26);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max: 1280px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .route-page {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .route-page.active {
+      display: block;
+    }
+
+    .page-wrap {
+      width: min(var(--max), calc(100% - 72px));
+      margin: 0 auto;
+      padding: 42px 0 64px;
+    }
+
+    .page-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .page-kicker::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--accent-2));
+      box-shadow: 0 0 0 6px rgba(240, 217, 165, 0.08);
+    }
+
+    h1, h2, h3, h4, p {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 5vw, 4.8rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+
+    h3 {
+      font-size: 1.28rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .muted {
+      color: var(--muted-2);
+    }
+
+    .panel {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background: var(--bg-panel);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-pad {
+      padding: 28px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .pill-button,
+    .ghost-button,
+    .secondary-button,
+    .mini-button {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+    }
+
+    .pill-button:hover,
+    .ghost-button:hover,
+    .secondary-button:hover,
+    .mini-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .pill-button {
+      padding: 14px 22px;
+      background: linear-gradient(135deg, rgba(214, 243, 234, 0.96), rgba(140, 211, 190, 0.96));
+      color: #122025;
+      font-weight: 800;
+      box-shadow: 0 14px 34px rgba(77, 165, 143, 0.28);
+    }
+
+    .ghost-button {
+      padding: 14px 28px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-weight: 700;
+      min-width: 160px;
+    }
+
+    .secondary-button {
+      padding: 13px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--line);
+      font-weight: 700;
+    }
+
+    .mini-button {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--line);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tag-soft {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--gold);
+    }
+
+    .floating-home {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      z-index: 80;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(11, 18, 24, 0.78);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.26);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .floating-home.visible {
+      display: inline-flex;
+    }
+
+    .toast {
+      position: fixed;
+      right: 28px;
+      bottom: 28px;
+      z-index: 100;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(8, 14, 19, 0.92);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      max-width: 340px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* HOME */
+    .home-shell {
+      position: relative;
+      min-height: 100vh;
+      background:
+        linear-gradient(to bottom, rgba(7, 12, 18, 0.12), rgba(7, 12, 18, 0.32) 36%, rgba(7, 12, 18, 0.64)),
+        linear-gradient(to top, rgba(8, 14, 19, 0.2), rgba(8, 14, 19, 0.04)),
+        url("assets/mountain-hero.jpg") center center / cover no-repeat;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .home-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255,255,255,0.08), transparent 34%),
+        radial-gradient(circle at 80% 20%, rgba(255,219,167,0.12), transparent 30%),
+        linear-gradient(to top, rgba(8, 14, 19, 0.46), rgba(8, 14, 19, 0.05));
+      pointer-events: none;
+    }
+
+    .home-content {
+      position: relative;
+      z-index: 2;
+      width: min(1320px, calc(100% - 72px));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 0;
+      text-align: center;
+    }
+
+    .home-title {
+      margin: 0;
+      font-size: clamp(4.6rem, 8vw, 7.2rem);
+      font-weight: 300;
+      color: #ffffff;
+      letter-spacing: -0.045em;
+      text-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+    }
+
+    .home-sub {
+      margin-top: 18px;
+      margin-bottom: 46px;
+      font-size: 1.15rem;
+      color: rgba(255, 255, 255, 0.82);
+      max-width: 760px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .home-links {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      margin-top: 30px;
+      margin-bottom: 36px;
+    }
+
+    .feature-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 118px;
+      padding: 22px 26px;
+      border-radius: 24px;
+      color: #ffffff;
+      font-size: 1.18rem;
+      line-height: 1.45;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(10px);
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .feature-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .feature-link .dot {
+      font-size: 1.8rem;
+      line-height: 1;
+      margin-top: -2px;
+      opacity: 0.95;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .feature-link .feature-text {
+      text-align: left;
+    }
+
+    .home-hint {
+      margin-top: 18px;
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 0.95rem;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+    }
+
+    /* GENERIC PAGE LAYOUT */
+    .subpage-bg {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(140, 211, 190, 0.1), transparent 28%),
+        linear-gradient(180deg, #0d171d 0%, #0a1216 55%, #081015 100%);
+    }
+
+    .page-hero {
+      margin-bottom: 28px;
+    }
+
+    .page-hero p {
+      max-width: 760px;
+      font-size: 1.05rem;
+    }
+
+    .card-grid {
+      display: grid;
+      gap: 22px;
+    }
+
+    .card-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card-grid.two {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+
+    .option-card {
+      padding: 26px;
+      border-radius: var(--radius-xl);
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 260px;
+    }
+
+    .option-card p {
+      flex: 1;
+    }
+
+    .option-card .button-row {
+      margin-top: auto;
+    }
+
+    .soft-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .soft-list li + li {
+      margin-top: 6px;
+    }
+
+    /* CALM DOWN */
+    .preview-strip {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+    }
+
+    .mini-note {
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line-soft);
+    }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background: rgba(4, 8, 11, 0.76);
+      backdrop-filter: blur(14px);
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(760px, 100%);
+      border-radius: 28px;
+      background: rgba(11, 20, 26, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+      padding: 30px;
+    }
+
+    .track-list {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0 24px;
+    }
+
+    .track {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .track small {
+      color: var(--muted-2);
+    }
+
+    /* WATCH BIRDS */
+    .forest-layout {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .forest-stage {
+      position: relative;
+      min-height: 620px;
+      overflow: hidden;
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background:
+        linear-gradient(to bottom, #9ad7f5 0%, #cfeef8 26%, #c9f0dd 54%, #8ec199 100%);
+      box-shadow: inset 0 -30px 90px rgba(15, 55, 36, 0.18);
+    }
+
+    .sun-glow {
+      position: absolute;
+      top: 34px;
+      right: 78px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 244, 196, 0.94) 0%, rgba(255, 244, 196, 0.18) 52%, rgba(255,244,196,0) 72%);
+      filter: blur(4px);
+    }
+
+    .cloud {
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.68);
+      filter: blur(0.2px);
+    }
+
+    .cloud::before,
+    .cloud::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .cloud-a {
+      top: 72px;
+      left: 110px;
+      width: 150px;
+      height: 42px;
+    }
+
+    .cloud-a::before {
+      width: 58px;
+      height: 58px;
+      left: 20px;
+      top: -24px;
+    }
+
+    .cloud-a::after {
+      width: 78px;
+      height: 58px;
+      right: 16px;
+      top: -18px;
+    }
+
+    .cloud-b {
+      top: 124px;
+      right: 210px;
+      width: 130px;
+      height: 34px;
+    }
+
+    .cloud-b::before {
+      width: 46px;
+      height: 46px;
+      left: 18px;
+      top: -16px;
+    }
+
+    .cloud-b::after {
+      width: 54px;
+      height: 40px;
+      right: 18px;
+      top: -10px;
+    }
+
+    .hill {
+      position: absolute;
+      left: -8%;
+      right: -8%;
+      border-radius: 50%;
+    }
+
+    .hill-back {
+      bottom: 170px;
+      height: 220px;
+      background: #72a57c;
+    }
+
+    .hill-middle {
+      bottom: 100px;
+      height: 240px;
+      background: #568967;
+    }
+
+    .hill-front {
+      bottom: -68px;
+      height: 240px;
+      background: #3f6e52;
+    }
+
+    .tree {
+      position: absolute;
+      bottom: 110px;
+      width: 52px;
+      border-radius: 999px 999px 10px 10px;
+      background: linear-gradient(to bottom, #5a3b23, #402818);
+    }
+
+    .tree::before,
+    .tree::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: #2e7c4e;
+    }
+
+    .tree::before {
+      bottom: 34px;
+      left: -26px;
+      width: 106px;
+      height: 96px;
+    }
+
+    .tree::after {
+      bottom: 82px;
+      left: -18px;
+      width: 88px;
+      height: 76px;
+      background: #3d915d;
+    }
+
+    .tree-a { left: 10%; height: 230px; }
+    .tree-b { left: 28%; height: 280px; }
+    .tree-c { right: 32%; height: 260px; }
+    .tree-d { right: 12%; height: 240px; }
+
+    .branch {
+      position: absolute;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(to right, #6d472a, #4a311f);
+      transform-origin: left center;
+    }
+
+    .branch-a {
+      top: 280px;
+      left: 14%;
+      width: 220px;
+      transform: rotate(8deg);
+    }
+
+    .branch-b {
+      top: 240px;
+      right: 16%;
+      width: 200px;
+      transform: rotate(-7deg);
+    }
+
+    .branch-c {
+      top: 340px;
+      left: 38%;
+      width: 170px;
+      transform: rotate(-10deg);
+    }
+
+    .forest-ground-detail {
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 120px;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.08), transparent 22%),
+        radial-gradient(circle at 78% 30%, rgba(255,255,255,0.06), transparent 18%);
+    }
+
+    .forest-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .bird {
+      position: absolute;
+      width: 86px;
+      height: 76px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transform-origin: center;
+      animation: floaty 3.6s ease-in-out infinite;
+    }
+
+    .bird:hover {
+      transform: scale(1.05);
+    }
+
+    .bird-shadow {
+      position: absolute;
+      left: 18px;
+      bottom: 8px;
+      width: 46px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.14);
+      filter: blur(2px);
+    }
+
+    .bird-body {
+      position: absolute;
+      left: 22px;
+      top: 20px;
+      width: 42px;
+      height: 30px;
+      border-radius: 55% 55% 48% 48%;
+      background: var(--bird-main, #ffc96f);
+      box-shadow: inset -8px -10px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    .bird-wing {
+      position: absolute;
+      left: 30px;
+      top: 28px;
+      width: 26px;
+      height: 18px;
+      border-radius: 55% 55% 50% 50%;
+      background: var(--bird-wing, #f29b5c);
+      transform: rotate(-18deg);
+    }
+
+    .bird-tail {
+      position: absolute;
+      left: 14px;
+      top: 30px;
+      width: 18px;
+      height: 12px;
+      border-radius: 4px 20px 4px 20px;
+      background: var(--bird-tail, #f29b5c);
+      transform: rotate(18deg);
+    }
+
+    .bird-eye {
+      position: absolute;
+      left: 55px;
+      top: 31px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #101010;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.55);
+    }
+
+    .bird-beak {
+      position: absolute;
+      left: 62px;
+      top: 33px;
+      width: 14px;
+      height: 10px;
+      background: var(--bird-beak, #ffcc66);
+      clip-path: polygon(0 50%, 100% 0, 100% 100%);
+    }
+
+    .bird-branch {
+      position: absolute;
+      left: 18px;
+      top: 52px;
+      width: 50px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(103, 68, 39, 0.56);
+    }
+
+    .info-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .stat-pill {
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .bird-story-box {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .dex-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .dex-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 118px;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .dex-card.locked {
+      opacity: 0.42;
+      filter: grayscale(1);
+    }
+
+    .dex-swatch {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #d2e9df, #7dc8b2);
+      box-shadow: inset 0 -8px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .dex-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.98rem;
+    }
+
+    .dex-card p {
+      margin: 0;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: var(--muted-2);
+    }
+
+    /* MEMES */
+    .meme-layout {
+      display: grid;
+      grid-template-columns: 0.86fr 1.14fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .quote-box {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin: 18px 0 20px;
+    }
+
+    .quote-label {
+      margin-bottom: 8px;
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .quote-line {
+      margin: 0;
+      font-size: 1.08rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .meme-stage {
+      overflow: hidden;
+    }
+
+    .meme-image-wrap {
+      overflow: hidden;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 18px;
+    }
+
+    .meme-image {
+      width: 100%;
+      max-height: 560px;
+      object-fit: contain;
+      background: #111;
+    }
+
+    .thumb-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .thumb {
+      width: 92px;
+      height: 72px;
+      padding: 0;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 2px solid transparent;
+      background: rgba(255,255,255,0.05);
+      cursor: pointer;
+    }
+
+    .thumb.active {
+      border-color: var(--accent-2);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* CHATBOX */
+    .chat-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .quick-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 20px;
+    }
+
+    .quick-chip {
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .mini-plan {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .chat-shell {
+      display: flex;
+      flex-direction: column;
+      min-height: 660px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .chat-top {
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .chat-log {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 22px 24px;
+      background:
+        radial-gradient(circle at top left, rgba(140,211,190,0.06), transparent 28%),
+        rgba(8, 14, 18, 0.52);
+      overflow-y: auto;
+    }
+
+    .message {
+      display: flex;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .bubble {
+      max-width: 78%;
+      padding: 14px 16px;
+      border-radius: 20px;
+      line-height: 1.65;
+      white-space: normal;
+      word-break: break-word;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .message.bot .bubble {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
+
+    .message.user .bubble {
+      background: linear-gradient(135deg, rgba(214,243,234,0.95), rgba(140,211,190,0.95));
+      color: #0d1b1f;
+      font-weight: 600;
+    }
+
+    .composer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 18px 22px 22px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .composer input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      outline: none;
+    }
+
+    .composer input::placeholder {
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* SUPPORT */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .support-card {
+      padding: 24px;
+      min-height: 220px;
+    }
+
+    .support-card h3 {
+      margin-bottom: 12px;
+    }
+
+    .warning-card {
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(255, 214, 173, 0.10);
+      border: 1px solid rgba(255, 214, 173, 0.18);
+      color: #ffe7c5;
+    }
+
+    .warning-card p {
+      color: rgba(255, 231, 197, 0.82);
+      margin-bottom: 0;
+    }
+
+    @keyframes floaty {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @media (max-width: 1200px) {
+      .home-links,
+      .card-grid.three,
+      .forest-layout,
+      .meme-layout,
+      .chat-layout,
+      .support-grid,
+      .preview-strip,
+      .card-grid.two {
+        grid-template-columns: 1fr;
+      }
+
+      .dex-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button id="floatingHome" class="floating-home" type="button">← Back to home</button>
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <!-- HOME -->
+  <section class="route-page active" data-route="home">
+    <div class="home-shell">
+      <div class="home-overlay"></div>
+      <div class="home-content">
+        <h1 class="home-title">Take a Break!</h1>
+        <p class="home-sub">
+          A gentle little space for slowing down, sorting out your thoughts,
+          and getting support without feeling like you are being yelled at by productivity.
+        </p>
+
+        <div class="home-links">
+          <a class="feature-link" href="#/calm-down">
+            <span class="dot">•</span>
+            <span class="feature-text">Calm down</span>
+          </a>
+
+          <a class="feature-link" href="#/chatbox">
+            <span class="dot">•</span>
+            <span class="feature-text">Sort my thoughts<br />with AI chatbox</span>
+          </a>
+
+          <a class="feature-link" href="#/support">
+            <span class="dot">•</span>
+            <span class="feature-text">Get support</span>
+          </a>
+        </div>
+
+        <button id="surpriseButton" class="ghost-button" type="button">Click me!</button>
+
+        <div class="home-hint">
+          This button randomly sends the user to one calm-down activity.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALM DOWN -->
+  <section class="route-page" data-route="calm-down">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Calm down</div>
+          <h1>Choose the kind of calm you want right now.</h1>
+          <p>
+            This section works like a small hub. One path is soft and auditory, one is playful and collectible,
+            and one pretends to be intellectually deep but is actually just memes.
+          </p>
+        </div>
+
+        <div class="card-grid three">
+          <article class="option-card">
+            <div class="tag tag-soft">Coming soon</div>
+            <h3>Music</h3>
+            <p>
+              This path will eventually open a playlist page with relaxing instrumental tracks,
+              ASMR, and soft white noise. For now, I made it a preview modal instead of a full page.
+            </p>
+            <div class="button-row">
+              <button id="openMusicPreview" class="pill-button" type="button">Open preview</button>
+            </div>
+          </article>
+
+          <article class="option-card">
+            <div class="tag">Playable</div>
+            <h3>Watch birds</h3>
+            <p>
+              Enter a cartoon forest where different little birds randomly appear.
+              Click a bird to get a tiny dialogue or small story. New birds get added to your field guide.
+            </p>
+            <div class="button-row">
+              <a class="pill-button" href="#/watch-birds">Go birdwatching</a>
+            </div>
+          </article>
+
+          <article class="option-card">
+            <div class="tag">Meme mode</div>
+            <h3>Intelligent quotes</h3>
+            <p>
+              Technically, this section is called “intelligent quotes”.
+              Spiritually, it is not quotes at all. It is just funny meme images with fake wisdom energy.
+            </p>
+            <div class="button-row">
+              <a class="pill-button" href="#/quotes">See the memes</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="preview-strip">
+          <div class="mini-note panel panel-pad">
+            <h3>How this section is designed</h3>
+            <ul class="soft-list">
+              <li><strong>Music</strong> is passive comfort: good when the user wants less interaction.</li>
+              <li><strong>Watch birds</strong> is light play: low-stakes discovery plus little rewards.</li>
+              <li><strong>Intelligent quotes</strong> is mood-lifting nonsense: humor as emotional interruption.</li>
+            </ul>
+          </div>
+
+          <div class="mini-note panel panel-pad">
+            <h3>Not sure what to click?</h3>
+            <p class="muted">
+              You can also let the site choose for you.
+            </p>
+            <div class="button-row">
+              <button id="branchSurpriseButton" class="ghost-button" type="button">Surprise me</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WATCH BIRDS -->
+  <section class="route-page" data-route="watch-birds">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Watch birds</div>
+          <h1>A tiny cartoon forest to click around in.</h1>
+          <p>
+            New birds refresh into the scene each time. Click them to reveal little conversations,
+            and collect every species in your field guide.
+          </p>
+        </div>
+
+        <div class="forest-layout">
+          <div>
+            <div id="forestStage" class="forest-stage" aria-label="cartoon forest scene">
+              <div class="sun-glow"></div>
+              <div class="cloud cloud-a"></div>
+              <div class="cloud cloud-b"></div>
+              <div class="hill hill-back"></div>
+              <div class="hill hill-middle"></div>
+              <div class="hill hill-front"></div>
+              <div class="branch branch-a"></div>
+              <div class="branch branch-b"></div>
+              <div class="branch branch-c"></div>
+              <div class="tree tree-a"></div>
+              <div class="tree tree-b"></div>
+              <div class="tree tree-c"></div>
+              <div class="tree tree-d"></div>
+              <div class="forest-ground-detail"></div>
+            </div>
+
+            <div class="forest-actions">
+              <button id="refreshForest" class="pill-button" type="button">Refresh forest</button>
+              <button id="resetDex" class="secondary-button" type="button">Reset field guide</button>
+            </div>
+          </div>
+
+          <aside class="panel panel-pad info-stack">
+            <div>
+              <div class="tag">Bird encounter</div>
+              <h2 id="birdName">Tap a bird in the forest</h2>
+              <p id="birdStory">
+                Different little birds will appear around the scene. Click one to get a tiny story,
+                a small dialogue, and an entry in your collection.
+              </p>
+            </div>
+
+            <div class="bird-story-box">
+              <p id="birdMeta" style="margin:0; color: var(--text);">
+                Your field guide fills up whenever you meet a species for the first time.
+              </p>
+            </div>
+
+            <div class="stat-row">
+              <div id="discoveryCount" class="stat-pill">0 / 8 discovered</div>
+              <div id="lastSeen" class="stat-pill">Last seen: none</div>
+            </div>
+
+            <div>
+              <div class="tag tag-soft">Field guide</div>
+              <div id="dexGrid" class="dex-grid"></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEMES -->
+  <section class="route-page" data-route="quotes">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Intelligent quotes</div>
+          <h1>Definitely not actual quotes.</h1>
+          <p>
+            This page is a fake wisdom machine. It behaves like a quote generator,
+            but it only dispenses memes and emotionally suspicious advice.
+          </p>
+        </div>
+
+        <div class="meme-layout">
+          <aside class="panel panel-pad">
+            <div class="tag">Meme oracle</div>
+            <h2>Consult the ancient council of nonsense.</h2>
+            <p>
+              Press shuffle when your brain needs interruption, not inspiration.
+            </p>
+
+            <div class="quote-box">
+              <div class="quote-label">Today's “intelligent quote”</div>
+              <p id="memeLine" class="quote-line">
+                Stay mysterious. Even if you are mostly just confused.
+              </p>
+            </div>
+
+            <div class="button-row">
+              <button id="prevMeme" class="secondary-button" type="button">Previous</button>
+              <button id="shuffleMeme" class="pill-button" type="button">Shuffle meme</button>
+              <button id="nextMeme" class="secondary-button" type="button">Next</button>
+            </div>
+
+            <p class="muted" style="margin-top: 18px;">
+              This page uses your uploaded meme images from the <code>assets</code> folder.
+            </p>
+          </aside>
+
+          <section class="panel panel-pad meme-stage">
+            <div class="meme-image-wrap">
+              <img id="memeImage" class="meme-image" src="assets/meme-1.jpg" alt="Funny meme image" />
+            </div>
+            <h3 id="memeTitle">Strategic intelligence</h3>
+            <p id="memeCaption">
+              The universe is not giving you a quote today. It is giving you vibes and poor decision-making energy.
+            </p>
+            <div id="thumbRow" class="thumb-row"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHATBOX -->
+  <section class="route-page" data-route="chatbox">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Sort my thoughts with AI chatbox</div>
+          <h1>One messy thought at a time is enough.</h1>
+          <p>
+            This is a prototype supportive chatbox page. Right now it gives gentle structured replies,
+            so the interaction already feels like part of the final site flow.
+          </p>
+        </div>
+
+        <div class="chat-layout">
+          <aside class="panel panel-pad">
+            <div class="tag">Quick start</div>
+            <h3>Try one of these</h3>
+            <div class="quick-grid">
+              <button class="quick-chip" data-prompt="I feel overwhelmed.">I feel overwhelmed</button>
+              <button class="quick-chip" data-prompt="I can't get started.">I can't get started</button>
+              <button class="quick-chip" data-prompt="I am anxious about deadlines.">Deadlines are stressing me out</button>
+              <button class="quick-chip" data-prompt="I'm really tired.">I'm really tired</button>
+              <button class="quick-chip" data-prompt="Help me find one tiny next step.">Give me one tiny next step</button>
+            </div>
+
+            <div class="mini-plan">
+              <h3 style="margin-bottom:10px;">Design direction</h3>
+              <ul class="soft-list">
+                <li>Empathetic first response</li>
+                <li>Break big feelings into tiny next actions</li>
+                <li>Low-pressure tone instead of productivity pressure</li>
+                <li>Easy to replace with a real API later</li>
+              </ul>
+            </div>
+          </aside>
+
+          <section class="panel chat-shell">
+            <div class="chat-top">
+              <div class="tag tag-soft">Prototype chatbox</div>
+              <p class="muted" style="margin:0;">
+                This is a front-end demo interaction, not a real clinical support tool.
+              </p>
+            </div>
+
+            <div id="chatLog" class="chat-log"></div>
+
+            <form id="chatForm" class="composer">
+              <input
+                id="chatInput"
+                type="text"
+                placeholder="Type what is on your mind..."
+                autocomplete="off"
+              />
+              <button class="pill-button" type="submit">Send</button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUPPORT -->
+  <section class="route-page" data-route="support">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Get support</div>
+          <h1>Support should feel easy to find.</h1>
+          <p>
+            This page is set up so you can later replace the placeholder cards
+            with your real university, local, or verified support resources.
+          </p>
+        </div>
+
+        <div class="support-grid">
+          <article class="panel support-card">
+            <div class="tag">Campus support</div>
+            <h3>Counselling / wellbeing</h3>
+            <p>
+              Add your school counselling centre, student wellbeing team,
+              or mental health service contact here.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Academic support</div>
+            <h3>Advisor / tutor / extension help</h3>
+            <p>
+              Add academic advisors, study skills support, extension policies,
+              or department contacts here.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Peer support</div>
+            <h3>Friends, mentors, communities</h3>
+            <p>
+              Add peer mentoring schemes, student communities, group chats,
+              or buddy systems here.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Urgent help</div>
+            <h3>Emergency / crisis support</h3>
+            <p>
+              Replace this with verified emergency and crisis contacts before publishing.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Small immediate actions</div>
+            <h3>What can I do right now?</h3>
+            <p>
+              Drink water, move away from the screen briefly, message one trusted person,
+              or go back to the chatbox and break the problem down.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Return gently</div>
+            <h3>Not ready to solve everything?</h3>
+            <p>
+              That is fine. You can go back to Calm down and pick a softer entry point instead.
+            </p>
+          </article>
+        </div>
+
+        <div class="warning-card">
+          <strong>Prototype note:</strong>
+          <p>
+            This site concept should not replace professional or emergency support.
+            Please add real, verified support information before using it publicly.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MUSIC MODAL -->
+  <div id="musicModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="tag tag-soft">Music preview</div>
+      <h2>Playlist page coming soon</h2>
+      <p>
+        You said this page does not need to be fully built yet, so for now it opens as a preview.
+        Later, this can become a real playlist page with embedded audio or curated links.
+      </p>
+
+      <div class="track-list">
+        <div class="track">
+          <div>
+            <strong>Misty Morning Piano</strong><br />
+            <small>Soft instrumental / 12 tracks</small>
+          </div>
+          <small>preview</small>
+        </div>
+
+        <div class="track">
+          <div>
+            <strong>Forest Rain + Leaves</strong><br />
+            <small>White noise / ambience / 45 min</small>
+          </div>
+          <small>preview</small>
+        </div>
+
+        <div class="track">
+          <div>
+            <strong>Desk Lamp Lo-fi</strong><br />
+            <small>Low-energy study calm / 18 tracks</small>
+          </div>
+          <small>preview</small>
+        </div>
+
+        <div class="track">
+          <div>
+            <strong>Gentle ASMR Room Tone</strong><br />
+            <small>Quiet breathing-space background</small>
+          </div>
+          <small>preview</small>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button id="closeMusicModal" class="pill-button" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------------------------
+    // ROUTER
+    // ---------------------------
+    const pages = Array.from(document.querySelectorAll(".route-page"));
+    const validRoutes = new Set(pages.map((page) => page.dataset.route));
+    const floatingHome = document.getElementById("floatingHome");
+    const toast = document.getElementById("toast");
+
+    let pendingMusicModal = false;
+    let toastTimer = null;
+
+    function getCurrentRoute() {
+      const raw = window.location.hash.replace(/^#\/?/, "").trim();
+      if (!raw) return "home";
+      return validRoutes.has(raw) ? raw : "home";
+    }
+
+    function renderRoute() {
+      const route = getCurrentRoute();
+
+      pages.forEach((page) => {
+        page.classList.toggle("active", page.dataset.route === route);
+      });
+
+      floatingHome.classList.toggle("visible", route !== "home");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (route === "calm-down" && pendingMusicModal) {
+        pendingMusicModal = false;
+        openMusicModal();
+      }
+    }
+
+    function navigate(route) {
+      window.location.hash = "#/" + route;
+    }
+
+    if (!window.location.hash) {
+      window.location.hash = "#/home";
+    } else {
+      renderRoute();
+    }
+
+    window.addEventListener("hashchange", renderRoute);
+
+    floatingHome.addEventListener("click", () => {
+      navigate("home");
+    });
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2200);
+    }
+
+    // ---------------------------
+    // SURPRISE BUTTONS
+    // ---------------------------
+    function surpriseCalmFeature() {
+      const picks = ["music", "watch-birds", "quotes"];
+      const pick = picks[Math.floor(Math.random() * picks.length)];
+
+      if (pick === "music") {
+        if (getCurrentRoute() === "calm-down") {
+          openMusicModal();
+        } else {
+          pendingMusicModal = true;
+          navigate("calm-down");
+        }
+        showToast("Random choice: Music preview");
+        return;
+      }
+
+      if (pick === "watch-birds") {
+        navigate("watch-birds");
+        showToast("Random choice: Watch birds");
+        return;
+      }
+
+      navigate("quotes");
+      showToast("Random choice: Intelligent quotes");
+    }
+
+    document.getElementById("surpriseButton").addEventListener("click", surpriseCalmFeature);
+    document.getElementById("branchSurpriseButton").addEventListener("click", surpriseCalmFeature);
+
+    // ---------------------------
+    // MUSIC MODAL
+    // ---------------------------
+    const musicModal = document.getElementById("musicModal");
+    const openMusicPreview = document.getElementById("openMusicPreview");
+    const closeMusicModalBtn = document.getElementById("closeMusicModal");
+
+    function openMusicModal() {
+      musicModal.classList.add("open");
+      musicModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeMusicModal() {
+      musicModal.classList.remove("open");
+      musicModal.setAttribute("aria-hidden", "true");
+    }
+
+    openMusicPreview.addEventListener("click", openMusicModal);
+    closeMusicModalBtn.addEventListener("click", closeMusicModal);
+
+    musicModal.addEventListener("click", (event) => {
+      if (event.target === musicModal) {
+        closeMusicModal();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMusicModal();
+      }
+    });
+
+    // ---------------------------
+    // WATCH BIRDS
+    // ---------------------------
+    const birdSpecies = [
+      {
+        id: "sunbeam-finch",
+        name: "Sunbeam Finch",
+        body: "#ffd774",
+        wing: "#f5a65c",
+        tail: "#f08d68",
+        beak: "#ffcc67",
+        note: "Always sits where the sunlight is most dramatic.",
+        lines: [
+          "“I am not late,” says the Sunbeam Finch. “I am arriving with cinematic timing.”",
+          "It hops twice, looks at you, and seems deeply pleased that someone noticed its glow-up.",
+          "This bird once tried to sing at sunrise and accidentally started a one-bird concert."
+        ]
+      },
+      {
+        id: "blueberry-swallow",
+        name: "Blueberry Swallow",
+        body: "#88bfff",
+        wing: "#4f85d8",
+        tail: "#5d70e1",
+        beak: "#ffd166",
+        note: "Fast, dramatic, and mildly convinced it is in a fantasy movie.",
+        lines: [
+          "The Blueberry Swallow zooms past and returns just to make sure you saw that.",
+          "“Speed is self-care,” it chirps, before doing a tiny useless lap around a branch.",
+          "It pauses for half a second, then leaves as if it remembered it had mysterious bird errands."
+        ]
+      },
+      {
+        id: "mossy-pigeon",
+        name: "Mossy Pigeon",
+        body: "#9dc9a4",
+        wing: "#6f9c75",
+        tail: "#7faf86",
+        beak: "#f5c96d",
+        note: "Looks like it took a nap in soft moss and decided to stay like that forever.",
+        lines: [
+          "The Mossy Pigeon blinks at you with the confidence of someone who has never rushed in its life.",
+          "It seems to be carrying one invisible thought and that thought is probably ‘snack’.",
+          "“No sudden movements,” it coos, even though nobody was moving suddenly."
+        ]
+      },
+      {
+        id: "teacup-robin",
+        name: "Teacup Robin",
+        body: "#f5b48c",
+        wing: "#d77d5a",
+        tail: "#c46749",
+        beak: "#ffd97c",
+        note: "Very round. Almost suspiciously round.",
+        lines: [
+          "The Teacup Robin looks like it should be served with a saucer and a biscuit.",
+          "It tilts its head and delivers the energy of a tiny old lady at a window.",
+          "“You seem busy,” it chirps. “Have you considered not?”"
+        ]
+      },
+      {
+        id: "cloud-wren",
+        name: "Cloud Wren",
+        body: "#edf2f7",
+        wing: "#b9c3d2",
+        tail: "#d4dae5",
+        beak: "#f6ca75",
+        note: "Seems like it may have been condensed directly from a soft afternoon sky.",
+        lines: [
+          "The Cloud Wren lands so lightly you almost think the wind placed it there.",
+          "It looks down with gentle concern, as if checking whether your brain has had water lately.",
+          "A tiny puff of movement, a tiny chirp, and suddenly the whole scene feels quieter."
+        ]
+      },
+      {
+        id: "jam-sparrow",
+        name: "Jam Sparrow",
+        body: "#ff8da1",
+        wing: "#d9587f",
+        tail: "#c74570",
+        beak: "#ffd46d",
+        note: "Cheerful, pink, and a little too delighted by absolutely everything.",
+        lines: [
+          "The Jam Sparrow looks like a bird that would absolutely gossip, but kindly.",
+          "It bounces in place as if every branch is secretly a trampoline.",
+          "“Good news,” it chirps. “I have no news. I just wanted the atmosphere to improve.”"
+        ]
+      },
+      {
+        id: "cinnamon-owl",
+        name: "Cinnamon Owl",
+        body: "#c5966a",
+        wing: "#8b6548",
+        tail: "#7b5a43",
+        beak: "#f7c96a",
+        note: "Somehow sleepy and wise and a bit silly at the same time.",
+        lines: [
+          "The Cinnamon Owl appears in broad daylight like it forgot what genre it belongs to.",
+          "It stares for a long time, then blinks with the exact rhythm of someone buffering.",
+          "“I support naps,” it says silently with its entire round face."
+        ]
+      },
+      {
+        id: "mint-leaf-lark",
+        name: "Mint Leaf Lark",
+        body: "#98e2c0",
+        wing: "#5fbc97",
+        tail: "#58a785",
+        beak: "#ffe08a",
+        note: "Looks freshly approved by a pastel color palette.",
+        lines: [
+          "The Mint Leaf Lark lands on a branch like a sticker that somehow became alive.",
+          "It gives a tiny note that sounds almost like a laugh.",
+          "You get the feeling this bird is emotionally sponsored by herbal tea."
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = "take-a-break-bird-guide";
+    const forestStage = document.getElementById("forestStage");
+    const birdName = document.getElementById("birdName");
+    const birdStory = document.getElementById("birdStory");
+    const birdMeta = document.getElementById("birdMeta");
+    const dexGrid = document.getElementById("dexGrid");
+    const discoveryCount = document.getElementById("discoveryCount");
+    const lastSeen = document.getElementById("lastSeen");
+    const refreshForestBtn = document.getElementById("refreshForest");
+    const resetDexBtn = document.getElementById("resetDex");
+
+    function loadDiscoveries() {
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return new Set(Array.isArray(data) ? data : []);
+      } catch {
+        return new Set();
+      }
+    }
+
+    function saveDiscoveries() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([...discoveredBirds]));
+      } catch {
+        // ignore storage errors
+      }
+    }
+
+    let discoveredBirds = loadDiscoveries();
+
+    function renderDex() {
+      discoveryCount.textContent = `${discoveredBirds.size} / ${birdSpecies.length} discovered`;
+
+      dexGrid.innerHTML = birdSpecies.map((bird) => {
+        const seen = discoveredBirds.has(bird.id);
+        return `
+          <div class="dex-card ${seen ? "" : "locked"}">
+            <div class="dex-swatch" style="background: ${
+              seen
+                ? `linear-gradient(135deg, ${bird.body}, ${bird.wing})`
+                : "linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06))"
+            }"></div>
+            <div>
+              <strong>${seen ? bird.name : "Unknown bird"}</strong>
+              <p>${seen ? bird.note : "Meet this bird in the forest to unlock its entry."}</p>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function randomBetween(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function chooseRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function makePosition(existingPositions) {
+      let tries = 0;
+      while (tries < 50) {
+        const left = randomBetween(8, 84);
+        const top = randomBetween(20, 66);
+        const tooClose = existingPositions.some((pos) => {
+          const dx = pos.left - left;
+          const dy = pos.top - top;
+          return Math.sqrt(dx * dx + dy * dy) < 13;
+        });
+        if (!tooClose) return { left, top };
+        tries += 1;
+      }
+      return { left: randomBetween(8, 84), top: randomBetween(20, 66) };
+    }
+
+    function createBirdElement(species, position) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "bird";
+      button.setAttribute("aria-label", species.name);
+      button.style.left = `${position.left}%`;
+      button.style.top = `${position.top}%`;
+      button.style.setProperty("--bird-main", species.body);
+      button.style.setProperty("--bird-wing", species.wing);
+      button.style.setProperty("--bird-tail", species.tail);
+      button.style.setProperty("--bird-beak", species.beak);
+      button.style.animationDelay = `${Math.random().toFixed(2)}s`;
+      button.innerHTML = `
+        <span class="bird-shadow"></span>
+        <span class="bird-branch"></span>
+        <span class="bird-tail"></span>
+        <span class="bird-body"></span>
+        <span class="bird-wing"></span>
+        <span class="bird-eye"></span>
+        <span class="bird-beak"></span>
+      `;
+
+      button.addEventListener("click", () => {
+        inspectBird(species);
+      });
+
+      return button;
+    }
+
+    function inspectBird(species) {
+      const isNew = !discoveredBirds.has(species.id);
+      discoveredBirds.add(species.id);
+      saveDiscoveries();
+      renderDex();
+
+      birdName.textContent = species.name;
+      birdStory.textContent = chooseRandom(species.lines);
+      birdMeta.textContent = isNew
+        ? `${species.note} New species added to your field guide.`
+        : species.note;
+      lastSeen.textContent = `Last seen: ${species.name}`;
+
+      if (isNew) {
+        showToast(`${species.name} added to your field guide!`);
+      }
+    }
+
+    function spawnForestBirds() {
+      forestStage.querySelectorAll(".bird").forEach((bird) => bird.remove());
+
+      const positions = [];
+      for (let i = 0; i < 6; i += 1) {
+        const position = makePosition(positions);
+        positions.push(position);
+        const species = chooseRandom(birdSpecies);
+        const birdEl = createBirdElement(species, position);
+        forestStage.appendChild(birdEl);
+      }
+    }
+
+    refreshForestBtn.addEventListener("click", () => {
+      spawnForestBirds();
+      showToast("The little birds moved to new spots.");
+    });
+
+    resetDexBtn.addEventListener("click", () => {
+      discoveredBirds = new Set();
+      saveDiscoveries();
+      renderDex();
+      birdName.textContent = "Tap a bird in the forest";
+      birdStory.textContent = "Different little birds will appear around the scene. Click one to get a tiny story, a small dialogue, and an entry in your collection.";
+      birdMeta.textContent = "Your field guide fills up whenever you meet a species for the first time.";
+      lastSeen.textContent = "Last seen: none";
+      showToast("Field guide reset.");
+    });
+
+    renderDex();
+    spawnForestBirds();
+
+    // ---------------------------
+    // MEME QUOTES
+    // ---------------------------
+    const memeDeck = [
+      {
+        src: "assets/meme-1.jpg",
+        title: "Strategic intelligence",
+        line: "Appear calm. Even if the internal situation is mostly chili peppers.",
+        caption: "A deeply advanced lesson in looking composed while absolute nonsense unfolds nearby.",
+        alt: "Spy A Spy B meme with peppers and Spider-Man"
+      },
+      {
+        src: "assets/meme-2.jpg",
+        title: "Oceanic wisdom",
+        line: "Speak softly. Say 'meow'. Refuse further explanation.",
+        caption: "Not every thought needs to be profound. Some thoughts can simply be a shark saying meow.",
+        alt: "Funny shark meme with the word meow"
+      },
+      {
+        src: "assets/meme-3.jpg",
+        title: "Museum ethics",
+        line: "Ask politely. If permission is granted, become unstoppable.",
+        caption: "An elegant reminder that wording matters and technicalities are carrying modern civilization.",
+        alt: "Museum meme where someone asks if they can take a picture"
+      }
+    ];
+
+    const memeImage = document.getElementById("memeImage");
+    const memeLine = document.getElementById("memeLine");
+    const memeTitle = document.getElementById("memeTitle");
+    const memeCaption = document.getElementById("memeCaption");
+    const thumbRow = document.getElementById("thumbRow");
+    const prevMeme = document.getElementById("prevMeme");
+    const nextMeme = document.getElementById("nextMeme");
+    const shuffleMeme = document.getElementById("shuffleMeme");
+
+    let memeIndex = 0;
+
+    function renderThumbs() {
+      thumbRow.innerHTML = memeDeck.map((meme, index) => `
+        <button class="thumb ${index === memeIndex ? "active" : ""}" data-index="${index}" type="button">
+          <img src="${meme.src}" alt="${meme.alt}">
+        </button>
+      `).join("");
+
+      thumbRow.querySelectorAll(".thumb").forEach((button) => {
+        button.addEventListener("click", () => {
+          memeIndex = Number(button.dataset.index);
+          renderMeme();
+        });
+      });
+    }
+
+    function renderMeme() {
+      const meme = memeDeck[memeIndex];
+      memeImage.src = meme.src;
+      memeImage.alt = meme.alt;
+      memeTitle.textContent = meme.title;
+      memeLine.textContent = meme.line;
+      memeCaption.textContent = meme.caption;
+      renderThumbs();
+    }
+
+    prevMeme.addEventListener("click", () => {
+      memeIndex = (memeIndex - 1 + memeDeck.length) % memeDeck.length;
+      renderMeme();
+    });
+
+    nextMeme.addEventListener("click", () => {
+      memeIndex = (memeIndex + 1) % memeDeck.length;
+      renderMeme();
+    });
+
+    shuffleMeme.addEventListener("click", () => {
+      let nextIndex = memeIndex;
+      while (nextIndex === memeIndex && memeDeck.length > 1) {
+        nextIndex = Math.floor(Math.random() * memeDeck.length);
+      }
+      memeIndex = nextIndex;
+      renderMeme();
+      showToast("A new piece of fake wisdom has arrived.");
+    });
+
+    renderMeme();
+
+    // ---------------------------
+    // CHATBOX
+    // ---------------------------
+    const chatLog = document.getElementById("chatLog");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+    const quickChips = Array.from(document.querySelectorAll(".quick-chip"));
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function addMessage(role, text) {
+      const wrapper = document.createElement("div");
+      wrapper.className = `message ${role}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.innerHTML = escapeHtml(text).replace(/\n/g, "<br>");
+
+      wrapper.appendChild(bubble);
+      chatLog.appendChild(wrapper);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function generateReply(input) {
+      const text = input.toLowerCase();
+
+      if (/overwhelmed|焦虑|好多|too much|overload/.test(text)) {
+        return [
+          "Okay. Let's make everything smaller for a second.",
+          "Try this:",
+          "1) Name the single thing that feels most urgent.",
+          "2) Ignore the rest for five minutes.",
+          "3) Do only the smallest visible start.",
+          "You do not need to solve the whole mountain today — just find one foothold."
+        ].join("\n");
+      }
+
+      if (/can't get started|can’t get started|start|开始不了|拖延|procrast/.test(text)) {
+        return [
+          "Let's remove the pressure to 'do it properly'.",
+          "Your only job is to begin badly on purpose.",
+          "Tiny next step idea:",
+          "• open the file",
+          "• write one messy sentence",
+          "• stop there if needed",
+          "Momentum often comes after starting, not before."
+        ].join("\n");
+      }
+
+      if (/deadline|ddl|due|截止|late/.test(text)) {
+        return [
+          "Deadlines can make everything feel louder than it is.",
+          "Let's turn it into a short plan:",
+          "• What is due first?",
+          "• What can be submitted in a rough version?",
+          "• Who could you contact if you need clarification or support?",
+          "Right now, choose the task with the biggest consequence and shrink it."
+        ].join("\n");
+      }
+
+      if (/tired|exhausted|累|burnt|burned/.test(text)) {
+        return [
+          "If you're tired, the next step should be gentler, not harsher.",
+          "Choose one of these:",
+          "• drink water and come back in 10 minutes",
+          "• do a 5-minute version of the task",
+          "• switch to the easiest admin task first",
+          "You are allowed to work with your energy level instead of fighting it."
+        ].join("\n");
+      }
+
+      if (/tiny next step|small step|next step|一步/.test(text)) {
+        return [
+          "Here is a tiny next step formula:",
+          "Verb + object + time limit.",
+          "Example:",
+          "• open lecture slides for 5 minutes",
+          "• list 3 bullet points",
+          "• email one person",
+          "If you want, type the task and I can help shrink it further."
+        ].join("\n");
+      }
+
+      return [
+        "I hear you.",
+        "Let's not solve everything at once.",
+        "Try answering these three mini questions:",
+        "1) What feels heaviest right now?",
+        "2) What part of it is actually in your control today?",
+        "3) What is the smallest next action that counts as movement?",
+        "You can type one short sentence and we can work from there."
+      ].join("\n");
+    }
+
+    function sendChat(text) {
+      const clean = text.trim();
+      if (!clean) return;
+
+      addMessage("user", clean);
+
+      setTimeout(() => {
+        addMessage("bot", generateReply(clean));
+      }, 280);
+    }
+
+    chatForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const value = chatInput.value;
+      if (!value.trim()) return;
+      sendChat(value);
+      chatInput.value = "";
+      chatInput.focus();
+    });
+
+    quickChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        sendChat(chip.dataset.prompt || "");
+      });
+    });
+
+    addMessage(
+      "bot",
+      "Hi — I'm the prototype chatbox.\nTell me what feels messy right now, and I'll try to help turn it into one smaller thing."
+    );
+  </script>
+</body>
+</html>

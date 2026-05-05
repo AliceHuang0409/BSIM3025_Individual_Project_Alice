@@ -1,0 +1,4034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>take a break</title>
+  <meta
+    name="description"
+    content="take a break - a calming desktop prototype with a homepage, calm down hub, watch birds, meme quotes, chatbox, and support pages."
+  />
+  <style>
+    :root {
+      --bg-dark: #091116;
+      --bg-panel: rgba(18, 28, 35, 0.72);
+      --bg-panel-strong: rgba(13, 23, 29, 0.88);
+      --bg-soft: rgba(255, 255, 255, 0.08);
+      --line: rgba(255, 255, 255, 0.12);
+      --line-soft: rgba(255, 255, 255, 0.08);
+      --text: #f5fbfb;
+      --muted: rgba(245, 251, 251, 0.78);
+      --muted-2: rgba(245, 251, 251, 0.58);
+      --accent: #d6f3ea;
+      --accent-2: #8cd3be;
+      --accent-3: #4da58f;
+      --gold: #f0d9a5;
+      --danger: #ffd7d7;
+      --shadow: 0 24px 64px rgba(0, 0, 0, 0.26);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max: 1280px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .route-page {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .route-page.active {
+      display: block;
+    }
+
+    .page-wrap {
+      width: min(var(--max), calc(100% - 72px));
+      margin: 0 auto;
+      padding: 42px 0 64px;
+    }
+
+    .page-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .page-kicker::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--accent-2));
+      box-shadow: 0 0 0 6px rgba(240, 217, 165, 0.08);
+    }
+
+    h1, h2, h3, h4, p {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 5vw, 4.8rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+
+    h3 {
+      font-size: 1.28rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .muted {
+      color: var(--muted-2);
+    }
+
+    .panel {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background: var(--bg-panel);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-pad {
+      padding: 28px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .pill-button,
+    .ghost-button,
+    .secondary-button,
+    .mini-button {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+    }
+
+    .pill-button:hover,
+    .ghost-button:hover,
+    .secondary-button:hover,
+    .mini-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .pill-button {
+      padding: 14px 22px;
+      background: linear-gradient(135deg, rgba(214, 243, 234, 0.96), rgba(140, 211, 190, 0.96));
+      color: #122025;
+      font-weight: 800;
+      box-shadow: 0 14px 34px rgba(77, 165, 143, 0.28);
+    }
+
+    .ghost-button {
+      padding: 14px 28px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-weight: 700;
+      min-width: 160px;
+    }
+
+    .secondary-button {
+      padding: 13px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--line);
+      font-weight: 700;
+    }
+
+    .mini-button {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--line);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tag-soft {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--gold);
+    }
+
+    .floating-home {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      z-index: 80;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(11, 18, 24, 0.78);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.26);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .floating-home.visible {
+      display: inline-flex;
+    }
+
+    .toast {
+      position: fixed;
+      right: 28px;
+      bottom: 28px;
+      z-index: 100;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(8, 14, 19, 0.92);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      max-width: 340px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* HOME */
+    .home-shell {
+      position: relative;
+      min-height: 100vh;
+      background:
+        linear-gradient(to bottom, rgba(7, 12, 18, 0.12), rgba(7, 12, 18, 0.32) 36%, rgba(7, 12, 18, 0.64)),
+        linear-gradient(to top, rgba(8, 14, 19, 0.2), rgba(8, 14, 19, 0.04)),
+        url("assets/mountain-hero.jpg") center center / cover no-repeat;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .home-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255,255,255,0.08), transparent 34%),
+        radial-gradient(circle at 80% 20%, rgba(255,219,167,0.12), transparent 30%),
+        linear-gradient(to top, rgba(8, 14, 19, 0.46), rgba(8, 14, 19, 0.05));
+      pointer-events: none;
+    }
+
+    .home-content {
+      position: relative;
+      z-index: 2;
+      width: min(1320px, calc(100% - 72px));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 0;
+      text-align: center;
+    }
+
+    .home-title {
+      margin: 0;
+      font-size: clamp(4.6rem, 8vw, 7.2rem);
+      font-weight: 300;
+      color: #ffffff;
+      letter-spacing: -0.045em;
+      text-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+    }
+
+    .home-sub {
+      margin-top: 18px;
+      margin-bottom: 46px;
+      font-size: 1.15rem;
+      color: rgba(255, 255, 255, 0.82);
+      max-width: 760px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .home-links {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      margin-top: 30px;
+      margin-bottom: 36px;
+    }
+
+    .feature-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 118px;
+      padding: 22px 26px;
+      border-radius: 24px;
+      color: #ffffff;
+      font-size: 1.18rem;
+      line-height: 1.45;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(10px);
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .feature-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .feature-link .dot {
+      font-size: 1.8rem;
+      line-height: 1;
+      margin-top: -2px;
+      opacity: 0.95;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .feature-link .feature-text {
+      text-align: left;
+    }
+
+    .home-hint {
+      margin-top: 18px;
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 0.95rem;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+    }
+
+    /* GENERIC PAGE LAYOUT */
+    .subpage-bg {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(140, 211, 190, 0.1), transparent 28%),
+        linear-gradient(180deg, #0d171d 0%, #0a1216 55%, #081015 100%);
+    }
+
+    .page-hero {
+      margin-bottom: 28px;
+    }
+
+    .page-hero p {
+      max-width: 760px;
+      font-size: 1.05rem;
+    }
+
+    .card-grid {
+      display: grid;
+      gap: 22px;
+    }
+
+    .card-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card-grid.two {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+
+    .option-card {
+      padding: 26px;
+      border-radius: var(--radius-xl);
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 260px;
+    }
+
+    .option-card p {
+      flex: 1;
+    }
+
+    .option-card .button-row {
+      margin-top: auto;
+    }
+
+    .soft-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .soft-list li + li {
+      margin-top: 6px;
+    }
+
+    /* CALM DOWN */
+    .preview-strip {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+    }
+
+    .mini-note {
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line-soft);
+    }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background: rgba(4, 8, 11, 0.76);
+      backdrop-filter: blur(14px);
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(760px, 100%);
+      border-radius: 28px;
+      background: rgba(11, 20, 26, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+      padding: 30px;
+    }
+
+    .track-list {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0 24px;
+    }
+
+    .track {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .track small {
+      color: var(--muted-2);
+    }
+
+/* WATCH BIRDS */
+    .habitat-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 24px 0 0;
+    }
+
+    .habitat-tab {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .habitat-tab:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .habitat-tab.active {
+      background: linear-gradient(135deg, rgba(214, 243, 234, 0.96), rgba(140, 211, 190, 0.96));
+      color: #122025;
+      border-color: transparent;
+      box-shadow: 0 14px 34px rgba(77, 165, 143, 0.24);
+    }
+
+    .birdwatch-layout {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .birdwatch-stage-wrap {
+      display: grid;
+      gap: 16px;
+    }
+
+    .bird-stage {
+      position: relative;
+      min-height: 620px;
+      overflow: hidden;
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow:
+        inset 0 -30px 90px rgba(15, 55, 36, 0.18),
+        var(--shadow);
+      isolation: isolate;
+    }
+
+    .bird-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 82% 12%, rgba(255, 244, 196, 0.58), transparent 12%),
+        radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.22), transparent 16%),
+        linear-gradient(to bottom, rgba(255,255,255,0.08), transparent 42%);
+    }
+
+    .bird-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      pointer-events: none;
+      background:
+        linear-gradient(to top, rgba(8, 14, 19, 0.22), transparent 34%),
+        radial-gradient(circle at 50% 105%, rgba(255,255,255,0.08), transparent 28%);
+      mix-blend-mode: soft-light;
+    }
+
+    .bird-stage.scene-city {
+      background:
+        linear-gradient(to bottom, #8fc9e4 0%, #d7eef4 42%, #d9d1c4 43%, #a9a197 100%);
+    }
+
+    .bird-stage.scene-forest {
+      background:
+        linear-gradient(to bottom, #9ad7f5 0%, #cfeef8 26%, #c9f0dd 54%, #8ec199 100%);
+    }
+
+    .bird-stage.scene-wetland {
+      background:
+        linear-gradient(to bottom, #9ed2ea 0%, #d7eef1 40%, #a5d6ca 41%, #5d95a8 100%);
+    }
+
+    .scene-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: none;
+      pointer-events: none;
+    }
+
+    .scene-city .city-layer,
+    .scene-forest .forest-layer,
+    .scene-wetland .wetland-layer {
+      display: block;
+    }
+
+    .stage-caption {
+      position: absolute;
+      left: 22px;
+      bottom: 22px;
+      z-index: 20;
+      max-width: min(560px, calc(100% - 44px));
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(8, 14, 19, 0.46);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: rgba(245, 251, 251, 0.82);
+      backdrop-filter: blur(12px);
+      font-size: 0.92rem;
+    }
+
+    /* City scene */
+    .city-building,
+    .city-wire,
+    .city-sidewalk,
+    .city-tree,
+    .city-bench,
+    .city-lamp {
+      position: absolute;
+      display: block;
+    }
+
+    .city-building {
+      bottom: 29%;
+      width: 13%;
+      border-radius: 12px 12px 0 0;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255, 238, 160, 0.72) 0 7px,
+          transparent 7px 18px
+        ),
+        linear-gradient(135deg, #7890a0, #526d7e);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+    }
+
+    .city-building.b1 { left: 5%; height: 36%; }
+    .city-building.b2 { left: 20%; height: 46%; width: 16%; }
+    .city-building.b3 { left: 39%; height: 31%; width: 11%; }
+    .city-building.b4 { right: 23%; height: 43%; width: 15%; background:
+        repeating-linear-gradient(to bottom, rgba(255, 238, 160, 0.58) 0 7px, transparent 7px 18px),
+        linear-gradient(135deg, #8b879c, #5e6479);
+    }
+    .city-building.b5 { right: 7%; height: 35%; width: 14%; }
+
+    .city-wire {
+      left: 4%;
+      right: 4%;
+      top: 31%;
+      height: 2px;
+      background: rgba(18, 32, 38, 0.38);
+      transform: rotate(-1deg);
+    }
+
+    .city-wire.wire-two {
+      top: 36%;
+      opacity: 0.55;
+      transform: rotate(1deg);
+    }
+
+    .city-sidewalk {
+      left: -3%;
+      right: -3%;
+      bottom: 0;
+      height: 29%;
+      background:
+        linear-gradient(90deg, transparent 0 16%, rgba(255,255,255,0.22) 16% 17%, transparent 17% 38%, rgba(255,255,255,0.18) 38% 39%, transparent 39% 62%, rgba(255,255,255,0.18) 62% 63%, transparent 63%),
+        linear-gradient(to bottom, #d7d1c6, #918a82);
+      border-top: 9px solid rgba(106, 126, 102, 0.45);
+    }
+
+    .city-tree {
+      right: 13%;
+      bottom: 21%;
+      width: 18px;
+      height: 25%;
+      border-radius: 999px;
+      background: #72503a;
+    }
+
+    .city-tree::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -54px;
+      width: 92px;
+      height: 92px;
+      border-radius: 48% 52% 48% 52%;
+      transform: translateX(-50%);
+      background:
+        radial-gradient(circle at 35% 35%, #a8c983, transparent 35%),
+        #789b78;
+      box-shadow:
+        -28px 18px 0 -12px #6f936d,
+        28px 16px 0 -14px #88aa76;
+    }
+
+    .city-bench {
+      left: 9%;
+      bottom: 20%;
+      width: 130px;
+      height: 12px;
+      border-radius: 999px;
+      background: #9d6c4a;
+      box-shadow: 0 20px 0 #805437;
+    }
+
+    .city-bench::before,
+    .city-bench::after {
+      content: "";
+      position: absolute;
+      top: 24px;
+      width: 8px;
+      height: 34px;
+      background: #5c4d45;
+      border-radius: 999px;
+    }
+
+    .city-bench::before { left: 18px; }
+    .city-bench::after { right: 18px; }
+
+    .city-lamp {
+      left: 55%;
+      bottom: 26%;
+      width: 7px;
+      height: 28%;
+      border-radius: 999px;
+      background: #47545c;
+    }
+
+    .city-lamp::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -16px;
+      width: 34px;
+      height: 20px;
+      border-radius: 18px 18px 4px 4px;
+      transform: translateX(-50%);
+      background: #f3d88b;
+      box-shadow: 0 0 28px rgba(243, 216, 139, 0.45);
+    }
+
+    /* Forest scene */
+    .forest-hill,
+    .forest-tree,
+    .forest-branch,
+    .forest-ground-detail,
+    .forest-log,
+    .forest-bush {
+      position: absolute;
+      display: block;
+    }
+
+    .forest-hill {
+      left: -8%;
+      right: -8%;
+      border-radius: 50%;
+    }
+
+    .forest-hill.hill-back {
+      bottom: 170px;
+      height: 220px;
+      background: #72a57c;
+    }
+
+    .forest-hill.hill-middle {
+      bottom: 100px;
+      height: 240px;
+      background: #568967;
+    }
+
+    .forest-hill.hill-front {
+      bottom: -68px;
+      height: 240px;
+      background: #3f6e52;
+    }
+
+    .forest-tree {
+      bottom: 110px;
+      width: 52px;
+      border-radius: 999px 999px 10px 10px;
+      background: linear-gradient(to bottom, #5a3b23, #402818);
+    }
+
+    .forest-tree::before,
+    .forest-tree::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: #2e7c4e;
+    }
+
+    .forest-tree::before {
+      bottom: 34px;
+      left: -26px;
+      width: 106px;
+      height: 96px;
+    }
+
+    .forest-tree::after {
+      bottom: 82px;
+      left: -18px;
+      width: 88px;
+      height: 76px;
+      background: #3d915d;
+    }
+
+    .forest-tree.t1 { left: 10%; height: 230px; }
+    .forest-tree.t2 { left: 28%; height: 280px; }
+    .forest-tree.t3 { right: 32%; height: 260px; }
+    .forest-tree.t4 { right: 12%; height: 240px; }
+
+    .forest-branch {
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(to right, #6d472a, #4a311f);
+      transform-origin: left center;
+    }
+
+    .forest-branch.a {
+      top: 280px;
+      left: 14%;
+      width: 220px;
+      transform: rotate(8deg);
+    }
+
+    .forest-branch.b {
+      top: 240px;
+      right: 16%;
+      width: 200px;
+      transform: rotate(-7deg);
+    }
+
+    .forest-branch.c {
+      top: 340px;
+      left: 38%;
+      width: 170px;
+      transform: rotate(-10deg);
+    }
+
+    .forest-ground-detail {
+      inset: auto 0 0 0;
+      height: 120px;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.08), transparent 22%),
+        radial-gradient(circle at 78% 30%, rgba(255,255,255,0.06), transparent 18%);
+    }
+
+    .forest-log {
+      left: 43%;
+      bottom: 98px;
+      width: 170px;
+      height: 32px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 90% 50%, #d0a073 0 7px, #8d5d3e 8px 13px, transparent 14px),
+        linear-gradient(135deg, #9a6846, #70482f);
+      transform: rotate(-3deg);
+    }
+
+    .forest-bush {
+      left: 16%;
+      bottom: 82px;
+      width: 140px;
+      height: 52px;
+      border-radius: 999px 999px 18px 18px;
+      background:
+        radial-gradient(circle at 28% 20%, #91b470, transparent 35%),
+        #6c9862;
+      box-shadow:
+        58px 6px 0 -16px #749d64,
+        -38px 7px 0 -16px #5f8d57;
+    }
+
+    /* Wetland scene */
+    .wet-water,
+    .wet-bank,
+    .wet-reed,
+    .wet-rock,
+    .wet-tree,
+    .water-ring {
+      position: absolute;
+      display: block;
+    }
+
+    .wet-water {
+      left: -4%;
+      right: -4%;
+      bottom: 0;
+      height: 49%;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.26), transparent 18%),
+        radial-gradient(ellipse at 60% 55%, rgba(255,255,255,0.2), transparent 22%),
+        repeating-linear-gradient(-4deg, rgba(255,255,255,0.16) 0 2px, transparent 2px 28px),
+        linear-gradient(to bottom, #80b9c1, #4f8eac);
+    }
+
+    .wet-bank {
+      left: -5%;
+      right: -5%;
+      bottom: 40%;
+      height: 12%;
+      border-radius: 999px 999px 0 0;
+      background:
+        radial-gradient(ellipse at 15% 50%, #c7a36d, transparent 18%),
+        radial-gradient(ellipse at 70% 40%, #d7bd82, transparent 18%),
+        linear-gradient(to bottom, #a9b975, #7f995d);
+    }
+
+    .wet-reed {
+      bottom: 36%;
+      width: 6px;
+      height: 22%;
+      border-radius: 999px;
+      background: #5f7f4c;
+      transform-origin: bottom;
+    }
+
+    .wet-reed::before {
+      content: "";
+      position: absolute;
+      left: -5px;
+      top: -16px;
+      width: 16px;
+      height: 32px;
+      border-radius: 999px;
+      background: #7b5b3b;
+    }
+
+    .wet-reed.r1 { left: 8%; transform: rotate(-8deg); }
+    .wet-reed.r2 { left: 12%; height: 28%; transform: rotate(5deg); }
+    .wet-reed.r3 { left: 18%; height: 19%; transform: rotate(-3deg); }
+    .wet-reed.r4 { right: 20%; height: 25%; transform: rotate(6deg); }
+    .wet-reed.r5 { right: 14%; height: 21%; transform: rotate(-5deg); }
+    .wet-reed.r6 { right: 8%; height: 29%; transform: rotate(7deg); }
+
+    .wet-rock {
+      bottom: 35%;
+      width: 96px;
+      height: 36px;
+      border-radius: 55% 45% 35% 45%;
+      background: linear-gradient(135deg, #a7aaa5, #737d7a);
+      box-shadow: 0 12px 22px rgba(42, 70, 76, 0.16);
+    }
+
+    .wet-rock.a { left: 28%; }
+    .wet-rock.b { right: 32%; width: 78px; height: 30px; opacity: 0.88; }
+
+    .wet-tree {
+      left: 48%;
+      bottom: 41%;
+      width: 13px;
+      height: 24%;
+      border-radius: 999px;
+      background: #79533c;
+      transform: rotate(8deg);
+    }
+
+    .wet-tree::before {
+      content: "";
+      position: absolute;
+      left: -80px;
+      top: -6px;
+      width: 96px;
+      height: 11px;
+      border-radius: 999px;
+      background: #79533c;
+      transform: rotate(-15deg);
+    }
+
+    .water-ring {
+      left: 37%;
+      bottom: 19%;
+      width: 140px;
+      height: 38px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 50%;
+      opacity: 0.7;
+    }
+
+    .water-ring.b {
+      left: 60%;
+      bottom: 27%;
+      transform: scale(0.75);
+      opacity: 0.48;
+    }
+
+    .bird-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 12;
+    }
+
+    .watch-bird {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: 112px;
+      height: 96px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transform: translate(-50%, -50%) scale(var(--scale, 1));
+      transform-origin: 50% 80%;
+      animation: birdIdle 3.8s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .watch-bird:hover {
+      filter: brightness(1.08) saturate(1.08);
+    }
+
+    .watch-bird span {
+      position: absolute;
+      display: block;
+    }
+
+    .wb-shadow {
+      left: 25px;
+      bottom: 8px;
+      width: 58px;
+      height: 11px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.18);
+      filter: blur(2px);
+    }
+
+    .wb-body {
+      left: 34px;
+      top: 38px;
+      width: 52px;
+      height: 34px;
+      border-radius: 55% 48% 48% 55%;
+      background:
+        radial-gradient(circle at 35% 28%, rgba(255,255,255,0.28), transparent 28%),
+        var(--body);
+      box-shadow: inset -8px -8px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    .wb-belly {
+      left: 39px;
+      top: 51px;
+      width: 30px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--belly);
+      opacity: 0.82;
+    }
+
+    .wb-wing {
+      left: 50px;
+      top: 43px;
+      width: 34px;
+      height: 21px;
+      border-radius: 60% 45% 55% 45%;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.17), transparent 45%),
+        var(--wing);
+      transform: rotate(-8deg);
+      transform-origin: 30% 20%;
+    }
+
+    .wb-tail {
+      left: 78px;
+      top: 48px;
+      width: 24px;
+      height: 14px;
+      border-radius: 4px 999px 999px 4px;
+      background: var(--tail);
+      transform: rotate(13deg);
+      transform-origin: left center;
+    }
+
+    .wb-head {
+      left: 22px;
+      top: 30px;
+      width: 31px;
+      height: 30px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,0.23), transparent 26%),
+        var(--head);
+      box-shadow: inset -4px -3px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .wb-eye {
+      left: 30px;
+      top: 41px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--eye);
+      box-shadow: 0 0 0 1.5px rgba(255,255,255,0.28);
+      z-index: 4;
+    }
+
+    .wb-beak {
+      left: 8px;
+      top: 42px;
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 16px solid var(--beak);
+      transform-origin: right center;
+    }
+
+    .wb-leg {
+      top: 66px;
+      width: 3px;
+      height: 15px;
+      border-radius: 999px;
+      background: var(--legs);
+    }
+
+    .wb-leg.a { left: 52px; }
+    .wb-leg.b { left: 64px; }
+
+    .wb-mask,
+    .wb-crest,
+    .wb-neck {
+      display: none;
+    }
+
+    .bird-rock-pigeon .wb-mask {
+      display: block;
+      left: 32px;
+      top: 48px;
+      width: 16px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #51b893, #9b5fbf);
+      opacity: 0.95;
+    }
+
+    .bird-rock-pigeon .wb-wing::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      right: 5px;
+      top: 5px;
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(32, 34, 38, 0.62);
+      box-shadow: 0 7px 0 rgba(32, 34, 38, 0.5);
+    }
+
+    .bird-mourning-dove .wb-wing::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 5px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(36, 31, 28, 0.6);
+      box-shadow:
+        9px 4px 0 rgba(36, 31, 28, 0.45),
+        18px 2px 0 rgba(36, 31, 28, 0.42);
+    }
+
+    .bird-house-sparrow .wb-mask {
+      display: block;
+      left: 30px;
+      top: 48px;
+      width: 12px;
+      height: 15px;
+      border-radius: 50% 50% 999px 999px;
+      background: #202120;
+      opacity: 0.82;
+    }
+
+    .bird-house-sparrow .wb-head::after {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 3px;
+      width: 18px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(96, 62, 33, 0.7);
+      transform: rotate(-12deg);
+    }
+
+    .bird-american-crow .wb-body {
+      width: 60px;
+      height: 37px;
+    }
+
+    .bird-american-crow .wb-head {
+      left: 18px;
+      top: 28px;
+      width: 37px;
+      height: 34px;
+    }
+
+    .bird-american-crow .wb-beak {
+      left: 0;
+      top: 42px;
+      border-top-width: 7px;
+      border-bottom-width: 7px;
+      border-right-width: 24px;
+    }
+
+    .bird-black-capped-chickadee .wb-mask {
+      display: block;
+      left: 21px;
+      top: 42px;
+      width: 23px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff7ec;
+      z-index: 3;
+    }
+
+    .bird-black-capped-chickadee .wb-head::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 55%;
+      border-radius: 999px 999px 40% 40%;
+      background: #15191c;
+    }
+
+    .bird-northern-cardinal .wb-crest,
+    .bird-belted-kingfisher .wb-crest {
+      display: block;
+    }
+
+    .bird-northern-cardinal .wb-crest {
+      left: 30px;
+      top: 16px;
+      width: 18px;
+      height: 20px;
+      background: #d63a38;
+      clip-path: polygon(0 100%, 45% 0, 100% 100%);
+      transform: rotate(13deg);
+    }
+
+    .bird-northern-cardinal .wb-mask {
+      display: block;
+      left: 19px;
+      top: 41px;
+      width: 20px;
+      height: 15px;
+      border-radius: 60% 45% 60% 45%;
+      background: #25201f;
+      z-index: 3;
+    }
+
+    .bird-wood-thrush .wb-belly::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 2px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(77, 48, 35, 0.65);
+      box-shadow:
+        10px 2px 0 rgba(77, 48, 35, 0.56),
+        18px 4px 0 rgba(77, 48, 35, 0.52),
+        7px 10px 0 rgba(77, 48, 35, 0.48);
+    }
+
+    .shape-woodpecker {
+      height: 128px;
+    }
+
+    .shape-woodpecker::before {
+      content: "";
+      position: absolute;
+      right: 8px;
+      top: 6px;
+      bottom: 9px;
+      width: 16px;
+      border-radius: 999px;
+      background:
+        linear-gradient(to right, rgba(255,255,255,0.14), transparent),
+        #7a543d;
+      box-shadow: inset -4px 0 0 rgba(0,0,0,0.08);
+    }
+
+    .shape-woodpecker .wb-body {
+      left: 41px;
+      top: 52px;
+      width: 30px;
+      height: 48px;
+      border-radius: 48% 48% 56% 56%;
+      transform: rotate(-8deg);
+    }
+
+    .shape-woodpecker .wb-wing {
+      left: 50px;
+      top: 59px;
+      width: 22px;
+      height: 32px;
+      border-radius: 999px;
+    }
+
+    .shape-woodpecker .wb-tail {
+      left: 58px;
+      top: 91px;
+      width: 13px;
+      height: 25px;
+    }
+
+    .shape-woodpecker .wb-head {
+      left: 31px;
+      top: 34px;
+      width: 28px;
+      height: 30px;
+    }
+
+    .shape-woodpecker .wb-beak {
+      left: 12px;
+      top: 44px;
+      border-top-width: 4px;
+      border-bottom-width: 4px;
+      border-right-width: 21px;
+    }
+
+    .shape-woodpecker .wb-leg.a {
+      left: 52px;
+      top: 95px;
+      height: 12px;
+    }
+
+    .shape-woodpecker .wb-leg.b {
+      left: 61px;
+      top: 95px;
+      height: 12px;
+    }
+
+    .bird-downy-woodpecker .wb-crest {
+      display: block;
+      left: 45px;
+      top: 33px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d34236;
+      z-index: 4;
+    }
+
+    .bird-downy-woodpecker .wb-wing::after {
+      content: "";
+      position: absolute;
+      inset: 5px 4px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.9) 0 2px, transparent 3px),
+        radial-gradient(circle at 64% 45%, rgba(255,255,255,0.9) 0 2px, transparent 3px),
+        radial-gradient(circle at 42% 72%, rgba(255,255,255,0.9) 0 2px, transparent 3px);
+    }
+
+    .shape-heron {
+      width: 132px;
+      height: 154px;
+    }
+
+    .shape-heron .wb-shadow {
+      left: 43px;
+      bottom: 6px;
+      width: 64px;
+      height: 13px;
+    }
+
+    .shape-heron .wb-body {
+      left: 58px;
+      top: 92px;
+      width: 48px;
+      height: 31px;
+    }
+
+    .shape-heron .wb-belly {
+      left: 67px;
+      top: 103px;
+      width: 24px;
+      height: 15px;
+    }
+
+    .shape-heron .wb-wing {
+      left: 75px;
+      top: 98px;
+      width: 29px;
+      height: 18px;
+    }
+
+    .shape-heron .wb-tail {
+      left: 98px;
+      top: 102px;
+      width: 18px;
+      height: 12px;
+    }
+
+    .shape-heron .wb-neck {
+      display: block;
+      left: 46px;
+      top: 50px;
+      width: 45px;
+      height: 58px;
+      border-left: 11px solid var(--head);
+      border-radius: 56% 0 0 44%;
+      transform: rotate(-8deg);
+    }
+
+    .shape-heron .wb-head {
+      left: 30px;
+      top: 41px;
+      width: 32px;
+      height: 22px;
+      border-radius: 55% 45% 48% 52%;
+    }
+
+    .shape-heron .wb-eye {
+      left: 38px;
+      top: 48px;
+    }
+
+    .shape-heron .wb-beak {
+      left: 7px;
+      top: 48px;
+      border-top-width: 4px;
+      border-bottom-width: 4px;
+      border-right-width: 25px;
+    }
+
+    .shape-heron .wb-leg {
+      top: 117px;
+      height: 31px;
+      width: 3px;
+    }
+
+    .shape-heron .wb-leg.a { left: 72px; }
+    .shape-heron .wb-leg.b { left: 85px; transform: rotate(-8deg); }
+
+.bird-black-crowned-night-heron .wb-body {
+      left: 58px;
+      top: 91px;
+      width: 52px;
+      height: 34px;
+      border-radius: 55% 50% 46% 55%;
+      background:
+        radial-gradient(circle at 34% 34%, rgba(255,255,255,0.18), transparent 26%),
+        var(--body);
+    }
+
+    .bird-black-crowned-night-heron .wb-belly {
+      left: 66px;
+      top: 104px;
+      width: 30px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--belly);
+      opacity: 0.95;
+    }
+
+    .bird-black-crowned-night-heron .wb-wing {
+      left: 75px;
+      top: 96px;
+      width: 34px;
+      height: 22px;
+      border-radius: 58% 48% 54% 46%;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.16), transparent 45%),
+        var(--wing);
+      transform: rotate(-8deg);
+    }
+
+    .bird-black-crowned-night-heron .wb-tail {
+      left: 99px;
+      top: 103px;
+      width: 19px;
+      height: 13px;
+      border-radius: 4px 999px 999px 4px;
+      background: var(--tail);
+      transform: rotate(16deg);
+    }
+
+    .bird-black-crowned-night-heron .wb-neck {
+      display: block;
+      left: 47px;
+      top: 71px;
+      width: 40px;
+      height: 39px;
+      border-left: 12px solid var(--belly);
+      border-radius: 48% 0 0 54%;
+      transform: rotate(2deg);
+    }
+
+    .bird-black-crowned-night-heron .wb-head {
+      left: 27px;
+      top: 57px;
+      width: 37px;
+      height: 27px;
+      border-radius: 54% 46% 48% 52%;
+      background:
+        linear-gradient(to bottom, #1f2930 0 52%, #f3efe6 53% 100%);
+      box-shadow: inset -3px -2px 0 rgba(0, 0, 0, 0.07);
+    }
+
+    .bird-black-crowned-night-heron .wb-eye {
+      left: 38px;
+      top: 64px;
+      width: 6px;
+      height: 6px;
+      background: #b8292d;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.72),
+        0 0 8px rgba(184,41,45,0.35);
+      z-index: 5;
+    }
+
+    .bird-black-crowned-night-heron .wb-beak {
+      left: 4px;
+      top: 66px;
+      border-top-width: 4px;
+      border-bottom-width: 4px;
+      border-right-width: 27px;
+      border-right-color: var(--beak);
+      transform: rotate(-2deg);
+    }
+
+    .bird-black-crowned-night-heron .wb-mask {
+      display: none;
+    }
+
+    .bird-black-crowned-night-heron .wb-leg {
+      top: 119px;
+      height: 29px;
+      width: 4px;
+      background: var(--legs);
+    }
+
+    .bird-black-crowned-night-heron .wb-leg.a {
+      left: 73px;
+      transform: rotate(2deg);
+    }
+
+    .bird-black-crowned-night-heron .wb-leg.b {
+      left: 88px;
+      transform: rotate(-6deg);
+    }
+
+    .shape-duck {
+      width: 126px;
+      height: 94px;
+    }
+
+    .shape-duck .wb-shadow {
+      left: 24px;
+      bottom: 10px;
+      width: 84px;
+      height: 15px;
+      background: rgba(255,255,255,0.22);
+    }
+
+    .shape-duck .wb-body {
+      left: 35px;
+      top: 43px;
+      width: 70px;
+      height: 33px;
+      border-radius: 58% 52% 50% 58%;
+    }
+
+    .shape-duck .wb-belly {
+      left: 51px;
+      top: 57px;
+      width: 38px;
+      height: 15px;
+    }
+
+    .shape-duck .wb-wing {
+      left: 62px;
+      top: 49px;
+      width: 34px;
+      height: 19px;
+    }
+
+    .shape-duck .wb-head {
+      left: 22px;
+      top: 31px;
+      width: 31px;
+      height: 30px;
+    }
+
+    .shape-duck .wb-beak {
+      left: 4px;
+      top: 43px;
+      border-top-width: 5px;
+      border-bottom-width: 5px;
+      border-right-width: 20px;
+    }
+
+    .shape-duck .wb-tail {
+      left: 98px;
+      top: 52px;
+      width: 18px;
+      height: 12px;
+    }
+
+    .shape-duck .wb-leg {
+      display: none;
+    }
+
+    .bird-mallard .wb-mask {
+      display: block;
+      left: 46px;
+      top: 46px;
+      width: 5px;
+      height: 29px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.82);
+      transform: rotate(-12deg);
+    }
+
+    .bird-mallard .wb-wing::after {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 9px;
+      width: 16px;
+      height: 4px;
+      border-radius: 999px;
+      background: #416db8;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
+    }
+
+    .shape-kingfisher .wb-head {
+      left: 18px;
+      top: 27px;
+      width: 39px;
+      height: 35px;
+    }
+
+    .shape-kingfisher .wb-crest {
+      left: 37px;
+      top: 18px;
+      width: 24px;
+      height: 18px;
+      background: var(--head);
+      clip-path: polygon(0 100%, 18% 20%, 45% 78%, 72% 0, 100% 100%);
+    }
+
+    .shape-kingfisher .wb-beak {
+      left: -4px;
+      top: 40px;
+      border-top-width: 5px;
+      border-bottom-width: 5px;
+      border-right-width: 29px;
+    }
+
+    .bird-belted-kingfisher .wb-mask {
+      display: block;
+      left: 47px;
+      top: 57px;
+      width: 27px;
+      height: 7px;
+      border-radius: 999px;
+      background: #a96a44;
+      opacity: 0.92;
+    }
+
+
+
+/* Mallard final fix: remove oversized neck glow and keep only a small white collar */
+    .bird-mallard.shape-duck .wb-body {
+      left: 35px;
+      top: 43px;
+      width: 70px;
+      height: 33px;
+      border-radius: 58% 52% 50% 58%;
+      background:
+        linear-gradient(to bottom, #b8aa99 0 42%, #a99d91 43% 100%);
+      box-shadow: inset -6px -4px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .bird-mallard.shape-duck .wb-belly {
+      left: 50px;
+      top: 58px;
+      width: 42px;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(236, 233, 223, 0.82);
+      opacity: 1;
+      filter: none;
+      z-index: 3;
+    }
+
+    .bird-mallard.shape-duck .wb-wing {
+      left: 63px;
+      top: 50px;
+      width: 34px;
+      height: 19px;
+      border-radius: 999px;
+      background:
+        linear-gradient(
+          to bottom,
+          #7f8790 0 16%,
+          #415b9a 17% 58%,
+          #d8d2bd 59% 72%,
+          #7f8790 73% 100%
+        );
+      box-shadow:
+        inset 0 0 0 2px rgba(255, 255, 255, 0.34),
+        0 1px 0 rgba(0, 0, 0, 0.06);
+      transform: rotate(-4deg);
+      z-index: 4;
+    }
+
+    .bird-mallard.shape-duck .wb-wing::after {
+      display: none;
+    }
+
+    .bird-mallard.shape-duck .wb-head {
+      left: 22px;
+      top: 31px;
+      width: 31px;
+      height: 30px;
+      border-radius: 52% 50% 48% 54%;
+      background:
+        radial-gradient(circle at 38% 34%, rgba(255,255,255,0.14), transparent 20%),
+        linear-gradient(135deg, #1e6a55 0%, #24513f 62%, #17362e 100%);
+      box-shadow: inset -4px -4px 0 rgba(0, 0, 0, 0.08);
+      z-index: 6;
+    }
+
+    .bird-mallard.shape-duck .wb-eye {
+      left: 30px;
+      top: 40px;
+      width: 6px;
+      height: 6px;
+      background: #101418;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
+      z-index: 9;
+    }
+
+    .bird-mallard.shape-duck .wb-beak {
+      left: 4px;
+      top: 43px;
+      border-top-width: 5px;
+      border-bottom-width: 5px;
+      border-right-width: 20px;
+      border-right-color: #e3b83d;
+      transform: rotate(3deg);
+      z-index: 5;
+    }
+
+    .bird-mallard.shape-duck .wb-tail {
+      left: 98px;
+      top: 52px;
+      width: 18px;
+      height: 12px;
+      border-radius: 4px 999px 999px 4px;
+      background: #121820;
+      transform: rotate(10deg);
+      z-index: 2;
+    }
+
+    /* Replace the large white vertical mark with a tiny clean collar */
+    .bird-mallard.shape-duck .wb-neck {
+      display: block;
+      left: 49px;
+      top: 47px;
+      width: 6px;
+      height: 16px;
+      background: transparent;
+      border-left: 4px solid rgba(246, 246, 235, 0.95);
+      border-radius: 50%;
+      transform: rotate(-12deg);
+      z-index: 7;
+    }
+
+    .bird-mallard.shape-duck .wb-mask {
+      display: none;
+    }
+
+    /* Keep the water reflection under the duck, not visually like a body glow */
+    .bird-mallard.shape-duck .wb-shadow {
+      left: 34px;
+      bottom: 9px;
+      width: 74px;
+      height: 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      filter: blur(2px);
+      z-index: 0;
+    }
+
+
+/* Belted Kingfisher final polish: big head, shaggy crest, long bill, compact body */
+    .bird-belted-kingfisher.shape-kingfisher {
+      width: 128px;
+      height: 106px;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-shadow {
+      left: 45px;
+      bottom: 9px;
+      width: 54px;
+      height: 10px;
+      background: rgba(0, 0, 0, 0.15);
+      filter: blur(2px);
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-body {
+      left: 62px;
+      top: 50px;
+      width: 50px;
+      height: 31px;
+      border-radius: 56% 48% 50% 54%;
+      background:
+        linear-gradient(to bottom, #607f9a 0 46%, #f4f0e8 47% 100%);
+      box-shadow: inset -5px -4px 0 rgba(0,0,0,0.06);
+      z-index: 2;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-belly {
+      left: 68px;
+      top: 70px;
+      width: 33px;
+      height: 10px;
+      border-radius: 999px;
+      background: #b77750;
+      opacity: 0.96;
+      z-index: 5;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-wing {
+      left: 83px;
+      top: 53px;
+      width: 31px;
+      height: 23px;
+      border-radius: 52% 48% 55% 45%;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.15), transparent 40%),
+        #5f7893;
+      transform: rotate(5deg);
+      z-index: 4;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-tail {
+      left: 105px;
+      top: 67px;
+      width: 25px;
+      height: 17px;
+      border-radius: 45% 75% 70% 45%;
+      background: #5e7894;
+      transform: rotate(8deg);
+      z-index: 1;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-neck {
+      display: block;
+      left: 57px;
+      top: 56px;
+      width: 18px;
+      height: 24px;
+      border-radius: 45% 0 0 45%;
+      background: #f4f0e8;
+      transform: rotate(-4deg);
+      z-index: 3;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-head {
+      left: 29px;
+      top: 31px;
+      width: 44px;
+      height: 38px;
+      border-radius: 58% 50% 52% 50%;
+      background:
+        radial-gradient(circle at 39% 36%, rgba(255,255,255,0.18), transparent 22%),
+        linear-gradient(145deg, #7892a9 0%, #617f9a 68%, #4d6b86 100%);
+      box-shadow: inset -4px -4px 0 rgba(0,0,0,0.07);
+      z-index: 7;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-head::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      bottom: 0;
+      width: 21px;
+      height: 13px;
+      border-radius: 50%;
+      background: #f4f0e8;
+      transform: rotate(5deg);
+      z-index: 1;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-eye {
+      left: 46px;
+      top: 45px;
+      width: 6px;
+      height: 6px;
+      background: #111820;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.62);
+      z-index: 10;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-beak {
+      left: 1px;
+      top: 47px;
+      border-top-width: 4px;
+      border-bottom-width: 4px;
+      border-right-width: 33px;
+      border-right-color: #17212a;
+      transform: rotate(-1deg);
+      z-index: 8;
+    }
+
+    /* Replace the old twin-ear crest with a lower shaggy rear crest */
+    .bird-belted-kingfisher.shape-kingfisher .wb-crest {
+      display: block;
+      left: 52px;
+      top: 23px;
+      width: 28px;
+      height: 18px;
+      background: #617f9a;
+      clip-path: polygon(
+        0 100%,
+        12% 34%,
+        28% 78%,
+        45% 18%,
+        62% 78%,
+        82% 42%,
+        100% 100%
+      );
+      transform: rotate(8deg);
+      z-index: 6;
+    }
+
+    /* Old mask no longer used as a big chest patch */
+    .bird-belted-kingfisher.shape-kingfisher .wb-mask {
+      display: none;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-leg {
+      top: 80px;
+      height: 11px;
+      width: 4px;
+      background: #7b5334;
+      opacity: 0.82;
+      z-index: 3;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-leg.a {
+      left: 80px;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-leg.b {
+      left: 93px;
+    }
+
+    .bird-effect {
+      position: absolute;
+      left: 50%;
+      top: 2px;
+      z-index: 30;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .bird-effect::before {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: #122025;
+      background: rgba(214, 243, 234, 0.96);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.14);
+      font-size: 0.8rem;
+      font-weight: 900;
+      animation: effectRise 900ms ease forwards;
+    }
+
+    .effect-bob::before { content: "coo"; }
+    .effect-glide::before { content: "whoosh"; }
+    .effect-hop::before { content: "hop"; }
+    .effect-tilt::before { content: "hmm"; }
+    .effect-flit::before { content: "dee-dee"; }
+    .effect-peck::before { content: "tok tok"; }
+    .effect-crest::before { content: "chip!"; }
+    .effect-leaf::before { content: "rustle"; }
+    .effect-wade::before { content: "step"; }
+    .effect-hunch::before { content: "squawk?"; }
+    .effect-dabble::before { content: "blub"; }
+    .effect-dive::before { content: "splash"; }
+
+    .birdwatch-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .encounter-box {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .encounter-box blockquote {
+      margin: 0 0 14px;
+      padding-left: 14px;
+      border-left: 3px solid rgba(140, 211, 190, 0.7);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .encounter-box p {
+      margin: 0;
+      color: var(--muted-2);
+      font-size: 0.94rem;
+    }
+
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .stat-pill {
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .dex-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .dex-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 136px;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .dex-card.locked {
+      opacity: 0.42;
+      filter: grayscale(1);
+    }
+
+    .dex-swatch {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #d2e9df, #7dc8b2);
+      box-shadow: inset 0 -8px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .dex-card strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 0.98rem;
+    }
+
+    .dex-card small {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted-2);
+      font-size: 0.76rem;
+      font-style: italic;
+    }
+
+    .dex-card p {
+      margin: 0;
+      font-size: 0.86rem;
+      line-height: 1.48;
+      color: var(--muted-2);
+    }
+
+    @keyframes birdIdle {
+      0% { transform: translate(-50%, -50%) scale(var(--scale, 1)) translateY(0); }
+      50% { transform: translate(-50%, -50%) scale(var(--scale, 1)) translateY(-5px); }
+      100% { transform: translate(-50%, -50%) scale(var(--scale, 1)) translateY(0); }
+    }
+
+    @keyframes wingFlutter {
+      0%, 100% { transform: rotate(-8deg); }
+      25% { transform: rotate(-38deg) translateY(-3px); }
+      55% { transform: rotate(22deg); }
+    }
+
+    @keyframes headBob {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(4px) rotate(-5deg); }
+    }
+
+    @keyframes tinyHop {
+      0%, 100% { transform: translate(-50%, -50%) scale(var(--scale, 1)) translateY(0); }
+      45% { transform: translate(-50%, -50%) scale(var(--scale, 1)) translateY(-18px); }
+    }
+
+    @keyframes peck {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      30% { transform: translateY(7px) rotate(-18deg); }
+      55% { transform: translateY(1px) rotate(5deg); }
+    }
+
+    @keyframes glideAway {
+      0% { transform: translate(-50%, -50%) scale(var(--scale, 1)) translateY(0) rotate(0); }
+      45% { transform: translate(-70%, -72%) scale(var(--scale, 1)) rotate(-6deg); }
+      100% { transform: translate(-50%, -50%) scale(var(--scale, 1)) translateY(0) rotate(0); }
+    }
+
+    @keyframes tiltHead {
+      0%, 100% { transform: rotate(0); }
+      45% { transform: rotate(-16deg); }
+      70% { transform: rotate(8deg); }
+    }
+
+    @keyframes crestPop {
+      0%, 100% { transform: rotate(13deg) scaleY(1); }
+      50% { transform: rotate(13deg) scaleY(1.35); }
+    }
+
+    @keyframes dabble {
+      0%, 100% { transform: translate(-50%, -50%) scale(var(--scale, 1)) rotate(0); }
+      45% { transform: translate(-50%, -50%) scale(var(--scale, 1)) rotate(-18deg) translateY(8px); }
+    }
+
+    @keyframes dive {
+      0% { transform: translate(-50%, -50%) scale(var(--scale, 1)) rotate(0); }
+      35% { transform: translate(-50%, -80%) scale(var(--scale, 1)) rotate(-8deg); }
+      72% { transform: translate(-50%, -20%) scale(var(--scale, 1)) rotate(-28deg); }
+      100% { transform: translate(-50%, -50%) scale(var(--scale, 1)) rotate(0); }
+    }
+
+    @keyframes hunch {
+      0%, 100% { transform: translate(-50%, -50%) scale(var(--scale, 1)); }
+      50% { transform: translate(-50%, -47%) scale(var(--scale, 0.98)); }
+    }
+
+    @keyframes effectRise {
+      0% { opacity: 0; transform: translateY(8px) scale(0.92); }
+      18% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-30px) scale(1); }
+    }
+
+    .watch-bird.clicked .wb-wing {
+      animation: wingFlutter 520ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-bob .wb-head,
+    .watch-bird.clicked.motion-tilt .wb-head {
+      animation: headBob 430ms ease-in-out 2;
+    }
+
+    .watch-bird.clicked.motion-hop,
+    .watch-bird.clicked.motion-flit,
+    .watch-bird.clicked.motion-leaf {
+      animation: tinyHop 620ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-glide {
+      animation: glideAway 850ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-peck .wb-head,
+    .watch-bird.clicked.motion-peck .wb-beak {
+      animation: peck 560ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-crest .wb-crest {
+      animation: crestPop 520ms ease-in-out 2;
+    }
+
+    .watch-bird.clicked.motion-dabble {
+      animation: dabble 760ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-dive {
+      animation: dive 860ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-hunch {
+      animation: hunch 680ms ease-in-out 1;
+    }
+
+    @media (max-width: 1200px) {
+      .birdwatch-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .dex-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page-wrap {
+        width: min(var(--max), calc(100% - 32px));
+      }
+
+      .bird-stage {
+        min-height: 520px;
+      }
+
+      .habitat-tab,
+      .birdwatch-actions .pill-button,
+      .birdwatch-actions .secondary-button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .watch-bird {
+        transform: translate(-50%, -50%) scale(calc(var(--scale, 1) * 0.82));
+      }
+
+      .dex-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stage-caption {
+        border-radius: 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .watch-bird,
+      .watch-bird *,
+      .bird-effect::before {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+
+
+    /* MEMES */
+    .meme-layout {
+      display: grid;
+      grid-template-columns: 0.86fr 1.14fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .quote-box {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin: 18px 0 20px;
+    }
+
+    .quote-label {
+      margin-bottom: 8px;
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .quote-line {
+      margin: 0;
+      font-size: 1.08rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .meme-stage {
+      overflow: hidden;
+    }
+
+    .meme-image-wrap {
+      overflow: hidden;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 18px;
+    }
+
+    .meme-image {
+      width: 100%;
+      max-height: 560px;
+      object-fit: contain;
+      background: #111;
+    }
+
+    .thumb-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .thumb {
+      width: 92px;
+      height: 72px;
+      padding: 0;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 2px solid transparent;
+      background: rgba(255,255,255,0.05);
+      cursor: pointer;
+    }
+
+    .thumb.active {
+      border-color: var(--accent-2);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* CHATBOX */
+    .chat-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .quick-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 20px;
+    }
+
+    .quick-chip {
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .mini-plan {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .chat-shell {
+      display: flex;
+      flex-direction: column;
+      min-height: 660px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .chat-top {
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .chat-log {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 22px 24px;
+      background:
+        radial-gradient(circle at top left, rgba(140,211,190,0.06), transparent 28%),
+        rgba(8, 14, 18, 0.52);
+      overflow-y: auto;
+    }
+
+    .message {
+      display: flex;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .bubble {
+      max-width: 78%;
+      padding: 14px 16px;
+      border-radius: 20px;
+      line-height: 1.65;
+      white-space: normal;
+      word-break: break-word;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .message.bot .bubble {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
+
+    .message.user .bubble {
+      background: linear-gradient(135deg, rgba(214,243,234,0.95), rgba(140,211,190,0.95));
+      color: #0d1b1f;
+      font-weight: 600;
+    }
+
+    .composer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 18px 22px 22px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .composer input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      outline: none;
+    }
+
+    .composer input::placeholder {
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* SUPPORT */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .support-card {
+      padding: 24px;
+      min-height: 220px;
+    }
+
+    .support-card h3 {
+      margin-bottom: 12px;
+    }
+
+    .warning-card {
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(255, 214, 173, 0.10);
+      border: 1px solid rgba(255, 214, 173, 0.18);
+      color: #ffe7c5;
+    }
+
+    .warning-card p {
+      color: rgba(255, 231, 197, 0.82);
+      margin-bottom: 0;
+    }
+
+    @keyframes floaty {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @media (max-width: 1200px) {
+      .home-links,
+      .card-grid.three,
+      .forest-layout,
+      .meme-layout,
+      .chat-layout,
+      .support-grid,
+      .preview-strip,
+      .card-grid.two {
+        grid-template-columns: 1fr;
+      }
+
+      .dex-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button id="floatingHome" class="floating-home" type="button">← Back to home</button>
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <!-- HOME -->
+  <section class="route-page active" data-route="home">
+    <div class="home-shell">
+      <div class="home-overlay"></div>
+      <div class="home-content">
+        <h1 class="home-title">Take a Break!</h1>
+        <p class="home-sub">
+          A gentle little space for slowing down, sorting out your thoughts,
+          and getting support without feeling like you are being yelled at by productivity.
+        </p>
+
+        <div class="home-links">
+          <a class="feature-link" href="#/calm-down">
+            <span class="dot">•</span>
+            <span class="feature-text">Calm down</span>
+          </a>
+
+          <a class="feature-link" href="#/chatbox">
+            <span class="dot">•</span>
+            <span class="feature-text">Sort my thoughts<br />with AI chatbox</span>
+          </a>
+
+          <a class="feature-link" href="#/support">
+            <span class="dot">•</span>
+            <span class="feature-text">Get support</span>
+          </a>
+        </div>
+
+        <button id="surpriseButton" class="ghost-button" type="button">Click me!</button>
+
+        <div class="home-hint">
+          This button randomly sends the user to one calm-down activity.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALM DOWN -->
+  <section class="route-page" data-route="calm-down">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Calm down</div>
+          <h1>Choose the kind of calm you want right now.</h1>
+          <p>
+            This section works like a small hub. One path is soft and auditory, one is playful and collectible,
+            and one pretends to be intellectually deep but is actually just memes.
+          </p>
+        </div>
+
+        <div class="card-grid three">
+          <article class="option-card">
+            <div class="tag tag-soft">Coming soon</div>
+            <h3>Music</h3>
+            <p>
+              This path will eventually open a playlist page with relaxing instrumental tracks,
+              ASMR, and soft white noise. For now, I made it a preview modal instead of a full page.
+            </p>
+            <div class="button-row">
+              <button id="openMusicPreview" class="pill-button" type="button">Open preview</button>
+            </div>
+          </article>
+
+          <article class="option-card">
+            <div class="tag">Playable</div>
+            <h3>Watch birds</h3>
+            <p>
+              Enter a cartoon forest where different little birds randomly appear.
+              Click a bird to get a tiny dialogue or small story. New birds get added to your field guide.
+            </p>
+            <div class="button-row">
+              <a class="pill-button" href="#/watch-birds">Go birdwatching</a>
+            </div>
+          </article>
+
+          <article class="option-card">
+            <div class="tag">Meme mode</div>
+            <h3>Intelligent quotes</h3>
+            <p>
+              Technically, this section is called “intelligent quotes”.
+              Spiritually, it is not quotes at all. It is just funny meme images with fake wisdom energy.
+            </p>
+            <div class="button-row">
+              <a class="pill-button" href="#/quotes">See the memes</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="preview-strip">
+          <div class="mini-note panel panel-pad">
+            <h3>How this section is designed</h3>
+            <ul class="soft-list">
+              <li><strong>Music</strong> is passive comfort: good when the user wants less interaction.</li>
+              <li><strong>Watch birds</strong> is light play: low-stakes discovery plus little rewards.</li>
+              <li><strong>Intelligent quotes</strong> is mood-lifting nonsense: humor as emotional interruption.</li>
+            </ul>
+          </div>
+
+          <div class="mini-note panel panel-pad">
+            <h3>Not sure what to click?</h3>
+            <p class="muted">
+              You can also let the site choose for you.
+            </p>
+            <div class="button-row">
+              <button id="branchSurpriseButton" class="ghost-button" type="button">Surprise me</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- WATCH BIRDS -->
+  <section class="route-page" data-route="watch-birds">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Watch birds</div>
+          <h1>A tiny field trip without leaving the page.</h1>
+          <p>
+            Switch between a city pocket park, a forest edge, and a creek-side wetland.
+            Real birds appear in places they might actually hang out, but the field guide
+            is still emotionally unserious on purpose.
+          </p>
+
+          <div class="habitat-tabs" aria-label="Choose a birdwatching habitat">
+            <button class="habitat-tab" data-habitat="city" type="button">🏙️ City</button>
+            <button class="habitat-tab active" data-habitat="forest" type="button">🌲 Forest</button>
+            <button class="habitat-tab" data-habitat="wetland" type="button">💧 Creek &amp; Wetland</button>
+          </div>
+        </div>
+
+        <div class="birdwatch-layout">
+          <div class="birdwatch-stage-wrap">
+            <div id="birdStage" class="bird-stage scene-forest" aria-label="interactive birdwatching scene">
+              <div class="scene-layer city-layer" aria-hidden="true">
+                <span class="city-wire"></span>
+                <span class="city-wire wire-two"></span>
+                <span class="city-building b1"></span>
+                <span class="city-building b2"></span>
+                <span class="city-building b3"></span>
+                <span class="city-building b4"></span>
+                <span class="city-building b5"></span>
+                <span class="city-sidewalk"></span>
+                <span class="city-tree"></span>
+                <span class="city-bench"></span>
+                <span class="city-lamp"></span>
+              </div>
+
+              <div class="scene-layer forest-layer" aria-hidden="true">
+                <span class="forest-hill hill-back"></span>
+                <span class="forest-hill hill-middle"></span>
+                <span class="forest-hill hill-front"></span>
+                <span class="forest-branch a"></span>
+                <span class="forest-branch b"></span>
+                <span class="forest-branch c"></span>
+                <span class="forest-tree t1"></span>
+                <span class="forest-tree t2"></span>
+                <span class="forest-tree t3"></span>
+                <span class="forest-tree t4"></span>
+                <span class="forest-bush"></span>
+                <span class="forest-log"></span>
+                <span class="forest-ground-detail"></span>
+              </div>
+
+              <div class="scene-layer wetland-layer" aria-hidden="true">
+                <span class="wet-water"></span>
+                <span class="wet-bank"></span>
+                <span class="wet-reed r1"></span>
+                <span class="wet-reed r2"></span>
+                <span class="wet-reed r3"></span>
+                <span class="wet-reed r4"></span>
+                <span class="wet-reed r5"></span>
+                <span class="wet-reed r6"></span>
+                <span class="wet-rock a"></span>
+                <span class="wet-rock b"></span>
+                <span class="wet-tree"></span>
+                <span class="water-ring"></span>
+                <span class="water-ring b"></span>
+              </div>
+
+              <div id="birdLayer" class="bird-layer"></div>
+
+              <div id="stageCaption" class="stage-caption">
+                Forest edge: leaf litter, branches, and tiny birds with strong opinions about seeds.
+              </div>
+            </div>
+
+            <div class="birdwatch-actions">
+              <button id="refreshBirds" class="pill-button" type="button">Refresh habitat</button>
+              <button id="randomHabitat" class="secondary-button" type="button">Surprise habitat</button>
+              <button id="resetBirdGuide" class="secondary-button" type="button">Reset field guide</button>
+            </div>
+          </div>
+
+          <aside class="panel panel-pad info-stack">
+            <div>
+              <div class="tag">Bird encounter</div>
+              <h2 id="birdName">Tap a bird in the habitat</h2>
+              <p id="birdStory">
+                Different real birds appear in different scenes. Click one to get a tiny story,
+                a small dialogue, and an entry in your collection.
+              </p>
+            </div>
+
+            <div class="encounter-box">
+              <blockquote id="birdQuote">
+                Your field guide fills up whenever you meet a species for the first time.
+              </blockquote>
+              <p id="birdMeta">
+                Try switching habitats if the forest is giving “emotionally damp moss” and you need
+                “pigeon with sidewalk confidence” instead.
+              </p>
+            </div>
+
+            <div class="stat-row">
+              <div id="discoveryCount" class="stat-pill">0 / 12 discovered</div>
+              <div id="lastSeen" class="stat-pill">Last seen: none</div>
+            </div>
+
+            <div>
+              <div class="tag tag-soft">Field guide</div>
+              <div id="dexGrid" class="dex-grid"></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEMES -->
+  <section class="route-page" data-route="quotes">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Intelligent quotes</div>
+          <h1>Definitely not actual quotes.</h1>
+          <p>
+            This page is a fake wisdom machine. It behaves like a quote generator,
+            but it only dispenses memes and emotionally suspicious advice.
+          </p>
+        </div>
+
+        <div class="meme-layout">
+          <aside class="panel panel-pad">
+            <div class="tag">Meme oracle</div>
+            <h2>Consult the ancient council of nonsense.</h2>
+            <p>
+              Press shuffle when your brain needs interruption, not inspiration.
+            </p>
+
+            <div class="quote-box">
+              <div class="quote-label">Today's “intelligent quote”</div>
+              <p id="memeLine" class="quote-line">
+                Stay mysterious. Even if you are mostly just confused.
+              </p>
+            </div>
+
+            <div class="button-row">
+              <button id="prevMeme" class="secondary-button" type="button">Previous</button>
+              <button id="shuffleMeme" class="pill-button" type="button">Shuffle meme</button>
+              <button id="nextMeme" class="secondary-button" type="button">Next</button>
+            </div>
+
+            <p class="muted" style="margin-top: 18px;">
+              This page uses your uploaded meme images from the <code>assets</code> folder.
+            </p>
+          </aside>
+
+          <section class="panel panel-pad meme-stage">
+            <div class="meme-image-wrap">
+              <img id="memeImage" class="meme-image" src="assets/meme-1.jpg" alt="Funny meme image" />
+            </div>
+            <h3 id="memeTitle">Strategic intelligence</h3>
+            <p id="memeCaption">
+              The universe is not giving you a quote today. It is giving you vibes and poor decision-making energy.
+            </p>
+            <div id="thumbRow" class="thumb-row"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHATBOX -->
+  <section class="route-page" data-route="chatbox">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Sort my thoughts with AI chatbox</div>
+          <h1>One messy thought at a time is enough.</h1>
+          <p>
+            This is a prototype supportive chatbox page. Right now it gives gentle structured replies,
+            so the interaction already feels like part of the final site flow.
+          </p>
+        </div>
+
+        <div class="chat-layout">
+          <aside class="panel panel-pad">
+            <div class="tag">Quick start</div>
+            <h3>Try one of these</h3>
+            <div class="quick-grid">
+              <button class="quick-chip" data-prompt="I feel overwhelmed.">I feel overwhelmed</button>
+              <button class="quick-chip" data-prompt="I can't get started.">I can't get started</button>
+              <button class="quick-chip" data-prompt="I am anxious about deadlines.">Deadlines are stressing me out</button>
+              <button class="quick-chip" data-prompt="I'm really tired.">I'm really tired</button>
+              <button class="quick-chip" data-prompt="Help me find one tiny next step.">Give me one tiny next step</button>
+            </div>
+
+            <div class="mini-plan">
+              <h3 style="margin-bottom:10px;">Design direction</h3>
+              <ul class="soft-list">
+                <li>Empathetic first response</li>
+                <li>Break big feelings into tiny next actions</li>
+                <li>Low-pressure tone instead of productivity pressure</li>
+                <li>Easy to replace with a real API later</li>
+              </ul>
+            </div>
+          </aside>
+
+          <section class="panel chat-shell">
+            <div class="chat-top">
+              <div class="tag tag-soft">Prototype chatbox</div>
+              <p class="muted" style="margin:0;">
+                This is a front-end demo interaction, not a real clinical support tool.
+              </p>
+            </div>
+
+            <div id="chatLog" class="chat-log"></div>
+
+            <form id="chatForm" class="composer">
+              <input
+                id="chatInput"
+                type="text"
+                placeholder="Type what is on your mind..."
+                autocomplete="off"
+              />
+              <button class="pill-button" type="submit">Send</button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUPPORT -->
+  <section class="route-page" data-route="support">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Get support</div>
+          <h1>Support should feel easy to find.</h1>
+          <p>
+            This page is set up so you can later replace the placeholder cards
+            with your real university, local, or verified support resources.
+          </p>
+        </div>
+
+        <div class="support-grid">
+          <article class="panel support-card">
+            <div class="tag">Campus support</div>
+            <h3>Counselling / wellbeing</h3>
+            <p>
+              Add your school counselling centre, student wellbeing team,
+              or mental health service contact here.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Academic support</div>
+            <h3>Advisor / tutor / extension help</h3>
+            <p>
+              Add academic advisors, study skills support, extension policies,
+              or department contacts here.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Peer support</div>
+            <h3>Friends, mentors, communities</h3>
+            <p>
+              Add peer mentoring schemes, student communities, group chats,
+              or buddy systems here.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Urgent help</div>
+            <h3>Emergency / crisis support</h3>
+            <p>
+              Replace this with verified emergency and crisis contacts before publishing.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Small immediate actions</div>
+            <h3>What can I do right now?</h3>
+            <p>
+              Drink water, move away from the screen briefly, message one trusted person,
+              or go back to the chatbox and break the problem down.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Return gently</div>
+            <h3>Not ready to solve everything?</h3>
+            <p>
+              That is fine. You can go back to Calm down and pick a softer entry point instead.
+            </p>
+          </article>
+        </div>
+
+        <div class="warning-card">
+          <strong>Prototype note:</strong>
+          <p>
+            This site concept should not replace professional or emergency support.
+            Please add real, verified support information before using it publicly.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MUSIC MODAL -->
+  <div id="musicModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="tag tag-soft">Music preview</div>
+      <h2>Playlist page coming soon</h2>
+      <p>
+        You said this page does not need to be fully built yet, so for now it opens as a preview.
+        Later, this can become a real playlist page with embedded audio or curated links.
+      </p>
+
+      <div class="track-list">
+        <div class="track">
+          <div>
+            <strong>Misty Morning Piano</strong><br />
+            <small>Soft instrumental / 12 tracks</small>
+          </div>
+          <small>preview</small>
+        </div>
+
+        <div class="track">
+          <div>
+            <strong>Forest Rain + Leaves</strong><br />
+            <small>White noise / ambience / 45 min</small>
+          </div>
+          <small>preview</small>
+        </div>
+
+        <div class="track">
+          <div>
+            <strong>Desk Lamp Lo-fi</strong><br />
+            <small>Low-energy study calm / 18 tracks</small>
+          </div>
+          <small>preview</small>
+        </div>
+
+        <div class="track">
+          <div>
+            <strong>Gentle ASMR Room Tone</strong><br />
+            <small>Quiet breathing-space background</small>
+          </div>
+          <small>preview</small>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button id="closeMusicModal" class="pill-button" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------------------------
+    // ROUTER
+    // ---------------------------
+    const pages = Array.from(document.querySelectorAll(".route-page"));
+    const validRoutes = new Set(pages.map((page) => page.dataset.route));
+    const floatingHome = document.getElementById("floatingHome");
+    const toast = document.getElementById("toast");
+
+    let pendingMusicModal = false;
+    let toastTimer = null;
+
+    function getCurrentRoute() {
+      const raw = window.location.hash.replace(/^#\/?/, "").trim();
+      if (!raw) return "home";
+      return validRoutes.has(raw) ? raw : "home";
+    }
+
+    function renderRoute() {
+      const route = getCurrentRoute();
+
+      pages.forEach((page) => {
+        page.classList.toggle("active", page.dataset.route === route);
+      });
+
+      floatingHome.classList.toggle("visible", route !== "home");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (route === "calm-down" && pendingMusicModal) {
+        pendingMusicModal = false;
+        openMusicModal();
+      }
+    }
+
+    function navigate(route) {
+      window.location.hash = "#/" + route;
+    }
+
+    if (!window.location.hash) {
+      window.location.hash = "#/home";
+    } else {
+      renderRoute();
+    }
+
+    window.addEventListener("hashchange", renderRoute);
+
+    floatingHome.addEventListener("click", () => {
+      navigate("home");
+    });
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2200);
+    }
+
+    // ---------------------------
+    // SURPRISE BUTTONS
+    // ---------------------------
+    function surpriseCalmFeature() {
+      const picks = ["music", "watch-birds", "quotes"];
+      const pick = picks[Math.floor(Math.random() * picks.length)];
+
+      if (pick === "music") {
+        if (getCurrentRoute() === "calm-down") {
+          openMusicModal();
+        } else {
+          pendingMusicModal = true;
+          navigate("calm-down");
+        }
+        showToast("Random choice: Music preview");
+        return;
+      }
+
+      if (pick === "watch-birds") {
+        navigate("watch-birds");
+        showToast("Random choice: Watch birds");
+        return;
+      }
+
+      navigate("quotes");
+      showToast("Random choice: Intelligent quotes");
+    }
+
+    document.getElementById("surpriseButton").addEventListener("click", surpriseCalmFeature);
+    document.getElementById("branchSurpriseButton").addEventListener("click", surpriseCalmFeature);
+
+    // ---------------------------
+    // MUSIC MODAL
+    // ---------------------------
+    const musicModal = document.getElementById("musicModal");
+    const openMusicPreview = document.getElementById("openMusicPreview");
+    const closeMusicModalBtn = document.getElementById("closeMusicModal");
+
+    function openMusicModal() {
+      musicModal.classList.add("open");
+      musicModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeMusicModal() {
+      musicModal.classList.remove("open");
+      musicModal.setAttribute("aria-hidden", "true");
+    }
+
+    openMusicPreview.addEventListener("click", openMusicModal);
+    closeMusicModalBtn.addEventListener("click", closeMusicModal);
+
+    musicModal.addEventListener("click", (event) => {
+      if (event.target === musicModal) {
+        closeMusicModal();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMusicModal();
+      }
+    });
+
+// ---------------------------
+    // WATCH BIRDS
+    // ---------------------------
+    const birdHabitats = {
+      city: {
+        name: "City pocket park",
+        caption:
+          "City pocket park: wires, sidewalks, ledges, and pigeons with the confidence of unpaid interns who somehow run the place.",
+        ids: ["rock-pigeon", "mourning-dove", "house-sparrow", "american-crow"]
+      },
+      forest: {
+        name: "Forest edge",
+        caption:
+          "Forest edge: leaf litter, branches, and tiny birds with strong opinions about seeds.",
+        ids: ["black-capped-chickadee", "downy-woodpecker", "northern-cardinal", "wood-thrush"]
+      },
+      wetland: {
+        name: "Creek & wetland",
+        caption:
+          "Creek & wetland: slow water, reeds, mud, and birds who made standing near fish into a whole career.",
+        ids: ["great-egret", "black-crowned-night-heron", "mallard", "belted-kingfisher"]
+      }
+    };
+
+    const realBirdSpecies = {
+      "rock-pigeon": {
+        id: "rock-pigeon",
+        habitat: "city",
+        name: "Rock Pigeon",
+        zh: "原鸽 / 城市鸽",
+        scientific: "Columba livia",
+        shape: "default",
+        motion: "bob",
+        body: "#8995a6",
+        wing: "#596574",
+        tail: "#4d5967",
+        head: "#707b8b",
+        belly: "#c4ccd8",
+        beak: "#3c3832",
+        legs: "#cf8157",
+        eye: "#101314",
+        note:
+          "Professional sidewalk manager. Can look lost and still navigate home better than most calendar apps.",
+        fact:
+          "Often hangs around city streets, parks, ledges, bridges, and other human-made cliffs.",
+        lines: [
+          "The pigeon looks at you like you are both waiting for the same late bus.",
+          "It performs three tiny head-bobs. This is legally a meeting now.",
+          "It has no advice, only crumb-based confidence.",
+          "It coos with the energy of a tiny public announcement."
+        ],
+        spots: [
+          { x: 21, y: 72, scale: 1.02 },
+          { x: 40, y: 70, scale: 0.9 },
+          { x: 67, y: 67, scale: 1.06 },
+          { x: 80, y: 73, scale: 0.94 }
+        ]
+      },
+      "mourning-dove": {
+        id: "mourning-dove",
+        habitat: "city",
+        name: "Mourning Dove",
+        zh: "哀鸽",
+        scientific: "Zenaida macroura",
+        shape: "default",
+        motion: "glide",
+        body: "#bfa28f",
+        wing: "#9b8276",
+        tail: "#8b756d",
+        head: "#c4aa9b",
+        belly: "#e0c9b8",
+        beak: "#34302d",
+        legs: "#c99078",
+        eye: "#181513",
+        note:
+          "Soft coo, dramatic wing-whistle. Looks like it has read one sad poem and decided to be gentle.",
+        fact:
+          "Often perches on wires and forages for seeds on bare ground; its wings can whistle sharply when it takes off.",
+        lines: [
+          "The dove coos as if your unread messages are none of its business.",
+          "It takes off with a small wing-whistle: extremely theatrical, but politely so.",
+          "It blinks. You both agree not everything needs to be solved today.",
+          "It is shaped like a sigh that found a telephone wire."
+        ],
+        spots: [
+          { x: 30, y: 33, scale: 0.92 },
+          { x: 52, y: 37, scale: 0.85 },
+          { x: 74, y: 55, scale: 0.9 },
+          { x: 18, y: 61, scale: 0.86 }
+        ]
+      },
+      "house-sparrow": {
+        id: "house-sparrow",
+        habitat: "city",
+        name: "House Sparrow",
+        zh: "家麻雀",
+        scientific: "Passer domesticus",
+        shape: "default",
+        motion: "hop",
+        body: "#9a724d",
+        wing: "#65462e",
+        tail: "#563d2e",
+        head: "#8b806b",
+        belly: "#d7c1a1",
+        beak: "#4a3323",
+        legs: "#b47b52",
+        eye: "#111111",
+        note:
+          "Tiny crumb auditor. Hop-hop-pecks through human civilization like it owns the lease.",
+        fact:
+          "Closely associated with buildings and urban areas, often hopping on the ground near people.",
+        lines: [
+          "The sparrow hops twice and files a crumb-related incident report.",
+          "It has the energy of someone very small but fully booked.",
+          "It pecks once. The sidewalk has been audited.",
+          "It pauses, considers your vibe, and resumes being extremely busy."
+        ],
+        spots: [
+          { x: 31, y: 74, scale: 0.68 },
+          { x: 57, y: 73, scale: 0.66 },
+          { x: 72, y: 68, scale: 0.7 },
+          { x: 47, y: 61, scale: 0.62 }
+        ]
+      },
+      "american-crow": {
+        id: "american-crow",
+        habitat: "city",
+        name: "American Crow",
+        zh: "美洲鸦",
+        scientific: "Corvus brachyrhynchos",
+        shape: "default",
+        motion: "tilt",
+        body: "#15191d",
+        wing: "#070809",
+        tail: "#050607",
+        head: "#111417",
+        belly: "#20252a",
+        beak: "#0b0d0f",
+        legs: "#111111",
+        eye: "#0c0c0c",
+        note:
+          "Suspiciously competent. If it stares at you, assume it has opened a case file.",
+        fact:
+          "Uses open woods and human-modified places such as city parks, lawns, parking lots, and roadsides.",
+        lines: [
+          "The crow tilts its head. You are being perceived with unsettling accuracy.",
+          "It says 'caw' in a tone that implies a spreadsheet exists.",
+          "It looks at the trash can, then at you. A plan is forming somewhere.",
+          "You have been added to the crow's soft surveillance network."
+        ],
+        spots: [
+          { x: 54, y: 51, scale: 1.03 },
+          { x: 76, y: 66, scale: 1.08 },
+          { x: 28, y: 63, scale: 1 },
+          { x: 61, y: 31, scale: 0.92 }
+        ]
+      },
+      "black-capped-chickadee": {
+        id: "black-capped-chickadee",
+        habitat: "forest",
+        name: "Black-capped Chickadee",
+        zh: "黑顶山雀",
+        scientific: "Poecile atricapillus",
+        shape: "default",
+        motion: "flit",
+        body: "#9aa0a2",
+        wing: "#6f777c",
+        tail: "#535a61",
+        head: "#111418",
+        belly: "#eee2cf",
+        beak: "#1b1b1b",
+        legs: "#6f5f4e",
+        eye: "#050505",
+        note:
+          "Round tiny chaos sphere. Caches snacks and remembers where the tiny emotional support snacks are.",
+        fact:
+          "Moves actively through trees and shrubs, often acrobatically, and is quick to investigate its surroundings.",
+        lines: [
+          "The chickadee appears, says 'dee-dee,' and immediately has somewhere else to be.",
+          "It grabs an invisible seed and leaves like a tiny grocery thief.",
+          "It hangs sideways from a twig. Honestly, good core strength.",
+          "It gives you one bright look and decides you are probably not a suet feeder."
+        ],
+        spots: [
+          { x: 22, y: 39, scale: 0.68 },
+          { x: 35, y: 50, scale: 0.62 },
+          { x: 66, y: 43, scale: 0.7 },
+          { x: 77, y: 58, scale: 0.64 }
+        ]
+      },
+      "downy-woodpecker": {
+        id: "downy-woodpecker",
+        habitat: "forest",
+        name: "Downy Woodpecker",
+        zh: "绒啄木鸟",
+        scientific: "Dryobates pubescens",
+        shape: "woodpecker",
+        motion: "peck",
+        body: "#f4f1e7",
+        wing: "#171a1d",
+        tail: "#151515",
+        head: "#f1efe8",
+        belly: "#fff8ef",
+        beak: "#202020",
+        legs: "#4d4033",
+        eye: "#111111",
+        note:
+          "Pocket-size drummer. Turns tree bark into a very serious percussion instrument.",
+        fact:
+          "Forages on trunks, branches, and stems, using its stiff tail for support while it works over bark.",
+        lines: [
+          "The woodpecker taps the trunk like it is trying to unlock a secret menu.",
+          "Tok tok tok. It has joined the percussion section.",
+          "It pauses dramatically. The tree remains suspicious.",
+          "It pecks once more, because apparently the bark had follow-up questions."
+        ],
+        spots: [
+          { x: 27, y: 49, scale: 0.86 },
+          { x: 64, y: 44, scale: 0.88 },
+          { x: 82, y: 53, scale: 0.82 },
+          { x: 43, y: 55, scale: 0.78 }
+        ]
+      },
+      "northern-cardinal": {
+        id: "northern-cardinal",
+        habitat: "forest",
+        name: "Northern Cardinal",
+        zh: "北美红雀",
+        scientific: "Cardinalis cardinalis",
+        shape: "default",
+        motion: "crest",
+        body: "#cf2f2e",
+        wing: "#9f2325",
+        tail: "#8e1d21",
+        head: "#d63a38",
+        belly: "#f07064",
+        beak: "#e77f43",
+        legs: "#7a4c3f",
+        eye: "#101010",
+        note:
+          "A red notification from the shrubbery. No action required; just admire.",
+        fact:
+          "Likes dense shrubs, forest edges, backyards, and conspicuous perches for singing.",
+        lines: [
+          "The cardinal raises its crest. A tiny red exclamation point has entered the chat.",
+          "It chips once, with the confidence of a bird that knows its color palette works.",
+          "It perches upright and lets the entire forest become more designed.",
+          "It declines to be subtle. Honestly, respect."
+        ],
+        spots: [
+          { x: 18, y: 58, scale: 0.88 },
+          { x: 48, y: 42, scale: 0.86 },
+          { x: 71, y: 55, scale: 0.92 },
+          { x: 36, y: 68, scale: 0.84 }
+        ]
+      },
+      "wood-thrush": {
+        id: "wood-thrush",
+        habitat: "forest",
+        name: "Wood Thrush",
+        zh: "林鸫",
+        scientific: "Hylocichla mustelina",
+        shape: "default",
+        motion: "leaf",
+        body: "#a5653b",
+        wing: "#7b4c32",
+        tail: "#714631",
+        head: "#b46d3e",
+        belly: "#f2e6d8",
+        beak: "#443225",
+        legs: "#8a6040",
+        eye: "#12100f",
+        note:
+          "Forest-floor poet. Tosses leaves like it is looking for a tiny lost receipt.",
+        fact:
+          "Forages quietly on the forest floor, digging through leaf litter for invertebrates.",
+        lines: [
+          "The thrush flips a leaf. Nothing urgent is under it, which is comforting.",
+          "It stands very still, then rustles the floor like a tiny archivist.",
+          "It looks camouflaged and emotionally literate.",
+          "It does not sing right now, but the forest pretends it heard something beautiful."
+        ],
+        spots: [
+          { x: 24, y: 74, scale: 0.8 },
+          { x: 52, y: 73, scale: 0.82 },
+          { x: 69, y: 69, scale: 0.78 },
+          { x: 39, y: 66, scale: 0.75 }
+        ]
+      },
+      "great-egret": {
+        id: "great-egret",
+        habitat: "wetland",
+        name: "Great Egret",
+        zh: "大白鹭",
+        scientific: "Ardea alba",
+        shape: "heron",
+        motion: "wade",
+        body: "#fffdf4",
+        wing: "#f1f3ec",
+        tail: "#f1f3ec",
+        head: "#fffdf4",
+        belly: "#ffffff",
+        beak: "#e7ac35",
+        legs: "#1d2328",
+        eye: "#1a1a1a",
+        note:
+          "Minimalist wetland wizard. Stands still until a fish makes a career-ending mistake.",
+        fact:
+          "Slowly wades or stands motionless in wetlands, striking fish with its long yellow bill.",
+        lines: [
+          "The egret takes one extremely deliberate step. Productivity culture is shaking.",
+          "It freezes. Somewhere, a fish has a bad feeling.",
+          "It looks elegant in a way that feels slightly unfair.",
+          "It demonstrates the ancient technique of doing almost nothing, but with posture."
+        ],
+        spots: [
+          { x: 22, y: 54, scale: 1.06 },
+          { x: 41, y: 59, scale: 1.0 },
+          { x: 67, y: 52, scale: 1.1 },
+          { x: 79, y: 59, scale: 0.98 }
+        ]
+      },
+      "black-crowned-night-heron": {
+        id: "black-crowned-night-heron",
+        habitat: "wetland",
+        name: "Black-crowned Night-Heron",
+        zh: "夜鹭",
+        scientific: "Nycticorax nycticorax",
+        shape: "heron",
+        motion: "hunch",
+        body: "#8e9aa1",
+        wing: "#59636d",
+        tail: "#3f4650",
+        head: "#20262c",
+        belly: "#e6e1d7",
+        beak: "#1f2428",
+        legs: "#d2b35c",
+        eye: "#b8292d",
+        note:
+          "Compact dusk goblin. Looks sleepy, works night shift.",
+        fact:
+          "Often rests hunched by day near water and becomes more active around dusk and night.",
+        lines: [
+          "The night-heron hunches. Same, honestly.",
+          "It squawks in a way that suggests it was not prepared for morning people.",
+          "It looks half-asleep and fully employed.",
+          "It has the energy of a bird who owns one lamp and several secrets."
+        ],
+        spots: [
+          { x: 17, y: 48, scale: 0.93 },
+          { x: 51, y: 48, scale: 0.98 },
+          { x: 71, y: 57, scale: 0.9 },
+          { x: 84, y: 45, scale: 0.88 }
+        ]
+      },
+      "mallard": {
+        id: "mallard",
+        habitat: "wetland",
+        name: "Mallard",
+        zh: "绿头鸭",
+        scientific: "Anas platyrhynchos",
+        shape: "duck",
+        motion: "dabble",
+        body: "#b8aa99",
+        wing: "#5f6670",
+        tail: "#121820",
+        head: "#24513f",
+        belly: "#ece9df",
+        beak: "#e3b83d",
+        legs: "#a87735",
+        eye: "#101418",
+        note:
+          "Pond celebrity. Dabbles professionally, quacks with HR confidence.",
+        fact:
+          "A dabbling duck often found in ponds, lakes, parks, and many natural or artificial wetlands.",
+        lines: [
+          "The mallard tips forward. For a moment, only duck butt and commitment remain.",
+          "It quacks like it has a calendar invite titled 'Bread? Again?'",
+          "It paddles by with the calm authority of a tiny boat manager.",
+          "It dabbles. Honestly, that counts as having a plan."
+        ],
+        spots: [
+          { x: 25, y: 76, scale: 0.93 },
+          { x: 46, y: 78, scale: 0.88 },
+          { x: 66, y: 75, scale: 0.95 },
+          { x: 82, y: 72, scale: 0.86 }
+        ]
+      },
+      "belted-kingfisher": {
+        id: "belted-kingfisher",
+        habitat: "wetland",
+        name: "Belted Kingfisher",
+        zh: "冠鱼狗 / 带鱼狗",
+        scientific: "Megaceryle alcyon",
+        shape: "kingfisher",
+        motion: "dive",
+        body: "#6f879e",
+        wing: "#5f7893",
+        tail: "#5e7894",
+        head: "#617f9a",
+        belly: "#f4f0e8",
+        beak: "#17212a",
+        legs: "#7b5334",
+        eye: "#111820",
+        note:
+          "River patrol gremlin. Hovers, rattles, and enters the water with zero chill.",
+        fact:
+          "Perches along streams and shorelines, then plunges or hovers before diving after fish.",
+        lines: [
+          "The kingfisher rattles like a tiny scooter made of opinions.",
+          "It dives. The water receives a very dramatic complaint.",
+          "It returns to the branch with the attitude of someone who has a territory and a brand.",
+          "It watches the creek like the creek owes it money."
+        ],
+        spots: [
+          { x: 31, y: 37, scale: 0.82 },
+          { x: 50, y: 34, scale: 0.85 },
+          { x: 69, y: 39, scale: 0.8 },
+          { x: 79, y: 48, scale: 0.78 }
+        ]
+      }
+    };
+
+    const BIRD_STORAGE_KEY = "take-a-break-real-bird-guide-v1";
+    const birdStage = document.getElementById("birdStage");
+    const birdLayer = document.getElementById("birdLayer");
+    const stageCaption = document.getElementById("stageCaption");
+    const habitatTabs = Array.from(document.querySelectorAll(".habitat-tab"));
+    const birdName = document.getElementById("birdName");
+    const birdStory = document.getElementById("birdStory");
+    const birdQuote = document.getElementById("birdQuote");
+    const birdMeta = document.getElementById("birdMeta");
+    const dexGrid = document.getElementById("dexGrid");
+    const discoveryCount = document.getElementById("discoveryCount");
+    const lastSeen = document.getElementById("lastSeen");
+    const refreshBirdsBtn = document.getElementById("refreshBirds");
+    const randomHabitatBtn = document.getElementById("randomHabitat");
+    const resetBirdGuideBtn = document.getElementById("resetBirdGuide");
+
+    let currentHabitat = "forest";
+    let birdResetArmed = false;
+    let birdResetTimer = null;
+
+    function loadBirdDiscoveries() {
+      try {
+        const data = JSON.parse(localStorage.getItem(BIRD_STORAGE_KEY) || "[]");
+        return new Set(Array.isArray(data) ? data.filter((id) => realBirdSpecies[id]) : []);
+      } catch {
+        return new Set();
+      }
+    }
+
+    let discoveredBirds = loadBirdDiscoveries();
+
+    function saveBirdDiscoveries() {
+      try {
+        localStorage.setItem(BIRD_STORAGE_KEY, JSON.stringify([...discoveredBirds]));
+      } catch {
+        // ignore storage errors
+      }
+    }
+
+    function chooseRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function jitter(value, amount, min, max) {
+      const next = value + (Math.random() * 2 - 1) * amount;
+      return Math.min(max, Math.max(min, next));
+    }
+
+    function birdMarkup() {
+      return `
+        <span class="wb-shadow"></span>
+        <span class="wb-tail"></span>
+        <span class="wb-leg a"></span>
+        <span class="wb-leg b"></span>
+        <span class="wb-body"></span>
+        <span class="wb-belly"></span>
+        <span class="wb-wing"></span>
+        <span class="wb-neck"></span>
+        <span class="wb-head"></span>
+        <span class="wb-crest"></span>
+        <span class="wb-mask"></span>
+        <span class="wb-eye"></span>
+        <span class="wb-beak"></span>
+      `;
+    }
+
+    function createBirdElement(species) {
+      const spot = chooseRandom(species.spots);
+      const button = document.createElement("button");
+      const scale = jitter(spot.scale, 0.06, 0.56, 1.18).toFixed(2);
+
+      button.type = "button";
+      button.className = [
+        "watch-bird",
+        `bird-${species.id}`,
+        `shape-${species.shape}`,
+        `motion-${species.motion}`
+      ].join(" ");
+      button.setAttribute("aria-label", species.name);
+      button.style.left = `${jitter(spot.x, 3.8, 7, 93).toFixed(1)}%`;
+      button.style.top = `${jitter(spot.y, 2.2, 15, 86).toFixed(1)}%`;
+      button.style.setProperty("--x", button.style.left);
+      button.style.setProperty("--y", button.style.top);
+      button.style.setProperty("--scale", scale);
+      button.style.setProperty("--delay", `${(-Math.random() * 3).toFixed(2)}s`);
+      button.style.setProperty("--body", species.body);
+      button.style.setProperty("--wing", species.wing);
+      button.style.setProperty("--tail", species.tail);
+      button.style.setProperty("--head", species.head);
+      button.style.setProperty("--belly", species.belly);
+      button.style.setProperty("--beak", species.beak);
+      button.style.setProperty("--legs", species.legs);
+      button.style.setProperty("--eye", species.eye);
+
+      button.innerHTML = birdMarkup();
+
+      button.addEventListener("click", () => {
+        inspectRealBird(species, button);
+      });
+
+      return button;
+    }
+
+    function chooseBirdsForHabitat(habitat) {
+      const ids = birdHabitats[habitat].ids;
+      const count = Math.min(ids.length, 3 + Math.floor(Math.random() * 2));
+      const selected = [];
+
+      const unseenHere = ids.filter((id) => !discoveredBirds.has(id));
+      if (unseenHere.length && Math.random() < 0.75) {
+        selected.push(chooseRandom(unseenHere));
+      }
+
+      shuffleArray(ids).forEach((id) => {
+        if (selected.length < count && !selected.includes(id)) {
+          selected.push(id);
+        }
+      });
+
+      return selected;
+    }
+
+    function setHabitat(habitat, options = {}) {
+      currentHabitat = habitat;
+      const config = birdHabitats[habitat];
+
+      birdStage.classList.remove("scene-city", "scene-forest", "scene-wetland");
+      birdStage.classList.add(`scene-${habitat}`);
+      birdStage.setAttribute("aria-label", `${config.name} interactive birdwatching scene`);
+      stageCaption.textContent = config.caption;
+
+      habitatTabs.forEach((tab) => {
+        const active = tab.dataset.habitat === habitat;
+        tab.classList.toggle("active", active);
+      });
+
+      spawnBirds(options.onlyBirdId);
+    }
+
+    function spawnBirds(onlyBirdId) {
+      birdLayer.innerHTML = "";
+
+      const ids = onlyBirdId ? [onlyBirdId] : chooseBirdsForHabitat(currentHabitat);
+
+      ids.forEach((id) => {
+        birdLayer.appendChild(createBirdElement(realBirdSpecies[id]));
+      });
+    }
+
+    function inspectRealBird(species, element) {
+      const isNew = !discoveredBirds.has(species.id);
+      discoveredBirds.add(species.id);
+      saveBirdDiscoveries();
+      renderBirdDex();
+
+      element.classList.remove("clicked");
+      void element.offsetWidth;
+      element.classList.add("clicked");
+
+      showBirdEffect(element, species.motion);
+
+      setTimeout(() => {
+        element.classList.remove("clicked");
+      }, 920);
+
+      birdName.textContent = `${species.name} · ${species.zh}`;
+      birdStory.textContent = species.note;
+      birdQuote.textContent = chooseRandom(species.lines);
+      birdMeta.textContent = `${species.scientific}. ${species.fact}`;
+      lastSeen.textContent = `Last seen: ${species.name}`;
+
+      if (isNew) {
+        showToast(`${species.name} added to your field guide!`);
+      }
+    }
+
+    function showBirdEffect(element, motion) {
+      const oldEffect = element.querySelector(".bird-effect");
+      if (oldEffect) oldEffect.remove();
+
+      const effect = document.createElement("span");
+      effect.className = `bird-effect effect-${motion}`;
+      effect.setAttribute("aria-hidden", "true");
+      element.appendChild(effect);
+
+      setTimeout(() => {
+        effect.remove();
+      }, 950);
+    }
+
+    function renderBirdDex() {
+      const allIds = Object.keys(realBirdSpecies);
+      discoveryCount.textContent = `${discoveredBirds.size} / ${allIds.length} discovered`;
+
+      dexGrid.innerHTML = allIds.map((id) => {
+        const bird = realBirdSpecies[id];
+        const seen = discoveredBirds.has(id);
+
+        return `
+          <div class="dex-card ${seen ? "" : "locked"}">
+            <div class="dex-swatch" style="background: ${
+              seen
+                ? `linear-gradient(135deg, ${bird.body}, ${bird.wing})`
+                : "linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06))"
+            }"></div>
+            <div>
+              <strong>${seen ? `${bird.name} · ${bird.zh}` : "Unknown bird"}</strong>
+              <small>${seen ? bird.scientific : "Unmet species"}</small>
+              <p>${seen ? bird.note : "Meet this bird in one of the habitats to unlock its entry."}</p>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    habitatTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        setHabitat(tab.dataset.habitat);
+        showToast(`Habitat switched: ${birdHabitats[tab.dataset.habitat].name}`);
+      });
+    });
+
+    refreshBirdsBtn.addEventListener("click", () => {
+      spawnBirds();
+      showToast("The birds rearranged themselves with mysterious purpose.");
+    });
+
+    randomHabitatBtn.addEventListener("click", () => {
+      const habitats = Object.keys(birdHabitats);
+      let next = currentHabitat;
+      while (next === currentHabitat && habitats.length > 1) {
+        next = chooseRandom(habitats);
+      }
+      setHabitat(next);
+      showToast(`Random habitat: ${birdHabitats[next].name}`);
+    });
+
+    resetBirdGuideBtn.addEventListener("click", () => {
+      if (!birdResetArmed) {
+        birdResetArmed = true;
+        resetBirdGuideBtn.textContent = "Click again to reset";
+        showToast("Click reset again to clear the field guide.");
+
+        clearTimeout(birdResetTimer);
+        birdResetTimer = setTimeout(() => {
+          birdResetArmed = false;
+          resetBirdGuideBtn.textContent = "Reset field guide";
+        }, 2600);
+
+        return;
+      }
+
+      birdResetArmed = false;
+      clearTimeout(birdResetTimer);
+      resetBirdGuideBtn.textContent = "Reset field guide";
+
+      discoveredBirds = new Set();
+      saveBirdDiscoveries();
+      renderBirdDex();
+      setHabitat(currentHabitat);
+
+      birdName.textContent = "Tap a bird in the habitat";
+      birdStory.textContent = "Different real birds appear in different scenes. Click one to get a tiny story, a small dialogue, and an entry in your collection.";
+      birdQuote.textContent = "Your field guide fills up whenever you meet a species for the first time.";
+      birdMeta.textContent = "Try switching habitats if the forest is giving “emotionally damp moss” and you need “pigeon with sidewalk confidence” instead.";
+      lastSeen.textContent = "Last seen: none";
+
+      showToast("Field guide reset.");
+    });
+
+    renderBirdDex();
+    setHabitat(currentHabitat);
+
+    // ---------------------------
+    // MEME QUOTES
+    // ---------------------------
+    const memeDeck = [
+      {
+        src: "assets/meme-1.jpg",
+        title: "Strategic intelligence",
+        line: "Appear calm. Even if the internal situation is mostly chili peppers.",
+        caption: "A deeply advanced lesson in looking composed while absolute nonsense unfolds nearby.",
+        alt: "Spy A Spy B meme with peppers and Spider-Man"
+      },
+      {
+        src: "assets/meme-2.jpg",
+        title: "Oceanic wisdom",
+        line: "Speak softly. Say 'meow'. Refuse further explanation.",
+        caption: "Not every thought needs to be profound. Some thoughts can simply be a shark saying meow.",
+        alt: "Funny shark meme with the word meow"
+      },
+      {
+        src: "assets/meme-3.jpg",
+        title: "Museum ethics",
+        line: "Ask politely. If permission is granted, become unstoppable.",
+        caption: "An elegant reminder that wording matters and technicalities are carrying modern civilization.",
+        alt: "Museum meme where someone asks if they can take a picture"
+      }
+    ];
+
+    const memeImage = document.getElementById("memeImage");
+    const memeLine = document.getElementById("memeLine");
+    const memeTitle = document.getElementById("memeTitle");
+    const memeCaption = document.getElementById("memeCaption");
+    const thumbRow = document.getElementById("thumbRow");
+    const prevMeme = document.getElementById("prevMeme");
+    const nextMeme = document.getElementById("nextMeme");
+    const shuffleMeme = document.getElementById("shuffleMeme");
+
+    let memeIndex = 0;
+
+    function renderThumbs() {
+      thumbRow.innerHTML = memeDeck.map((meme, index) => `
+        <button class="thumb ${index === memeIndex ? "active" : ""}" data-index="${index}" type="button">
+          <img src="${meme.src}" alt="${meme.alt}">
+        </button>
+      `).join("");
+
+      thumbRow.querySelectorAll(".thumb").forEach((button) => {
+        button.addEventListener("click", () => {
+          memeIndex = Number(button.dataset.index);
+          renderMeme();
+        });
+      });
+    }
+
+    function renderMeme() {
+      const meme = memeDeck[memeIndex];
+      memeImage.src = meme.src;
+      memeImage.alt = meme.alt;
+      memeTitle.textContent = meme.title;
+      memeLine.textContent = meme.line;
+      memeCaption.textContent = meme.caption;
+      renderThumbs();
+    }
+
+    prevMeme.addEventListener("click", () => {
+      memeIndex = (memeIndex - 1 + memeDeck.length) % memeDeck.length;
+      renderMeme();
+    });
+
+    nextMeme.addEventListener("click", () => {
+      memeIndex = (memeIndex + 1) % memeDeck.length;
+      renderMeme();
+    });
+
+    shuffleMeme.addEventListener("click", () => {
+      let nextIndex = memeIndex;
+      while (nextIndex === memeIndex && memeDeck.length > 1) {
+        nextIndex = Math.floor(Math.random() * memeDeck.length);
+      }
+      memeIndex = nextIndex;
+      renderMeme();
+      showToast("A new piece of fake wisdom has arrived.");
+    });
+
+    renderMeme();
+
+    // ---------------------------
+    // CHATBOX
+    // ---------------------------
+    const chatLog = document.getElementById("chatLog");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+    const quickChips = Array.from(document.querySelectorAll(".quick-chip"));
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function addMessage(role, text) {
+      const wrapper = document.createElement("div");
+      wrapper.className = `message ${role}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.innerHTML = escapeHtml(text).replace(/\n/g, "<br>");
+
+      wrapper.appendChild(bubble);
+      chatLog.appendChild(wrapper);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function generateReply(input) {
+      const text = input.toLowerCase();
+
+      if (/overwhelmed|焦虑|好多|too much|overload/.test(text)) {
+        return [
+          "Okay. Let's make everything smaller for a second.",
+          "Try this:",
+          "1) Name the single thing that feels most urgent.",
+          "2) Ignore the rest for five minutes.",
+          "3) Do only the smallest visible start.",
+          "You do not need to solve the whole mountain today — just find one foothold."
+        ].join("\n");
+      }
+
+      if (/can't get started|can’t get started|start|开始不了|拖延|procrast/.test(text)) {
+        return [
+          "Let's remove the pressure to 'do it properly'.",
+          "Your only job is to begin badly on purpose.",
+          "Tiny next step idea:",
+          "• open the file",
+          "• write one messy sentence",
+          "• stop there if needed",
+          "Momentum often comes after starting, not before."
+        ].join("\n");
+      }
+
+      if (/deadline|ddl|due|截止|late/.test(text)) {
+        return [
+          "Deadlines can make everything feel louder than it is.",
+          "Let's turn it into a short plan:",
+          "• What is due first?",
+          "• What can be submitted in a rough version?",
+          "• Who could you contact if you need clarification or support?",
+          "Right now, choose the task with the biggest consequence and shrink it."
+        ].join("\n");
+      }
+
+      if (/tired|exhausted|累|burnt|burned/.test(text)) {
+        return [
+          "If you're tired, the next step should be gentler, not harsher.",
+          "Choose one of these:",
+          "• drink water and come back in 10 minutes",
+          "• do a 5-minute version of the task",
+          "• switch to the easiest admin task first",
+          "You are allowed to work with your energy level instead of fighting it."
+        ].join("\n");
+      }
+
+      if (/tiny next step|small step|next step|一步/.test(text)) {
+        return [
+          "Here is a tiny next step formula:",
+          "Verb + object + time limit.",
+          "Example:",
+          "• open lecture slides for 5 minutes",
+          "• list 3 bullet points",
+          "• email one person",
+          "If you want, type the task and I can help shrink it further."
+        ].join("\n");
+      }
+
+      return [
+        "I hear you.",
+        "Let's not solve everything at once.",
+        "Try answering these three mini questions:",
+        "1) What feels heaviest right now?",
+        "2) What part of it is actually in your control today?",
+        "3) What is the smallest next action that counts as movement?",
+        "You can type one short sentence and we can work from there."
+      ].join("\n");
+    }
+
+    function sendChat(text) {
+      const clean = text.trim();
+      if (!clean) return;
+
+      addMessage("user", clean);
+
+      setTimeout(() => {
+        addMessage("bot", generateReply(clean));
+      }, 280);
+    }
+
+    chatForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const value = chatInput.value;
+      if (!value.trim()) return;
+      sendChat(value);
+      chatInput.value = "";
+      chatInput.focus();
+    });
+
+    quickChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        sendChat(chip.dataset.prompt || "");
+      });
+    });
+
+    addMessage(
+      "bot",
+      "Hi — I'm the prototype chatbox.\nTell me what feels messy right now, and I'll try to help turn it into one smaller thing."
+    );
+  </script>
+</body>
+</html>

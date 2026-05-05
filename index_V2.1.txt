@@ -1,0 +1,6277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>take a break</title>
+  <meta
+    name="description"
+    content="take a break - a calming desktop prototype with a homepage, calm down hub, watch birds, meme quotes, chatbox, and support pages."
+  />
+  <style>
+    :root {
+      --bg-dark: #091116;
+      --bg-panel: rgba(18, 28, 35, 0.72);
+      --bg-panel-strong: rgba(13, 23, 29, 0.88);
+      --bg-soft: rgba(255, 255, 255, 0.08);
+      --line: rgba(255, 255, 255, 0.12);
+      --line-soft: rgba(255, 255, 255, 0.08);
+      --text: #f5fbfb;
+      --muted: rgba(245, 251, 251, 0.78);
+      --muted-2: rgba(245, 251, 251, 0.58);
+      --accent: #d6f3ea;
+      --accent-2: #8cd3be;
+      --accent-3: #4da58f;
+      --gold: #f0d9a5;
+      --danger: #ffd7d7;
+      --shadow: 0 24px 64px rgba(0, 0, 0, 0.26);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max: 1280px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .route-page {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .route-page.active {
+      display: block;
+    }
+
+    .page-wrap {
+      width: min(var(--max), calc(100% - 72px));
+      margin: 0 auto;
+      padding: 42px 0 64px;
+    }
+
+    .page-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .page-kicker::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--accent-2));
+      box-shadow: 0 0 0 6px rgba(240, 217, 165, 0.08);
+    }
+
+    h1, h2, h3, h4, p {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 5vw, 4.8rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+
+    h3 {
+      font-size: 1.28rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .muted {
+      color: var(--muted-2);
+    }
+
+    .panel {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background: var(--bg-panel);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-pad {
+      padding: 28px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .pill-button,
+    .ghost-button,
+    .secondary-button,
+    .mini-button {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+    }
+
+    .pill-button:hover,
+    .ghost-button:hover,
+    .secondary-button:hover,
+    .mini-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .pill-button {
+      padding: 14px 22px;
+      background: linear-gradient(135deg, rgba(214, 243, 234, 0.96), rgba(140, 211, 190, 0.96));
+      color: #122025;
+      font-weight: 800;
+      box-shadow: 0 14px 34px rgba(77, 165, 143, 0.28);
+    }
+
+    .ghost-button {
+      padding: 14px 28px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-weight: 700;
+      min-width: 160px;
+    }
+
+    .secondary-button {
+      padding: 13px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--line);
+      font-weight: 700;
+    }
+
+    .mini-button {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--line);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tag-soft {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--gold);
+    }
+
+    .floating-home {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      z-index: 80;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(11, 18, 24, 0.78);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.26);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .floating-home.visible {
+      display: inline-flex;
+    }
+
+    .toast {
+      position: fixed;
+      right: 28px;
+      bottom: 28px;
+      z-index: 100;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(8, 14, 19, 0.92);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      max-width: 340px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* HOME */
+    .home-shell {
+      position: relative;
+      min-height: 100vh;
+      background:
+        linear-gradient(to bottom, rgba(7, 12, 18, 0.12), rgba(7, 12, 18, 0.32) 36%, rgba(7, 12, 18, 0.64)),
+        linear-gradient(to top, rgba(8, 14, 19, 0.2), rgba(8, 14, 19, 0.04)),
+        url("assets/mountain-hero.jpg") center center / cover no-repeat;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .home-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255,255,255,0.08), transparent 34%),
+        radial-gradient(circle at 80% 20%, rgba(255,219,167,0.12), transparent 30%),
+        linear-gradient(to top, rgba(8, 14, 19, 0.46), rgba(8, 14, 19, 0.05));
+      pointer-events: none;
+    }
+
+    .home-content {
+      position: relative;
+      z-index: 2;
+      width: min(1320px, calc(100% - 72px));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 0;
+      text-align: center;
+    }
+
+    .home-title {
+      margin: 0;
+      font-size: clamp(4.4rem, 8vw, 7.4rem);
+      font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.055em;
+      text-shadow:
+        0 5px 18px rgba(0, 0, 0, 0.32),
+        0 18px 46px rgba(0, 0, 0, 0.28);
+    }
+
+    .home-sub {
+      margin-top: 18px;
+      margin-bottom: 46px;
+      font-size: 1.15rem;
+      color: rgba(255, 255, 255, 0.82);
+      max-width: 760px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .home-links {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      margin-top: 30px;
+      margin-bottom: 36px;
+    }
+
+    .feature-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 118px;
+      padding: 22px 26px;
+      border-radius: 24px;
+      color: #ffffff;
+      font-size: 1.18rem;
+      line-height: 1.45;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(10px);
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .feature-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .feature-link .dot {
+      font-size: 1.8rem;
+      line-height: 1;
+      margin-top: -2px;
+      opacity: 0.95;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .feature-link .feature-text {
+      text-align: left;
+    }
+
+    .home-hint {
+      margin-top: 18px;
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 0.95rem;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+    }
+
+    /* GENERIC PAGE LAYOUT */
+    .subpage-bg {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(140, 211, 190, 0.1), transparent 28%),
+        linear-gradient(180deg, #0d171d 0%, #0a1216 55%, #081015 100%);
+    }
+
+    .page-hero {
+      margin-bottom: 28px;
+    }
+
+    .page-hero p {
+      max-width: 760px;
+      font-size: 1.05rem;
+    }
+
+    .card-grid {
+      display: grid;
+      gap: 22px;
+    }
+
+    .card-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card-grid.two {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+
+    .option-card {
+      padding: 26px;
+      border-radius: var(--radius-xl);
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 260px;
+    }
+
+    .option-card p {
+      flex: 1;
+    }
+
+    .option-card .button-row {
+      margin-top: auto;
+    }
+
+    .soft-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .soft-list li + li {
+      margin-top: 6px;
+    }
+
+    /* CALM DOWN */
+    .preview-strip {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+    }
+
+    .mini-note {
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line-soft);
+    }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      padding: 28px;
+      background: rgba(4, 8, 11, 0.76);
+      backdrop-filter: blur(14px);
+
+      /* allow tall modal content to scroll */
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .modal.open {
+      display: block;
+    }
+
+    .modal-card {
+      width: min(760px, 100%);
+      max-height: calc(100vh - 56px);
+      margin: 0 auto;
+      border-radius: 28px;
+      background: rgba(11, 20, 26, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+      padding: 30px;
+
+      /* scroll inside the card if content is taller than screen */
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .track-list {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0 24px;
+    }
+
+    .track {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .track small {
+      color: var(--muted-2);
+    }
+
+/* WATCH BIRDS */
+    .habitat-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 24px 0 0;
+    }
+
+    .habitat-tab {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .habitat-tab:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .habitat-tab.active {
+      background: linear-gradient(135deg, rgba(214, 243, 234, 0.96), rgba(140, 211, 190, 0.96));
+      color: #122025;
+      border-color: transparent;
+      box-shadow: 0 14px 34px rgba(77, 165, 143, 0.24);
+    }
+
+    .birdwatch-layout {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .birdwatch-stage-wrap {
+      display: grid;
+      gap: 16px;
+    }
+
+    .bird-stage {
+      position: relative;
+      min-height: 620px;
+      overflow: hidden;
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow:
+        inset 0 -30px 90px rgba(15, 55, 36, 0.18),
+        var(--shadow);
+      isolation: isolate;
+    }
+
+    .bird-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 82% 12%, rgba(255, 244, 196, 0.58), transparent 12%),
+        radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.22), transparent 16%),
+        linear-gradient(to bottom, rgba(255,255,255,0.08), transparent 42%);
+    }
+
+    .bird-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      pointer-events: none;
+      background:
+        linear-gradient(to top, rgba(8, 14, 19, 0.22), transparent 34%),
+        radial-gradient(circle at 50% 105%, rgba(255,255,255,0.08), transparent 28%);
+      mix-blend-mode: soft-light;
+    }
+
+    .bird-stage.scene-city {
+      background:
+        linear-gradient(to bottom, #8fc9e4 0%, #d7eef4 42%, #d9d1c4 43%, #a9a197 100%);
+    }
+
+    .bird-stage.scene-forest {
+      background:
+        linear-gradient(to bottom, #9ad7f5 0%, #cfeef8 26%, #c9f0dd 54%, #8ec199 100%);
+    }
+
+    .bird-stage.scene-wetland {
+      background:
+        linear-gradient(to bottom, #9ed2ea 0%, #d7eef1 40%, #a5d6ca 41%, #5d95a8 100%);
+    }
+
+    .scene-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: none;
+      pointer-events: none;
+    }
+
+    .scene-city .city-layer,
+    .scene-forest .forest-layer,
+    .scene-wetland .wetland-layer {
+      display: block;
+    }
+
+    .stage-caption {
+      position: absolute;
+      left: 22px;
+      bottom: 22px;
+      z-index: 20;
+      max-width: min(560px, calc(100% - 44px));
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(8, 14, 19, 0.46);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: rgba(245, 251, 251, 0.82);
+      backdrop-filter: blur(12px);
+      font-size: 0.92rem;
+    }
+
+    /* City scene */
+    .city-building,
+    .city-wire,
+    .city-sidewalk,
+    .city-tree,
+    .city-bench,
+    .city-lamp {
+      position: absolute;
+      display: block;
+    }
+
+    .city-building {
+      bottom: 29%;
+      width: 13%;
+      border-radius: 12px 12px 0 0;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255, 238, 160, 0.72) 0 7px,
+          transparent 7px 18px
+        ),
+        linear-gradient(135deg, #7890a0, #526d7e);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+    }
+
+    .city-building.b1 { left: 5%; height: 36%; }
+    .city-building.b2 { left: 20%; height: 46%; width: 16%; }
+    .city-building.b3 { left: 39%; height: 31%; width: 11%; }
+    .city-building.b4 { right: 23%; height: 43%; width: 15%; background:
+        repeating-linear-gradient(to bottom, rgba(255, 238, 160, 0.58) 0 7px, transparent 7px 18px),
+        linear-gradient(135deg, #8b879c, #5e6479);
+    }
+    .city-building.b5 { right: 7%; height: 35%; width: 14%; }
+
+    .city-wire {
+      left: 4%;
+      right: 4%;
+      top: 31%;
+      height: 2px;
+      background: rgba(18, 32, 38, 0.38);
+      transform: rotate(-1deg);
+    }
+
+    .city-wire.wire-two {
+      top: 36%;
+      opacity: 0.55;
+      transform: rotate(1deg);
+    }
+
+    .city-sidewalk {
+      left: -3%;
+      right: -3%;
+      bottom: 0;
+      height: 29%;
+      background:
+        linear-gradient(90deg, transparent 0 16%, rgba(255,255,255,0.22) 16% 17%, transparent 17% 38%, rgba(255,255,255,0.18) 38% 39%, transparent 39% 62%, rgba(255,255,255,0.18) 62% 63%, transparent 63%),
+        linear-gradient(to bottom, #d7d1c6, #918a82);
+      border-top: 9px solid rgba(106, 126, 102, 0.45);
+    }
+
+    .city-tree {
+      right: 13%;
+      bottom: 21%;
+      width: 18px;
+      height: 25%;
+      border-radius: 999px;
+      background: #72503a;
+    }
+
+    .city-tree::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -54px;
+      width: 92px;
+      height: 92px;
+      border-radius: 48% 52% 48% 52%;
+      transform: translateX(-50%);
+      background:
+        radial-gradient(circle at 35% 35%, #a8c983, transparent 35%),
+        #789b78;
+      box-shadow:
+        -28px 18px 0 -12px #6f936d,
+        28px 16px 0 -14px #88aa76;
+    }
+
+    .city-bench {
+      left: 9%;
+      bottom: 20%;
+      width: 130px;
+      height: 12px;
+      border-radius: 999px;
+      background: #9d6c4a;
+      box-shadow: 0 20px 0 #805437;
+    }
+
+    .city-bench::before,
+    .city-bench::after {
+      content: "";
+      position: absolute;
+      top: 24px;
+      width: 8px;
+      height: 34px;
+      background: #5c4d45;
+      border-radius: 999px;
+    }
+
+    .city-bench::before { left: 18px; }
+    .city-bench::after { right: 18px; }
+
+    .city-lamp {
+      left: 55%;
+      bottom: 26%;
+      width: 7px;
+      height: 28%;
+      border-radius: 999px;
+      background: #47545c;
+    }
+
+    .city-lamp::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -16px;
+      width: 34px;
+      height: 20px;
+      border-radius: 18px 18px 4px 4px;
+      transform: translateX(-50%);
+      background: #f3d88b;
+      box-shadow: 0 0 28px rgba(243, 216, 139, 0.45);
+    }
+
+    /* Forest scene */
+    .forest-hill,
+    .forest-tree,
+    .forest-branch,
+    .forest-ground-detail,
+    .forest-log,
+    .forest-bush {
+      position: absolute;
+      display: block;
+    }
+
+    .forest-hill {
+      left: -8%;
+      right: -8%;
+      border-radius: 50%;
+    }
+
+    .forest-hill.hill-back {
+      bottom: 170px;
+      height: 220px;
+      background: #72a57c;
+    }
+
+    .forest-hill.hill-middle {
+      bottom: 100px;
+      height: 240px;
+      background: #568967;
+    }
+
+    .forest-hill.hill-front {
+      bottom: -68px;
+      height: 240px;
+      background: #3f6e52;
+    }
+
+    .forest-tree {
+      bottom: 110px;
+      width: 52px;
+      border-radius: 999px 999px 10px 10px;
+      background: linear-gradient(to bottom, #5a3b23, #402818);
+    }
+
+    .forest-tree::before,
+    .forest-tree::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: #2e7c4e;
+    }
+
+    .forest-tree::before {
+      bottom: 34px;
+      left: -26px;
+      width: 106px;
+      height: 96px;
+    }
+
+    .forest-tree::after {
+      bottom: 82px;
+      left: -18px;
+      width: 88px;
+      height: 76px;
+      background: #3d915d;
+    }
+
+    .forest-tree.t1 { left: 10%; height: 230px; }
+    .forest-tree.t2 { left: 28%; height: 280px; }
+    .forest-tree.t3 { right: 32%; height: 260px; }
+    .forest-tree.t4 { right: 12%; height: 240px; }
+
+    .forest-branch {
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(to right, #6d472a, #4a311f);
+      transform-origin: left center;
+    }
+
+    .forest-branch.a {
+      top: 280px;
+      left: 14%;
+      width: 220px;
+      transform: rotate(8deg);
+    }
+
+    .forest-branch.b {
+      top: 240px;
+      right: 16%;
+      width: 200px;
+      transform: rotate(-7deg);
+    }
+
+    .forest-branch.c {
+      top: 340px;
+      left: 38%;
+      width: 170px;
+      transform: rotate(-10deg);
+    }
+
+    .forest-ground-detail {
+      inset: auto 0 0 0;
+      height: 120px;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.08), transparent 22%),
+        radial-gradient(circle at 78% 30%, rgba(255,255,255,0.06), transparent 18%);
+    }
+
+    .forest-log {
+      left: 43%;
+      bottom: 98px;
+      width: 170px;
+      height: 32px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 90% 50%, #d0a073 0 7px, #8d5d3e 8px 13px, transparent 14px),
+        linear-gradient(135deg, #9a6846, #70482f);
+      transform: rotate(-3deg);
+    }
+
+    .forest-bush {
+      left: 16%;
+      bottom: 82px;
+      width: 140px;
+      height: 52px;
+      border-radius: 999px 999px 18px 18px;
+      background:
+        radial-gradient(circle at 28% 20%, #91b470, transparent 35%),
+        #6c9862;
+      box-shadow:
+        58px 6px 0 -16px #749d64,
+        -38px 7px 0 -16px #5f8d57;
+    }
+
+    /* Wetland scene */
+    .wet-water,
+    .wet-bank,
+    .wet-reed,
+    .wet-rock,
+    .wet-tree,
+    .water-ring {
+      position: absolute;
+      display: block;
+    }
+
+    .wet-water {
+      left: -4%;
+      right: -4%;
+      bottom: 0;
+      height: 49%;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.26), transparent 18%),
+        radial-gradient(ellipse at 60% 55%, rgba(255,255,255,0.2), transparent 22%),
+        repeating-linear-gradient(-4deg, rgba(255,255,255,0.16) 0 2px, transparent 2px 28px),
+        linear-gradient(to bottom, #80b9c1, #4f8eac);
+    }
+
+    .wet-bank {
+      left: -5%;
+      right: -5%;
+      bottom: 40%;
+      height: 12%;
+      border-radius: 999px 999px 0 0;
+      background:
+        radial-gradient(ellipse at 15% 50%, #c7a36d, transparent 18%),
+        radial-gradient(ellipse at 70% 40%, #d7bd82, transparent 18%),
+        linear-gradient(to bottom, #a9b975, #7f995d);
+    }
+
+    .wet-reed {
+      bottom: 36%;
+      width: 6px;
+      height: 22%;
+      border-radius: 999px;
+      background: #5f7f4c;
+      transform-origin: bottom;
+    }
+
+    .wet-reed::before {
+      content: "";
+      position: absolute;
+      left: -5px;
+      top: -16px;
+      width: 16px;
+      height: 32px;
+      border-radius: 999px;
+      background: #7b5b3b;
+    }
+
+    .wet-reed.r1 { left: 8%; transform: rotate(-8deg); }
+    .wet-reed.r2 { left: 12%; height: 28%; transform: rotate(5deg); }
+    .wet-reed.r3 { left: 18%; height: 19%; transform: rotate(-3deg); }
+    .wet-reed.r4 { right: 20%; height: 25%; transform: rotate(6deg); }
+    .wet-reed.r5 { right: 14%; height: 21%; transform: rotate(-5deg); }
+    .wet-reed.r6 { right: 8%; height: 29%; transform: rotate(7deg); }
+
+    .wet-rock {
+      bottom: 35%;
+      width: 96px;
+      height: 36px;
+      border-radius: 55% 45% 35% 45%;
+      background: linear-gradient(135deg, #a7aaa5, #737d7a);
+      box-shadow: 0 12px 22px rgba(42, 70, 76, 0.16);
+    }
+
+    .wet-rock.a { left: 28%; }
+    .wet-rock.b { right: 32%; width: 78px; height: 30px; opacity: 0.88; }
+
+    .wet-tree {
+      left: 48%;
+      bottom: 41%;
+      width: 13px;
+      height: 24%;
+      border-radius: 999px;
+      background: #79533c;
+      transform: rotate(8deg);
+    }
+
+    .wet-tree::before {
+      content: "";
+      position: absolute;
+      left: -80px;
+      top: -6px;
+      width: 96px;
+      height: 11px;
+      border-radius: 999px;
+      background: #79533c;
+      transform: rotate(-15deg);
+    }
+
+    .water-ring {
+      left: 37%;
+      bottom: 19%;
+      width: 140px;
+      height: 38px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 50%;
+      opacity: 0.7;
+    }
+
+    .water-ring.b {
+      left: 60%;
+      bottom: 27%;
+      transform: scale(0.75);
+      opacity: 0.48;
+    }
+
+    .bird-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 12;
+    }
+
+    .watch-bird {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: 112px;
+      height: 96px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1));
+      transform-origin: 50% 80%;
+      animation: birdIdle 3.8s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .watch-bird:hover {
+      filter: brightness(1.08) saturate(1.08);
+    }
+
+    .watch-bird span {
+      position: absolute;
+      display: block;
+    }
+
+    .wb-shadow {
+      left: 25px;
+      bottom: 8px;
+      width: 58px;
+      height: 11px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.18);
+      filter: blur(2px);
+    }
+
+    .wb-body {
+      left: 34px;
+      top: 38px;
+      width: 52px;
+      height: 34px;
+      border-radius: 55% 48% 48% 55%;
+      background:
+        radial-gradient(circle at 35% 28%, rgba(255,255,255,0.28), transparent 28%),
+        var(--body);
+      box-shadow: inset -8px -8px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    .wb-belly {
+      left: 39px;
+      top: 51px;
+      width: 30px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--belly);
+      opacity: 0.82;
+    }
+
+    .wb-wing {
+      left: 50px;
+      top: 43px;
+      width: 34px;
+      height: 21px;
+      border-radius: 60% 45% 55% 45%;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.17), transparent 45%),
+        var(--wing);
+      transform: rotate(-8deg);
+      transform-origin: 30% 20%;
+    }
+
+    .wb-tail {
+      left: 78px;
+      top: 48px;
+      width: 24px;
+      height: 14px;
+      border-radius: 4px 999px 999px 4px;
+      background: var(--tail);
+      transform: rotate(13deg);
+      transform-origin: left center;
+    }
+
+    .wb-head {
+      left: 22px;
+      top: 30px;
+      width: 31px;
+      height: 30px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,0.23), transparent 26%),
+        var(--head);
+      box-shadow: inset -4px -3px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .wb-eye {
+      left: 30px;
+      top: 41px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--eye);
+      box-shadow: 0 0 0 1.5px rgba(255,255,255,0.28);
+      z-index: 4;
+    }
+
+    .wb-beak {
+      left: 8px;
+      top: 42px;
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 16px solid var(--beak);
+      transform-origin: right center;
+    }
+
+    .wb-leg {
+      top: 66px;
+      width: 3px;
+      height: 15px;
+      border-radius: 999px;
+      background: var(--legs);
+    }
+
+    .wb-leg.a { left: 52px; }
+    .wb-leg.b { left: 64px; }
+
+    .wb-mask,
+    .wb-crest,
+    .wb-neck {
+      display: none;
+    }
+
+    .bird-rock-pigeon .wb-mask {
+      display: block;
+      left: 32px;
+      top: 48px;
+      width: 16px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #51b893, #9b5fbf);
+      opacity: 0.95;
+    }
+
+    .bird-rock-pigeon .wb-wing::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      right: 5px;
+      top: 5px;
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(32, 34, 38, 0.62);
+      box-shadow: 0 7px 0 rgba(32, 34, 38, 0.5);
+    }
+
+    .bird-mourning-dove .wb-wing::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 5px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(36, 31, 28, 0.6);
+      box-shadow:
+        9px 4px 0 rgba(36, 31, 28, 0.45),
+        18px 2px 0 rgba(36, 31, 28, 0.42);
+    }
+
+    .bird-house-sparrow .wb-mask {
+      display: block;
+      left: 30px;
+      top: 48px;
+      width: 12px;
+      height: 15px;
+      border-radius: 50% 50% 999px 999px;
+      background: #202120;
+      opacity: 0.82;
+    }
+
+    .bird-house-sparrow .wb-head::after {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 3px;
+      width: 18px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(96, 62, 33, 0.7);
+      transform: rotate(-12deg);
+    }
+
+    .bird-american-crow .wb-body {
+      width: 60px;
+      height: 37px;
+    }
+
+    .bird-american-crow .wb-head {
+      left: 18px;
+      top: 28px;
+      width: 37px;
+      height: 34px;
+    }
+
+    .bird-american-crow .wb-beak {
+      left: 0;
+      top: 42px;
+      border-top-width: 7px;
+      border-bottom-width: 7px;
+      border-right-width: 24px;
+    }
+
+    .bird-black-capped-chickadee .wb-mask {
+      display: block;
+      left: 21px;
+      top: 42px;
+      width: 23px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff7ec;
+      z-index: 3;
+    }
+
+    .bird-black-capped-chickadee .wb-head::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 55%;
+      border-radius: 999px 999px 40% 40%;
+      background: #15191c;
+    }
+
+    .bird-northern-cardinal .wb-crest,
+    .bird-belted-kingfisher .wb-crest {
+      display: block;
+    }
+
+    .bird-northern-cardinal .wb-crest {
+      left: 30px;
+      top: 16px;
+      width: 18px;
+      height: 20px;
+      background: #d63a38;
+      clip-path: polygon(0 100%, 45% 0, 100% 100%);
+      transform: rotate(13deg);
+    }
+
+    .bird-northern-cardinal .wb-mask {
+      display: block;
+      left: 19px;
+      top: 41px;
+      width: 20px;
+      height: 15px;
+      border-radius: 60% 45% 60% 45%;
+      background: #25201f;
+      z-index: 3;
+    }
+
+    .bird-wood-thrush .wb-belly::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 2px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(77, 48, 35, 0.65);
+      box-shadow:
+        10px 2px 0 rgba(77, 48, 35, 0.56),
+        18px 4px 0 rgba(77, 48, 35, 0.52),
+        7px 10px 0 rgba(77, 48, 35, 0.48);
+    }
+
+    .shape-woodpecker {
+      height: 128px;
+    }
+
+    .shape-woodpecker::before {
+      content: "";
+      position: absolute;
+      right: 8px;
+      top: 6px;
+      bottom: 9px;
+      width: 16px;
+      border-radius: 999px;
+      background:
+        linear-gradient(to right, rgba(255,255,255,0.14), transparent),
+        #7a543d;
+      box-shadow: inset -4px 0 0 rgba(0,0,0,0.08);
+    }
+
+    .shape-woodpecker .wb-body {
+      left: 41px;
+      top: 52px;
+      width: 30px;
+      height: 48px;
+      border-radius: 48% 48% 56% 56%;
+      transform: rotate(-8deg);
+    }
+
+    .shape-woodpecker .wb-wing {
+      left: 50px;
+      top: 59px;
+      width: 22px;
+      height: 32px;
+      border-radius: 999px;
+    }
+
+    .shape-woodpecker .wb-tail {
+      left: 58px;
+      top: 91px;
+      width: 13px;
+      height: 25px;
+    }
+
+    .shape-woodpecker .wb-head {
+      left: 31px;
+      top: 34px;
+      width: 28px;
+      height: 30px;
+    }
+
+    .shape-woodpecker .wb-beak {
+      left: 12px;
+      top: 44px;
+      border-top-width: 4px;
+      border-bottom-width: 4px;
+      border-right-width: 21px;
+    }
+
+    .shape-woodpecker .wb-leg.a {
+      left: 52px;
+      top: 95px;
+      height: 12px;
+    }
+
+    .shape-woodpecker .wb-leg.b {
+      left: 61px;
+      top: 95px;
+      height: 12px;
+    }
+
+    .bird-downy-woodpecker .wb-crest {
+      display: block;
+      left: 45px;
+      top: 33px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d34236;
+      z-index: 4;
+    }
+
+    .bird-downy-woodpecker .wb-wing::after {
+      content: "";
+      position: absolute;
+      inset: 5px 4px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.9) 0 2px, transparent 3px),
+        radial-gradient(circle at 64% 45%, rgba(255,255,255,0.9) 0 2px, transparent 3px),
+        radial-gradient(circle at 42% 72%, rgba(255,255,255,0.9) 0 2px, transparent 3px);
+    }
+
+    .shape-heron {
+      width: 132px;
+      height: 154px;
+    }
+
+    .shape-heron .wb-shadow {
+      left: 43px;
+      bottom: 6px;
+      width: 64px;
+      height: 13px;
+    }
+
+    .shape-heron .wb-body {
+      left: 58px;
+      top: 92px;
+      width: 48px;
+      height: 31px;
+    }
+
+    .shape-heron .wb-belly {
+      left: 67px;
+      top: 103px;
+      width: 24px;
+      height: 15px;
+    }
+
+    .shape-heron .wb-wing {
+      left: 75px;
+      top: 98px;
+      width: 29px;
+      height: 18px;
+    }
+
+    .shape-heron .wb-tail {
+      left: 98px;
+      top: 102px;
+      width: 18px;
+      height: 12px;
+    }
+
+    .shape-heron .wb-neck {
+      display: block;
+      left: 46px;
+      top: 50px;
+      width: 45px;
+      height: 58px;
+      border-left: 11px solid var(--head);
+      border-radius: 56% 0 0 44%;
+      transform: rotate(-8deg);
+    }
+
+    .shape-heron .wb-head {
+      left: 30px;
+      top: 41px;
+      width: 32px;
+      height: 22px;
+      border-radius: 55% 45% 48% 52%;
+    }
+
+    .shape-heron .wb-eye {
+      left: 38px;
+      top: 48px;
+    }
+
+    .shape-heron .wb-beak {
+      left: 7px;
+      top: 48px;
+      border-top-width: 4px;
+      border-bottom-width: 4px;
+      border-right-width: 25px;
+    }
+
+    .shape-heron .wb-leg {
+      top: 117px;
+      height: 31px;
+      width: 3px;
+    }
+
+    .shape-heron .wb-leg.a { left: 72px; }
+    .shape-heron .wb-leg.b { left: 85px; transform: rotate(-8deg); }
+
+.bird-black-crowned-night-heron .wb-body {
+      left: 58px;
+      top: 91px;
+      width: 52px;
+      height: 34px;
+      border-radius: 55% 50% 46% 55%;
+      background:
+        radial-gradient(circle at 34% 34%, rgba(255,255,255,0.18), transparent 26%),
+        var(--body);
+    }
+
+    .bird-black-crowned-night-heron .wb-belly {
+      left: 66px;
+      top: 104px;
+      width: 30px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--belly);
+      opacity: 0.95;
+    }
+
+    .bird-black-crowned-night-heron .wb-wing {
+      left: 75px;
+      top: 96px;
+      width: 34px;
+      height: 22px;
+      border-radius: 58% 48% 54% 46%;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.16), transparent 45%),
+        var(--wing);
+      transform: rotate(-8deg);
+    }
+
+    .bird-black-crowned-night-heron .wb-tail {
+      left: 99px;
+      top: 103px;
+      width: 19px;
+      height: 13px;
+      border-radius: 4px 999px 999px 4px;
+      background: var(--tail);
+      transform: rotate(16deg);
+    }
+
+    .bird-black-crowned-night-heron .wb-neck {
+      display: block;
+      left: 47px;
+      top: 71px;
+      width: 40px;
+      height: 39px;
+      border-left: 12px solid var(--belly);
+      border-radius: 48% 0 0 54%;
+      transform: rotate(2deg);
+    }
+
+    .bird-black-crowned-night-heron .wb-head {
+      left: 27px;
+      top: 57px;
+      width: 37px;
+      height: 27px;
+      border-radius: 54% 46% 48% 52%;
+      background:
+        linear-gradient(to bottom, #1f2930 0 52%, #f3efe6 53% 100%);
+      box-shadow: inset -3px -2px 0 rgba(0, 0, 0, 0.07);
+    }
+
+    .bird-black-crowned-night-heron .wb-eye {
+      left: 38px;
+      top: 64px;
+      width: 6px;
+      height: 6px;
+      background: #b8292d;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.72),
+        0 0 8px rgba(184,41,45,0.35);
+      z-index: 5;
+    }
+
+    .bird-black-crowned-night-heron .wb-beak {
+      left: 4px;
+      top: 66px;
+      border-top-width: 4px;
+      border-bottom-width: 4px;
+      border-right-width: 27px;
+      border-right-color: var(--beak);
+      transform: rotate(-2deg);
+    }
+
+    .bird-black-crowned-night-heron .wb-mask {
+      display: none;
+    }
+
+    .bird-black-crowned-night-heron .wb-leg {
+      top: 119px;
+      height: 29px;
+      width: 4px;
+      background: var(--legs);
+    }
+
+    .bird-black-crowned-night-heron .wb-leg.a {
+      left: 73px;
+      transform: rotate(2deg);
+    }
+
+    .bird-black-crowned-night-heron .wb-leg.b {
+      left: 88px;
+      transform: rotate(-6deg);
+    }
+
+    .shape-duck {
+      width: 126px;
+      height: 94px;
+    }
+
+    .shape-duck .wb-shadow {
+      left: 24px;
+      bottom: 10px;
+      width: 84px;
+      height: 15px;
+      background: rgba(255,255,255,0.22);
+    }
+
+    .shape-duck .wb-body {
+      left: 35px;
+      top: 43px;
+      width: 70px;
+      height: 33px;
+      border-radius: 58% 52% 50% 58%;
+    }
+
+    .shape-duck .wb-belly {
+      left: 51px;
+      top: 57px;
+      width: 38px;
+      height: 15px;
+    }
+
+    .shape-duck .wb-wing {
+      left: 62px;
+      top: 49px;
+      width: 34px;
+      height: 19px;
+    }
+
+    .shape-duck .wb-head {
+      left: 22px;
+      top: 31px;
+      width: 31px;
+      height: 30px;
+    }
+
+    .shape-duck .wb-beak {
+      left: 4px;
+      top: 43px;
+      border-top-width: 5px;
+      border-bottom-width: 5px;
+      border-right-width: 20px;
+    }
+
+    .shape-duck .wb-tail {
+      left: 98px;
+      top: 52px;
+      width: 18px;
+      height: 12px;
+    }
+
+    .shape-duck .wb-leg {
+      display: none;
+    }
+
+    .bird-mallard .wb-mask {
+      display: block;
+      left: 46px;
+      top: 46px;
+      width: 5px;
+      height: 29px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.82);
+      transform: rotate(-12deg);
+    }
+
+    .bird-mallard .wb-wing::after {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 9px;
+      width: 16px;
+      height: 4px;
+      border-radius: 999px;
+      background: #416db8;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
+    }
+
+    .shape-kingfisher .wb-head {
+      left: 18px;
+      top: 27px;
+      width: 39px;
+      height: 35px;
+    }
+
+    .shape-kingfisher .wb-crest {
+      left: 37px;
+      top: 18px;
+      width: 24px;
+      height: 18px;
+      background: var(--head);
+      clip-path: polygon(0 100%, 18% 20%, 45% 78%, 72% 0, 100% 100%);
+    }
+
+    .shape-kingfisher .wb-beak {
+      left: -4px;
+      top: 40px;
+      border-top-width: 5px;
+      border-bottom-width: 5px;
+      border-right-width: 29px;
+    }
+
+    .bird-belted-kingfisher .wb-mask {
+      display: block;
+      left: 47px;
+      top: 57px;
+      width: 27px;
+      height: 7px;
+      border-radius: 999px;
+      background: #a96a44;
+      opacity: 0.92;
+    }
+
+
+
+/* Mallard final fix: remove oversized neck glow and keep only a small white collar */
+    .bird-mallard.shape-duck .wb-body {
+      left: 35px;
+      top: 43px;
+      width: 70px;
+      height: 33px;
+      border-radius: 58% 52% 50% 58%;
+      background:
+        linear-gradient(to bottom, #b8aa99 0 42%, #a99d91 43% 100%);
+      box-shadow: inset -6px -4px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .bird-mallard.shape-duck .wb-belly {
+      left: 50px;
+      top: 58px;
+      width: 42px;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(236, 233, 223, 0.82);
+      opacity: 1;
+      filter: none;
+      z-index: 3;
+    }
+
+    .bird-mallard.shape-duck .wb-wing {
+      left: 63px;
+      top: 50px;
+      width: 34px;
+      height: 19px;
+      border-radius: 999px;
+      background:
+        linear-gradient(
+          to bottom,
+          #7f8790 0 16%,
+          #415b9a 17% 58%,
+          #d8d2bd 59% 72%,
+          #7f8790 73% 100%
+        );
+      box-shadow:
+        inset 0 0 0 2px rgba(255, 255, 255, 0.34),
+        0 1px 0 rgba(0, 0, 0, 0.06);
+      transform: rotate(-4deg);
+      z-index: 4;
+    }
+
+    .bird-mallard.shape-duck .wb-wing::after {
+      display: none;
+    }
+
+    .bird-mallard.shape-duck .wb-head {
+      left: 22px;
+      top: 31px;
+      width: 31px;
+      height: 30px;
+      border-radius: 52% 50% 48% 54%;
+      background:
+        radial-gradient(circle at 38% 34%, rgba(255,255,255,0.14), transparent 20%),
+        linear-gradient(135deg, #1e6a55 0%, #24513f 62%, #17362e 100%);
+      box-shadow: inset -4px -4px 0 rgba(0, 0, 0, 0.08);
+      z-index: 6;
+    }
+
+    .bird-mallard.shape-duck .wb-eye {
+      left: 30px;
+      top: 40px;
+      width: 6px;
+      height: 6px;
+      background: #101418;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
+      z-index: 9;
+    }
+
+    .bird-mallard.shape-duck .wb-beak {
+      left: 4px;
+      top: 43px;
+      border-top-width: 5px;
+      border-bottom-width: 5px;
+      border-right-width: 20px;
+      border-right-color: #e3b83d;
+      transform: rotate(3deg);
+      z-index: 5;
+    }
+
+    .bird-mallard.shape-duck .wb-tail {
+      left: 98px;
+      top: 52px;
+      width: 18px;
+      height: 12px;
+      border-radius: 4px 999px 999px 4px;
+      background: #121820;
+      transform: rotate(10deg);
+      z-index: 2;
+    }
+
+    /* Replace the large white vertical mark with a tiny clean collar */
+    .bird-mallard.shape-duck .wb-neck {
+      display: block;
+      left: 49px;
+      top: 47px;
+      width: 6px;
+      height: 16px;
+      background: transparent;
+      border-left: 4px solid rgba(246, 246, 235, 0.95);
+      border-radius: 50%;
+      transform: rotate(-12deg);
+      z-index: 7;
+    }
+
+    .bird-mallard.shape-duck .wb-mask {
+      display: none;
+    }
+
+    /* Keep the water reflection under the duck, not visually like a body glow */
+    .bird-mallard.shape-duck .wb-shadow {
+      left: 34px;
+      bottom: 9px;
+      width: 74px;
+      height: 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      filter: blur(2px);
+      z-index: 0;
+    }
+
+
+/* Belted Kingfisher final polish: big head, shaggy crest, long bill, compact body */
+    .bird-belted-kingfisher.shape-kingfisher {
+      width: 128px;
+      height: 106px;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-shadow {
+      left: 45px;
+      bottom: 9px;
+      width: 54px;
+      height: 10px;
+      background: rgba(0, 0, 0, 0.15);
+      filter: blur(2px);
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-body {
+      left: 62px;
+      top: 50px;
+      width: 50px;
+      height: 31px;
+      border-radius: 56% 48% 50% 54%;
+      background:
+        linear-gradient(to bottom, #607f9a 0 46%, #f4f0e8 47% 100%);
+      box-shadow: inset -5px -4px 0 rgba(0,0,0,0.06);
+      z-index: 2;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-belly {
+      left: 68px;
+      top: 70px;
+      width: 33px;
+      height: 10px;
+      border-radius: 999px;
+      background: #b77750;
+      opacity: 0.96;
+      z-index: 5;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-wing {
+      left: 83px;
+      top: 53px;
+      width: 31px;
+      height: 23px;
+      border-radius: 52% 48% 55% 45%;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.15), transparent 40%),
+        #5f7893;
+      transform: rotate(5deg);
+      z-index: 4;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-tail {
+      left: 105px;
+      top: 67px;
+      width: 25px;
+      height: 17px;
+      border-radius: 45% 75% 70% 45%;
+      background: #5e7894;
+      transform: rotate(8deg);
+      z-index: 1;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-neck {
+      display: block;
+      left: 57px;
+      top: 56px;
+      width: 18px;
+      height: 24px;
+      border-radius: 45% 0 0 45%;
+      background: #f4f0e8;
+      transform: rotate(-4deg);
+      z-index: 3;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-head {
+      left: 29px;
+      top: 31px;
+      width: 44px;
+      height: 38px;
+      border-radius: 58% 50% 52% 50%;
+      background:
+        radial-gradient(circle at 39% 36%, rgba(255,255,255,0.18), transparent 22%),
+        linear-gradient(145deg, #7892a9 0%, #617f9a 68%, #4d6b86 100%);
+      box-shadow: inset -4px -4px 0 rgba(0,0,0,0.07);
+      z-index: 7;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-head::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      bottom: 0;
+      width: 21px;
+      height: 13px;
+      border-radius: 50%;
+      background: #f4f0e8;
+      transform: rotate(5deg);
+      z-index: 1;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-eye {
+      left: 46px;
+      top: 45px;
+      width: 6px;
+      height: 6px;
+      background: #111820;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.62);
+      z-index: 10;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-beak {
+      left: 1px;
+      top: 47px;
+      border-top-width: 4px;
+      border-bottom-width: 4px;
+      border-right-width: 33px;
+      border-right-color: #17212a;
+      transform: rotate(-1deg);
+      z-index: 8;
+    }
+
+    /* Replace the old twin-ear crest with a lower shaggy rear crest */
+    .bird-belted-kingfisher.shape-kingfisher .wb-crest {
+      display: block;
+      left: 52px;
+      top: 23px;
+      width: 28px;
+      height: 18px;
+      background: #617f9a;
+      clip-path: polygon(
+        0 100%,
+        12% 34%,
+        28% 78%,
+        45% 18%,
+        62% 78%,
+        82% 42%,
+        100% 100%
+      );
+      transform: rotate(8deg);
+      z-index: 6;
+    }
+
+    /* Old mask no longer used as a big chest patch */
+    .bird-belted-kingfisher.shape-kingfisher .wb-mask {
+      display: none;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-leg {
+      top: 80px;
+      height: 11px;
+      width: 4px;
+      background: #7b5334;
+      opacity: 0.82;
+      z-index: 3;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-leg.a {
+      left: 80px;
+    }
+
+    .bird-belted-kingfisher.shape-kingfisher .wb-leg.b {
+      left: 93px;
+    }
+
+    /* Small habitat event label */
+    .habitat-event-label {
+      position: absolute;
+      left: 22px;
+      top: 22px;
+      z-index: 26;
+      max-width: min(460px, calc(100% - 44px));
+      padding: 11px 15px;
+      border-radius: 999px;
+      background: rgba(8, 14, 19, 0.54);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: rgba(245, 251, 251, 0.92);
+      backdrop-filter: blur(12px);
+      font-size: 0.9rem;
+      font-weight: 800;
+      pointer-events: none;
+      animation: eventLabelIn 420ms ease both;
+    }
+
+    @keyframes eventLabelIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Event motion variations */
+    .watch-bird.event-jitter {
+      animation: birdJitter 720ms ease-in-out infinite;
+    }
+
+    .watch-bird.event-parade {
+      animation: birdParade 2.8s ease-in-out infinite;
+    }
+
+    .watch-bird.event-display {
+      animation: birdDisplay 1.25s ease-in-out infinite;
+    }
+
+    .watch-bird.event-dramatic {
+      animation: birdDramatic 1.1s ease-in-out infinite;
+    }
+
+    @keyframes birdJitter {
+      0%, 100% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translate(0, 0);
+      }
+      25% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translate(-4px, -2px);
+      }
+      55% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translate(4px, 1px);
+      }
+      75% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translate(-2px, 3px);
+      }
+    }
+
+    @keyframes birdParade {
+      0%, 100% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translateX(0);
+      }
+      50% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translateX(12px);
+      }
+    }
+
+    @keyframes birdDisplay {
+      0%, 100% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translateY(0) rotate(0);
+      }
+      35% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1.05)) translateY(-5px) rotate(-4deg);
+      }
+      70% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1.02)) translateY(1px) rotate(4deg);
+      }
+    }
+
+    @keyframes birdDramatic {
+      0%, 100% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) rotate(0);
+      }
+      40% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) rotate(-8deg) translateY(-6px);
+      }
+      70% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) rotate(6deg);
+      }
+    }
+
+    .watch-bird.event-display .wb-crest {
+      animation: crestPop 620ms ease-in-out infinite;
+    }
+
+    .watch-bird.event-jitter .wb-wing,
+    .watch-bird.event-dramatic .wb-wing {
+      animation: wingFlutter 560ms ease-in-out infinite;
+    }
+
+    .bird-effect {
+      position: absolute;
+      left: 50%;
+      top: 2px;
+      z-index: 30;
+      transform: translateX(-50%) scaleX(var(--flip, 1));
+      transform-origin: center;
+      pointer-events: none;
+    }
+
+    .bird-effect::before {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: #122025;
+      background: rgba(214, 243, 234, 0.96);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.14);
+      font-size: 0.8rem;
+      font-weight: 900;
+      animation: effectRise 900ms ease forwards;
+    }
+
+    .effect-bob::before { content: "coo"; }
+    .effect-glide::before { content: "whoosh"; }
+    .effect-hop::before { content: "hop"; }
+    .effect-tilt::before { content: "hmm"; }
+    .effect-flit::before { content: "dee-dee"; }
+    .effect-peck::before { content: "tok tok"; }
+    .effect-crest::before { content: "chip!"; }
+    .effect-leaf::before { content: "rustle"; }
+    .effect-wade::before { content: "step"; }
+    .effect-hunch::before { content: "squawk?"; }
+    .effect-dabble::before { content: "blub"; }
+    .effect-dive::before { content: "splash"; }
+
+    .birdwatch-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .encounter-box {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .encounter-box blockquote {
+      margin: 0 0 14px;
+      padding-left: 14px;
+      border-left: 3px solid rgba(140, 211, 190, 0.7);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .encounter-box p {
+      margin: 0;
+      color: var(--muted-2);
+      font-size: 0.94rem;
+    }
+
+    .info-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .stat-pill {
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .dex-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .dex-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 136px;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .dex-card.locked {
+      opacity: 0.42;
+      filter: grayscale(1);
+    }
+
+    .dex-swatch {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #d2e9df, #7dc8b2);
+      box-shadow: inset 0 -8px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .dex-card strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 0.98rem;
+    }
+
+    .dex-card small {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted-2);
+      font-size: 0.76rem;
+      font-style: italic;
+    }
+
+    .dex-card p {
+      margin: 0;
+      font-size: 0.86rem;
+      line-height: 1.48;
+      color: var(--muted-2);
+    }
+
+    .guide-launch-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .guide-launch-copy {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .guide-button-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .guide-open-button {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+      color: var(--gold);
+    }
+
+    .guide-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 140;
+      display: none;
+      padding: 34px;
+      background: rgba(4, 8, 11, 0.72);
+      backdrop-filter: blur(16px);
+      overflow-y: auto;
+    }
+
+    .guide-overlay.open {
+      display: block;
+    }
+
+    .guide-page {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 30px;
+      background: rgba(11, 20, 26, 0.96);
+    }
+
+    .guide-page-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .guide-page-top h2 {
+      margin-bottom: 8px;
+    }
+
+    .guide-page-top p {
+      margin-bottom: 0;
+    }
+
+    .guide-full-grid {
+      margin-top: 12px;
+    }
+
+    .event-dex-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .event-dex-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 150px;
+    }
+
+    .event-dex-card.locked {
+      opacity: 0.68;
+      filter: grayscale(0.45);
+    }
+
+    .event-dex-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .event-dex-card small {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .event-dex-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--muted-2);
+    }
+
+    .event-dex-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(214, 243, 234, 0.95), rgba(140, 211, 190, 0.95));
+      color: #122025;
+      font-weight: 900;
+    }
+
+    .event-dex-card.locked .event-dex-mark {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.55);
+    }
+    
+    .confetti-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      top: -18px;
+      width: 10px;
+      height: 16px;
+      border-radius: 3px;
+      background: var(--confetti-color);
+      opacity: 0;
+      animation: confettiFall var(--confetti-duration, 1500ms) ease-out forwards;
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    @keyframes confettiFall {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, -20px, 0) rotate(0deg);
+      }
+      12% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform:
+          translate3d(
+            var(--confetti-drift, 0px),
+            calc(100vh + 80px),
+            0
+          )
+          rotate(var(--confetti-rotate, 360deg));
+      }
+    }
+
+    @keyframes birdIdle {
+      0% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translateY(0);
+      }
+      50% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translateY(-5px);
+      }
+      100% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translateY(0);
+      }
+    }
+
+    @keyframes wingFlutter {
+      0%, 100% { transform: rotate(-8deg); }
+      25% { transform: rotate(-38deg) translateY(-3px); }
+      55% { transform: rotate(22deg); }
+    }
+
+    @keyframes headBob {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(4px) rotate(-5deg); }
+    }
+
+    @keyframes tinyHop {
+      0%, 100% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translateY(0);
+      }
+      45% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translateY(-18px);
+      }
+    }
+
+    @keyframes peck {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      30% { transform: translateY(7px) rotate(-18deg); }
+      55% { transform: translateY(1px) rotate(5deg); }
+    }
+
+    @keyframes glideAway {
+      0% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translateY(0) rotate(0);
+      }
+      45% {
+        transform: translate(-70%, -72%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) rotate(-6deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) translateY(0) rotate(0);
+      }
+    }
+
+    @keyframes tiltHead {
+      0%, 100% { transform: rotate(0); }
+      45% { transform: rotate(-16deg); }
+      70% { transform: rotate(8deg); }
+    }
+
+    @keyframes crestPop {
+      0%, 100% { transform: rotate(13deg) scaleY(1); }
+      50% { transform: rotate(13deg) scaleY(1.35); }
+    }
+
+    @keyframes dabble {
+      0%, 100% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) rotate(0);
+      }
+      45% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) rotate(-18deg) translateY(8px);
+      }
+    }
+
+    @keyframes dive {
+      0% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) rotate(0);
+      }
+      35% {
+        transform: translate(-50%, -80%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) rotate(-8deg);
+      }
+      72% {
+        transform: translate(-50%, -20%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) rotate(-28deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1)) rotate(0);
+      }
+    }
+
+    @keyframes hunch {
+      0%, 100% {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(var(--scale, 1));
+      }
+      50% {
+        transform: translate(-50%, -47%) scaleX(var(--flip, 1)) scale(var(--scale, 0.98));
+      }
+    }
+
+    @keyframes effectRise {
+      0% { opacity: 0; transform: translateY(8px) scale(0.92); }
+      18% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-30px) scale(1); }
+    }
+
+    .watch-bird.clicked .wb-wing {
+      animation: wingFlutter 520ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-bob .wb-head,
+    .watch-bird.clicked.motion-tilt .wb-head {
+      animation: headBob 430ms ease-in-out 2;
+    }
+
+    .watch-bird.clicked.motion-hop,
+    .watch-bird.clicked.motion-flit,
+    .watch-bird.clicked.motion-leaf {
+      animation: tinyHop 620ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-glide {
+      animation: glideAway 850ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-peck .wb-head,
+    .watch-bird.clicked.motion-peck .wb-beak {
+      animation: peck 560ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-crest .wb-crest {
+      animation: crestPop 520ms ease-in-out 2;
+    }
+
+    .watch-bird.clicked.motion-dabble {
+      animation: dabble 760ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-dive {
+      animation: dive 860ms ease-in-out 1;
+    }
+
+    .watch-bird.clicked.motion-hunch {
+      animation: hunch 680ms ease-in-out 1;
+    }
+
+    @media (max-width: 1200px) {
+      .birdwatch-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .dex-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .guide-button-grid,
+      .event-dex-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-overlay {
+        padding: 18px;
+      }
+
+      .guide-page {
+        padding: 22px;
+      }
+
+      .guide-page-top {
+        flex-direction: column;
+      }
+
+      .guide-page-top .mini-button {
+        width: 100%;
+      }
+
+      .page-wrap {
+        width: min(var(--max), calc(100% - 32px));
+      }
+
+      .bird-stage {
+        min-height: 520px;
+      }
+
+      .habitat-tab,
+      .birdwatch-actions .pill-button,
+      .birdwatch-actions .secondary-button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .watch-bird {
+        transform: translate(-50%, -50%) scaleX(var(--flip, 1)) scale(calc(var(--scale, 1) * 0.82));
+      }
+
+      .dex-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stage-caption {
+        border-radius: 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .watch-bird,
+      .watch-bird *,
+      .bird-effect::before {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+
+    /* MUSIC */
+
+    .music-credit-mini {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .music-credit-mini .mini-button {
+      color: var(--muted);
+      font-size: 0.9rem;
+      opacity: 0.88;
+    }
+
+    .music-credit-mini .mini-button:hover {
+      opacity: 1;
+      color: var(--text);
+    }
+
+    .music-layout {
+      display: grid;
+      grid-template-columns: 0.86fr 1.14fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .music-sidebar code {
+      color: var(--gold);
+    }
+
+    .music-filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .music-filter {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .music-filter:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .music-filter.active {
+      background: linear-gradient(135deg, rgba(214, 243, 234, 0.96), rgba(140, 211, 190, 0.96));
+      color: #122025;
+      border-color: transparent;
+    }
+
+    .music-player-panel {
+      overflow: hidden;
+    }
+
+    .music-now {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .music-art {
+      position: relative;
+      min-height: 220px;
+      border-radius: 30px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 30% 24%, rgba(240, 217, 165, 0.34), transparent 26%),
+        radial-gradient(circle at 70% 66%, rgba(140, 211, 190, 0.32), transparent 28%),
+        linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 0 60px rgba(255,255,255,0.04);
+    }
+
+    .music-orb {
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+      background: rgba(214, 243, 234, 0.18);
+      filter: blur(1px);
+      animation: musicFloat 5s ease-in-out infinite;
+    }
+
+    .orb-one {
+      width: 86px;
+      height: 86px;
+      left: 24px;
+      top: 30px;
+    }
+
+    .orb-two {
+      width: 118px;
+      height: 118px;
+      right: -20px;
+      bottom: 24px;
+      background: rgba(240, 217, 165, 0.16);
+      animation-delay: -1.4s;
+    }
+
+    .orb-three {
+      width: 58px;
+      height: 58px;
+      left: 88px;
+      bottom: 34px;
+      background: rgba(140, 211, 190, 0.22);
+      animation-delay: -2.2s;
+    }
+
+    .music-note {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: rgba(255,255,255,0.88);
+      font-size: 5rem;
+      text-shadow: 0 16px 40px rgba(0,0,0,0.28);
+      animation: musicPulse 2.6s ease-in-out infinite;
+    }
+
+    .music-player-panel.playing .music-note {
+      animation: musicPulse 1.5s ease-in-out infinite;
+    }
+
+    .music-current-copy h2 {
+      margin-bottom: 10px;
+    }
+
+    .music-file-name {
+      margin-bottom: 0;
+      font-size: 0.88rem;
+      word-break: break-word;
+    }
+
+    .music-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .music-play-button {
+      min-width: 140px;
+    }
+
+    .music-progress-wrap {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .music-time-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted-2);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .music-progress,
+    .music-volume input {
+      width: 100%;
+      accent-color: var(--accent-2);
+    }
+
+    .music-extra-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 0 22px;
+    }
+
+    .music-toggle,
+    .music-volume {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .music-toggle input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-2);
+    }
+
+    .music-volume {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .music-track-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .music-track-card {
+      width: 100%;
+      padding: 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.045);
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .music-track-card:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.075);
+    }
+
+    .music-track-card.active {
+      border-color: rgba(140, 211, 190, 0.76);
+      background: rgba(140, 211, 190, 0.12);
+    }
+
+    .music-track-number {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    .music-track-main strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .music-track-main small {
+      display: block;
+      color: var(--muted-2);
+      line-height: 1.4;
+    }
+
+    .music-track-chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .music-credits-list {
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .music-credits-list li {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .music-credits-list strong {
+      color: var(--text);
+    }
+
+    @keyframes musicFloat {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-10px) scale(1.04);
+      }
+    }
+
+    @keyframes musicPulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.06);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .music-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .music-now {
+        grid-template-columns: 1fr;
+      }
+
+      .music-art {
+        min-height: 180px;
+      }
+
+      .music-controls .secondary-button,
+      .music-controls .pill-button,
+      .music-extra-controls .mini-button {
+        width: 100%;
+      }
+
+      .music-extra-controls {
+        align-items: stretch;
+      }
+
+      .music-volume {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .music-track-card {
+        grid-template-columns: auto 1fr;
+      }
+
+      .music-track-chip {
+        grid-column: 1 / -1;
+        justify-self: start;
+      }
+    }
+
+    /* MEMES */
+    .meme-layout {
+      display: grid;
+      grid-template-columns: 0.86fr 1.14fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .quote-box {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin: 18px 0 20px;
+    }
+
+    .quote-label {
+      margin-bottom: 8px;
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .quote-line {
+      margin: 0;
+      font-size: 1.08rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .meme-stage {
+      overflow: hidden;
+    }
+
+    .meme-image-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(240, 217, 165, 0.08), transparent 34%),
+        radial-gradient(circle at 80% 70%, rgba(140, 211, 190, 0.08), transparent 34%),
+        rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 18px;
+    }
+
+    .meme-image {
+      width: 100%;
+      max-height: 620px;
+      object-fit: contain;
+      background: rgba(0, 0, 0, 0.28);
+    }
+
+    .meme-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 12px 0 4px;
+    }
+
+    .meme-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .thumb-panel {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .thumb-panel-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .thumb-panel-top strong {
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .thumb-panel-top small {
+      color: var(--muted-2);
+    }
+
+    .thumb-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+      gap: 10px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 0.78;
+      padding: 0;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      background: rgba(255,255,255,0.05);
+      cursor: pointer;
+    }
+
+    .thumb:hover {
+      border-color: rgba(255,255,255,0.28);
+    }
+
+    .thumb.active {
+      border-color: var(--accent-2);
+      box-shadow: 0 0 0 4px rgba(140, 211, 190, 0.14);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .thumb-number {
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      min-width: 24px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: rgba(8, 14, 19, 0.72);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    @media (max-width: 760px) {
+      .thumb-row {
+        grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+        max-height: 220px;
+      }
+
+      .meme-image {
+        max-height: 520px;
+      }
+    }
+
+    /* CHATBOX */
+    .chat-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .quick-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 20px;
+    }
+
+    .quick-chip {
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .mini-plan {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .chat-shell {
+      display: flex;
+      flex-direction: column;
+      min-height: 660px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .chat-top {
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .chat-log {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 22px 24px;
+      background:
+        radial-gradient(circle at top left, rgba(140,211,190,0.06), transparent 28%),
+        rgba(8, 14, 18, 0.52);
+      overflow-y: auto;
+    }
+
+    .message {
+      display: flex;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .bubble {
+      max-width: 78%;
+      padding: 14px 16px;
+      border-radius: 20px;
+      line-height: 1.65;
+      white-space: normal;
+      word-break: break-word;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .message.bot .bubble {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
+
+    .message.user .bubble {
+      background: linear-gradient(135deg, rgba(214,243,234,0.95), rgba(140,211,190,0.95));
+      color: #0d1b1f;
+      font-weight: 600;
+    }
+
+    .composer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 18px 22px 22px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .composer input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      outline: none;
+    }
+
+    .composer input::placeholder {
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* SUPPORT */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .support-card {
+      padding: 24px;
+      min-height: 220px;
+    }
+
+    .support-card h3 {
+      margin-bottom: 12px;
+    }
+
+    .warning-card {
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(255, 214, 173, 0.10);
+      border: 1px solid rgba(255, 214, 173, 0.18);
+      color: #ffe7c5;
+    }
+
+    .warning-card p {
+      color: rgba(255, 231, 197, 0.82);
+      margin-bottom: 0;
+    }
+
+    @keyframes floaty {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @media (max-width: 1200px) {
+      .home-links,
+      .card-grid.three,
+      .forest-layout,
+      .music-layout,
+      .meme-layout,
+      .chat-layout,
+      .support-grid,
+      .preview-strip,
+      .card-grid.two {
+        grid-template-columns: 1fr;
+      }
+
+      .dex-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button id="floatingHome" class="floating-home" type="button">← Back to home</button>
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+
+  <!-- HOME -->
+  <section class="route-page active" data-route="home">
+    <div class="home-shell">
+      <div class="home-overlay"></div>
+      <div class="home-content">
+        <h1 class="home-title">Take a Break!</h1>
+        <p class="home-sub">
+          A small, quiet corner for when your brain has too many tabs open.
+          Slow down, choose something gentle, and come back when you are ready.
+        </p>
+
+        <div class="home-links">
+          <a class="feature-link" href="#/calm-down">
+            <span class="dot">•</span>
+            <span class="feature-text">Calm down</span>
+          </a>
+
+          <a class="feature-link" href="#/chatbox">
+            <span class="dot">•</span>
+            <span class="feature-text">Sort my thoughts<br />with AI chatbox</span>
+          </a>
+
+          <a class="feature-link" href="#/support">
+            <span class="dot">•</span>
+            <span class="feature-text">Get support</span>
+          </a>
+        </div>
+
+        <button id="surpriseButton" class="ghost-button" type="button">Click me!</button>
+
+        <div class="home-hint">
+          This button randomly sends the user to one calm-down activity.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALM DOWN -->
+  <section class="route-page" data-route="calm-down">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Calm down</div>
+          <h1>Choose the kind of calm you want right now.</h1>
+        </div>
+
+        <div class="card-grid three">
+          <article class="option-card">
+            <div class="tag">Go with the flow</div>
+            <h3>Music</h3>
+            <p>
+              Pick a calming track, press play, and let the page become a small listening room.
+              This section now uses real audio files from the assets/music folder.
+            </p>
+            <div class="button-row">
+              <a class="pill-button" href="#/music">Open music player</a>
+            </div>
+          </article>
+
+          <article class="option-card">
+            <div class="tag">*Bird noises*</div>
+            <h3>Watch birds</h3>
+            <p>
+              Enter a cartoon forest where different little birds randomly appear.
+              Click a bird to get a tiny dialogue or small story. New birds get added to your field guide.
+            </p>
+            <div class="button-row">
+              <a class="pill-button" href="#/watch-birds">Go birdwatching</a>
+            </div>
+          </article>
+
+          <article class="option-card">
+            <div class="tag">Meme energy</div>
+            <h3>Intelligent quotes</h3>
+            <p>
+              A peer-reviewed collection of wise images delivering real important messages with real confidence.
+              Please do not cite this section in court, class, or any significant scenarios.
+            </p>
+            <div class="button-row">
+              <a class="pill-button" href="#/quotes">See the memes</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<!-- MUSIC -->
+<section class="route-page" data-route="music">
+  <div class="subpage-bg">
+    <div class="page-wrap">
+      <div class="page-hero">
+        <div class="page-kicker">Music</div>
+        <h1>A small listening room for softer moments.</h1>
+        <p>
+          Choose one calming track from this cozy folder. You can loop it,
+          change volume, move through the playlist, or let the player shuffle something gentle.
+        </p>
+      </div>
+
+      <div class="music-layout">
+        <aside class="panel panel-pad music-sidebar">
+          <div class="tag">Sound choices</div>
+          <h2>Pick a mood.</h2>
+          <p>
+            Pick something soft, let it play quietly, and give your thoughts a little more room.
+          </p>
+
+          <div class="music-filter-row" aria-label="Filter music tracks">
+            <button class="music-filter active" data-filter="all" type="button">All</button>
+            <button class="music-filter" data-filter="music-box" type="button">Music box</button>
+            <button class="music-filter" data-filter="melody" type="button">Melody</button>
+            <button class="music-filter" data-filter="nature" type="button">Nature</button>
+            <button class="music-filter" data-filter="guitar" type="button">Guitar</button>
+          </div>
+
+          <div class="mini-note" style="margin-top: 18px;">
+            <h3>Listening suggestion</h3>
+            <p class="muted" style="margin-bottom: 0;">
+              Try setting the volume low and turning loop on. The goal is not entertainment;
+              it is giving your brain a softer background.
+            </p>
+          </div>
+
+          <div class="music-credit-mini">
+            <button id="openMusicCredits" class="mini-button" type="button">
+              Audio credits
+            </button>
+          </div>
+        </aside>
+
+        <section class="panel panel-pad music-player-panel">
+          <div class="music-now">
+            <div class="music-art" aria-hidden="true">
+              <span class="music-orb orb-one"></span>
+              <span class="music-orb orb-two"></span>
+              <span class="music-orb orb-three"></span>
+              <span class="music-note">♪</span>
+            </div>
+
+            <div class="music-current-copy">
+              <div class="tag tag-soft" id="musicCategoryLabel">Ready</div>
+              <h2 id="musicTitle">Choose a track</h2>
+              <p id="musicDescription">
+                Select one of the tracks below to begin.
+              </p>
+              <p id="musicFileName" class="muted music-file-name">
+                No file loaded yet.
+              </p>
+            </div>
+          </div>
+
+          <audio id="musicAudio" preload="metadata"></audio>
+
+          <div class="music-controls">
+            <button id="musicPrev" class="secondary-button" type="button">Previous</button>
+            <button id="musicPlayPause" class="pill-button music-play-button" type="button">Play</button>
+            <button id="musicNext" class="secondary-button" type="button">Next</button>
+          </div>
+
+          <div class="music-progress-wrap">
+            <div class="music-time-row">
+              <span id="musicCurrentTime">0:00</span>
+              <span id="musicDuration">0:00</span>
+            </div>
+            <input
+              id="musicProgress"
+              class="music-progress"
+              type="range"
+              min="0"
+              max="100"
+              value="0"
+              step="0.1"
+              aria-label="Audio progress"
+            />
+          </div>
+
+          <div class="music-extra-controls">
+            <label class="music-toggle">
+              <input id="musicLoop" type="checkbox" checked />
+              <span>Loop</span>
+            </label>
+
+            <label class="music-volume">
+              <span>Volume</span>
+              <input
+                id="musicVolume"
+                type="range"
+                min="0"
+                max="1"
+                value="0.65"
+                step="0.01"
+                aria-label="Volume"
+              />
+            </label>
+
+            <button id="musicShuffle" class="mini-button" type="button">Shuffle</button>
+          </div>
+
+          <div id="musicTrackList" class="music-track-list"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WATCH BIRDS -->
+  <section class="route-page" data-route="watch-birds">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Watch birds</div>
+          <h1>A tiny field trip without leaving the page.</h1>
+          <p>
+            Wander through a city park, a forest edge, or a quiet wetland.
+            Tap the birds you meet, collect their tiny stories, and let your brain look at something softer for a while.
+          </p>
+
+          <div class="habitat-tabs" aria-label="Choose a birdwatching habitat">
+            <button class="habitat-tab" data-habitat="city" type="button">🏙️ City</button>
+            <button class="habitat-tab active" data-habitat="forest" type="button">🌲 Forest</button>
+            <button class="habitat-tab" data-habitat="wetland" type="button">💧 Creek &amp; Wetland</button>
+          </div>
+        </div>
+
+        <div class="birdwatch-layout">
+          <div class="birdwatch-stage-wrap">
+            <div id="birdStage" class="bird-stage scene-forest" aria-label="interactive birdwatching scene">
+              <div class="scene-layer city-layer" aria-hidden="true">
+                <span class="city-wire"></span>
+                <span class="city-wire wire-two"></span>
+                <span class="city-building b1"></span>
+                <span class="city-building b2"></span>
+                <span class="city-building b3"></span>
+                <span class="city-building b4"></span>
+                <span class="city-building b5"></span>
+                <span class="city-sidewalk"></span>
+                <span class="city-tree"></span>
+                <span class="city-bench"></span>
+                <span class="city-lamp"></span>
+              </div>
+
+              <div class="scene-layer forest-layer" aria-hidden="true">
+                <span class="forest-hill hill-back"></span>
+                <span class="forest-hill hill-middle"></span>
+                <span class="forest-hill hill-front"></span>
+                <span class="forest-branch a"></span>
+                <span class="forest-branch b"></span>
+                <span class="forest-branch c"></span>
+                <span class="forest-tree t1"></span>
+                <span class="forest-tree t2"></span>
+                <span class="forest-tree t3"></span>
+                <span class="forest-tree t4"></span>
+                <span class="forest-bush"></span>
+                <span class="forest-log"></span>
+                <span class="forest-ground-detail"></span>
+              </div>
+
+              <div class="scene-layer wetland-layer" aria-hidden="true">
+                <span class="wet-water"></span>
+                <span class="wet-bank"></span>
+                <span class="wet-reed r1"></span>
+                <span class="wet-reed r2"></span>
+                <span class="wet-reed r3"></span>
+                <span class="wet-reed r4"></span>
+                <span class="wet-reed r5"></span>
+                <span class="wet-reed r6"></span>
+                <span class="wet-rock a"></span>
+                <span class="wet-rock b"></span>
+                <span class="wet-tree"></span>
+                <span class="water-ring"></span>
+                <span class="water-ring b"></span>
+              </div>
+
+              <div id="birdLayer" class="bird-layer"></div>
+
+              <div id="stageCaption" class="stage-caption">
+                Forest edge: leaf litter, branches, and tiny birds with strong opinions about seeds.
+              </div>
+            </div>
+
+            <div class="birdwatch-actions">
+              <button id="refreshBirds" class="pill-button" type="button">Refresh habitat</button>
+              <button id="randomHabitat" class="secondary-button" type="button">Surprise habitat</button>
+              <button id="resetBirdGuide" class="secondary-button" type="button">Reset guides</button>
+            </div>
+          </div>
+
+          <aside class="panel panel-pad info-stack">
+            <div>
+              <div class="tag">Bird encounter</div>
+              <h2 id="birdName">Tap a bird in the habitat</h2>
+              <p id="birdStory">
+                Different real birds appear in different scenes. Click one to get a tiny story,
+                a small dialogue, and an entry in your collection.
+              </p>
+            </div>
+
+            <div class="encounter-box">
+              <blockquote id="birdQuote">
+                Your guides will fill up whenever you meet a species for the first time.
+              </blockquote>
+              <p id="birdMeta">
+                Not feeling this habitat? Try another one. Different birds bring different levels of plots.
+              </p>
+            </div>
+
+            <div class="stat-row">
+              <div id="birdDiscoveryCount" class="stat-pill">0 / 12 birds</div>
+              <div id="eventDiscoveryCount" class="stat-pill">0 / 9 events</div>
+              <div id="lastSeen" class="stat-pill">Last seen: none</div>
+            </div>
+
+            <div class="guide-launch-panel">
+              <p class="muted guide-launch-copy">
+                Your discoveries are saved here!
+              </p>
+
+              <div class="guide-button-grid">
+                <button id="openBirdGuide" class="secondary-button guide-open-button" type="button">
+                  Bird archive
+                </button>
+
+                <button id="openEventGuide" class="secondary-button guide-open-button" type="button">
+                  Habitat event log
+                </button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+        <div id="birdGuideOverlay" class="guide-overlay" aria-hidden="true">
+          <div class="guide-page panel">
+            <div class="guide-page-top">
+              <div>
+                <div class="tag tag-soft">Bird guide</div>
+                <h2>Bird species discovered</h2>
+                <p class="muted">
+                  A calmer full-page view of all the birds you have met so far.
+                </p>
+              </div>
+
+              <button id="closeBirdGuide" class="mini-button" type="button">
+                Close
+              </button>
+            </div>
+
+            <div id="dexGrid" class="dex-grid guide-full-grid"></div>
+          </div>
+        </div>
+
+        <div id="eventGuideOverlay" class="guide-overlay" aria-hidden="true">
+          <div class="guide-page panel">
+            <div class="guide-page-top">
+              <div>
+                <div class="tag tag-soft">Event guide</div>
+                <h2>Habitat events discovered</h2>
+                <p class="muted">
+                  Special little scenes you have encountered while refreshing habitats.
+                </p>
+              </div>
+
+              <button id="closeEventGuide" class="mini-button" type="button">
+                Close
+              </button>
+            </div>
+
+            <div id="eventDexGrid" class="event-dex-grid guide-full-grid"></div>
+          </div>
+        </div>
+  </section>
+
+  <!-- MEMES -->
+  <section class="route-page" data-route="quotes">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Intelligent quotes</div>
+          <h1>Random wise generator.</h1>
+          <p>
+            To sleep or not to sleep, this is a question.
+          </p>
+        </div>
+
+        <div class="meme-layout">
+          <aside class="panel panel-pad">
+            <div class="tag">Meme oracle</div>
+            <h2>Consult the ancient council of nonsense.</h2>
+            <p>
+              Press shuffle when your brain needs interruption, not inspiration.
+            </p>
+
+            <div class="quote-box">
+              <div class="quote-label">Today's intelligent quote</div>
+              <p id="memeLine" class="quote-line">
+                Stay mysterious. Even if you are mostly just confused.
+              </p>
+            </div>
+
+            <div class="button-row">
+              <button id="prevMeme" class="secondary-button" type="button">Previous</button>
+              <button id="shuffleMeme" class="pill-button" type="button">Shuffle meme</button>
+              <button id="nextMeme" class="secondary-button" type="button">Next</button>
+            </div>
+
+          </aside>
+
+          <section class="panel panel-pad meme-stage">
+            <div class="meme-image-wrap">
+              <img id="memeImage" class="meme-image" src="assets/meme/M1.png" alt="Funny meme image" />
+            </div>
+
+            <div class="meme-meta-row">
+              <span id="memeCounter" class="meme-pill">1 / 37</span>
+              <span id="memeCategory" class="meme-pill">chaotic wisdom</span>
+            </div>
+
+            <h3 id="memeTitle">Strategic intelligence</h3>
+            <p id="memeCaption">
+              The universe is not giving you a quote today. It is giving you vibes and poor decision-making energy.
+            </p>
+
+            <div class="thumb-panel">
+              <div class="thumb-panel-top">
+                <strong>Meme archive</strong>
+                <small>Click a tiny nonsense tile.</small>
+              </div>
+              <div id="thumbRow" class="thumb-row"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHATBOX -->
+  <section class="route-page" data-route="chatbox">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Sort my thoughts with AI chatbox</div>
+          <h1>One messy thought at a time is enough.</h1>
+          <p>
+            This is a prototype supportive chatbox page. Right now it gives gentle structured replies,
+            so the interaction already feels like part of the final site flow.
+          </p>
+        </div>
+
+        <div class="chat-layout">
+          <aside class="panel panel-pad">
+            <div class="tag">Quick start</div>
+            <h3>Try one of these</h3>
+            <div class="quick-grid">
+              <button class="quick-chip" data-prompt="I feel overwhelmed.">I feel overwhelmed</button>
+              <button class="quick-chip" data-prompt="I can't get started.">I can't get started</button>
+              <button class="quick-chip" data-prompt="I am anxious about deadlines.">Deadlines are stressing me out</button>
+              <button class="quick-chip" data-prompt="I'm really tired.">I'm really tired</button>
+              <button class="quick-chip" data-prompt="Help me find one tiny next step.">Give me one tiny next step</button>
+            </div>
+
+            <div class="mini-plan">
+              <h3 style="margin-bottom:10px;">Design direction</h3>
+              <ul class="soft-list">
+                <li>Empathetic first response</li>
+                <li>Break big feelings into tiny next actions</li>
+                <li>Low-pressure tone instead of productivity pressure</li>
+                <li>Easy to replace with a real API later</li>
+              </ul>
+            </div>
+          </aside>
+
+          <section class="panel chat-shell">
+            <div class="chat-top">
+              <div class="tag tag-soft">Prototype chatbox</div>
+              <p class="muted" style="margin:0;">
+                This is a front-end demo interaction, not a real clinical support tool.
+              </p>
+            </div>
+
+            <div id="chatLog" class="chat-log"></div>
+
+            <form id="chatForm" class="composer">
+              <input
+                id="chatInput"
+                type="text"
+                placeholder="Type what is on your mind..."
+                autocomplete="off"
+              />
+              <button class="pill-button" type="submit">Send</button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUPPORT -->
+  <section class="route-page" data-route="support">
+    <div class="subpage-bg">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <div class="page-kicker">Get support</div>
+          <h1>Support should feel easy to find.</h1>
+          <p>
+            This page is set up so you can later replace the placeholder cards
+            with your real university, local, or verified support resources.
+          </p>
+        </div>
+
+        <div class="support-grid">
+          <article class="panel support-card">
+            <div class="tag">Campus support</div>
+            <h3>Counselling / wellbeing</h3>
+            <p>
+              Add your school counselling centre, student wellbeing team,
+              or mental health service contact here.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Academic support</div>
+            <h3>Advisor / tutor / extension help</h3>
+            <p>
+              Add academic advisors, study skills support, extension policies,
+              or department contacts here.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Peer support</div>
+            <h3>Friends, mentors, communities</h3>
+            <p>
+              Add peer mentoring schemes, student communities, group chats,
+              or buddy systems here.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Urgent help</div>
+            <h3>Emergency / crisis support</h3>
+            <p>
+              Replace this with verified emergency and crisis contacts before publishing.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Small immediate actions</div>
+            <h3>What can I do right now?</h3>
+            <p>
+              Drink water, move away from the screen briefly, message one trusted person,
+              or go back to the chatbox and break the problem down.
+            </p>
+          </article>
+
+          <article class="panel support-card">
+            <div class="tag">Return gently</div>
+            <h3>Not ready to solve everything?</h3>
+            <p>
+              That is fine. You can go back to Calm down and pick a softer entry point instead.
+            </p>
+          </article>
+        </div>
+
+        <div class="warning-card">
+          <strong>Prototype note:</strong>
+          <p>
+            This site concept should not replace professional or emergency support.
+            Please add real, verified support information before using it publicly.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // ---------------------------
+    // ROUTER
+    // ---------------------------
+    const pages = Array.from(document.querySelectorAll(".route-page"));
+    const validRoutes = new Set(pages.map((page) => page.dataset.route));
+    const floatingHome = document.getElementById("floatingHome");
+    const toast = document.getElementById("toast");
+    const confettiLayer = document.getElementById("confettiLayer");
+
+    let toastTimer = null;
+
+    function getCurrentRoute() {
+      const raw = window.location.hash.replace(/^#\/?/, "").trim();
+      if (!raw) return "home";
+      return validRoutes.has(raw) ? raw : "home";
+    }
+
+    function renderRoute() {
+      const route = getCurrentRoute();
+
+      pages.forEach((page) => {
+        page.classList.toggle("active", page.dataset.route === route);
+      });
+
+      floatingHome.classList.toggle("visible", route !== "home");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function navigate(route) {
+      window.location.hash = "#/" + route;
+    }
+
+    if (!window.location.hash) {
+      window.location.hash = "#/home";
+    } else {
+      renderRoute();
+    }
+
+    window.addEventListener("hashchange", renderRoute);
+
+    floatingHome.addEventListener("click", () => {
+      navigate("home");
+    });
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2200);
+    }
+
+    function burstConfetti(message) {
+      if (!confettiLayer) return;
+
+      const colors = [
+        "#d6f3ea",
+        "#8cd3be",
+        "#f0d9a5",
+        "#ffd7d7",
+        "#ffffff",
+        "#9ad7f5"
+      ];
+
+      confettiLayer.innerHTML = "";
+
+      for (let i = 0; i < 90; i += 1) {
+        const piece = document.createElement("span");
+        const left = Math.random() * 100;
+        const drift = (Math.random() * 2 - 1) * 260;
+        const rotate = (Math.random() * 720 + 180).toFixed(0);
+        const duration = 1200 + Math.random() * 1100;
+        const delay = Math.random() * 260;
+
+        piece.className = "confetti-piece";
+        piece.style.left = `${left}%`;
+        piece.style.setProperty("--confetti-color", colors[i % colors.length]);
+        piece.style.setProperty("--confetti-drift", `${drift.toFixed(0)}px`);
+        piece.style.setProperty("--confetti-rotate", `${rotate}deg`);
+        piece.style.setProperty("--confetti-duration", `${duration.toFixed(0)}ms`);
+        piece.style.animationDelay = `${delay.toFixed(0)}ms`;
+
+        confettiLayer.appendChild(piece);
+      }
+
+      if (message) {
+        showToast(message);
+      }
+
+      setTimeout(() => {
+        confettiLayer.innerHTML = "";
+      }, 2600);
+    }
+ 
+    function checkBirdGuideCompletion() {
+      const total = Object.keys(realBirdSpecies).length;
+      const completeNow = discoveredBirds.size === total;
+
+      if (completeNow && !birdGuideCompleted) {
+        birdGuideCompleted = true;
+        burstConfetti("Bird guide complete! Every bird has joined the tiny archive.");
+      }
+    }
+
+    function checkEventGuideCompletion() {
+      const total = getAllHabitatEventIds().length;
+      const completeNow = discoveredEvents.size === total;
+
+      if (completeNow && !eventGuideCompleted) {
+        eventGuideCompleted = true;
+        burstConfetti("Event guide complete! You have witnessed all habitat drama.");
+      }
+    }
+
+    // ---------------------------
+    // SURPRISE BUTTONS
+    // ---------------------------
+    function surpriseCalmFeature() {
+      const picks = ["music", "watch-birds", "quotes"];
+      const pick = picks[Math.floor(Math.random() * picks.length)];
+
+      if (pick === "music") {
+        navigate("music");
+        showToast("Random choice: Music player");
+        return;
+      }
+
+      if (pick === "watch-birds") {
+        navigate("watch-birds");
+        showToast("Random choice: Watch birds");
+        return;
+      }
+
+      navigate("quotes");
+      showToast("Random choice: Intelligent quotes");
+    }
+
+    const surpriseButton = document.getElementById("surpriseButton");
+    const branchSurpriseButton = document.getElementById("branchSurpriseButton");
+
+    if (surpriseButton) {
+      surpriseButton.addEventListener("click", surpriseCalmFeature);
+    }
+
+    if (branchSurpriseButton) {
+      branchSurpriseButton.addEventListener("click", surpriseCalmFeature);
+    }
+
+    // ---------------------------
+    // MUSIC PLAYER
+    // ---------------------------
+    const musicTracks = [
+      {
+        title: "Music Box Silent Night",
+        artist: "bilwiss",
+        category: "music-box",
+        mood: "soft music box",
+        file: "24725__bilwiss__musicbox_silent_night.mp3",
+        description:
+          "A delicate music box track for very slow breathing and late-night reset moments.",
+        credit:
+          "Author - bilwiss. License - CC0 1.0 Universal. Source - Freesound."
+      },
+      {
+        title: "World Melody",
+        artist: "moonheart",
+        category: "melody",
+        mood: "warm melody",
+        file: "208992__moonheart__world-melody.wav",
+        description:
+          "A simple melodic track that feels like a small pause between busy thoughts.",
+        credit:
+          "Author - moonheart. License - CC0 1.0 Universal. Source - Freesound."
+      },
+      {
+        title: "Cuckoo & Nightingale Duet",
+        artist: "vonora",
+        category: "nature",
+        mood: "birdsong",
+        file: "269570__vonora__cuckoo-the-nightingale-duet.mp3",
+        description:
+          "A bird duet for users who want something more organic and outside-the-window feeling.",
+        credit:
+          "Author - Vonora. License - CC0 1.0 Universal. Source - Freesound."
+      },
+      {
+        title: "Eternity 20",
+        artist: "levelclearer",
+        category: "melody",
+        mood: "ambient loop",
+        file: "346387__levelclearer__eternity20.wav",
+       description:
+          "A calm ambient loop for background listening while the page stays quiet.",
+        credit:
+          "Author - levelclearer. License - CC0 1.0 Universal. Source - Freesound."
+      },
+      {
+        title: "Stream Running Water",
+        artist: "burghrecords",
+        category: "nature",
+        mood: "water ambience",
+        file: "415151__burghrecords__stream-running-water-aviemore-scotland.wav",
+        description:
+          "Running water ambience for a creek-side reset without leaving the desk.",
+        credit:
+          "Author - BurghRecords. License - CC0 1.0 Universal. Source - Freesound."
+      },
+      {
+        title: "Acoustic Guitar Melody",
+        artist: "garuda1982",
+        category: "guitar",
+        mood: "gentle guitar",
+        file: "536638__garuda1982__acoustic-guitar-melody-fingerstyle-picking.wav",
+        description:
+          "Fingerstyle acoustic guitar for a warmer, more human-feeling calm.",
+        credit:
+          "Author - Garuda1982. License - CC0 1.0 Universal. Source - Freesound."
+      },
+      {
+        title: "Rain Sound",
+        artist: "legnalegna55",
+        category: "nature",
+        mood: "rain ambience",
+        file: "545250__legnalegna55__rain-sound.mp3",
+        description:
+          "Rain ambience for when the page needs to become a tiny safe room.",
+        credit:
+          "Author - Legnalegna55. License - CC0 1.0 Universal. Source - Freesound."
+      },
+      {
+        title: "Birds and Water",
+        artist: "sadiqueat",
+        category: "nature",
+        mood: "field recording",
+        file: "852529__sadiquecat__2026-04-15-06h47-rouvenac-chemin-sw-bird-and-water-ms-raw.flac",
+        description:
+          "A field recording with bird and water sounds for a realistic outdoor atmosphere.",
+        credit:
+          "Author - Sadiqueat. License - CC0 1.0 Universal. Source - Freesound."
+      }
+    ];
+
+    const MUSIC_BASE_PATH = "assets/music/";
+
+    const musicAudio = document.getElementById("musicAudio");
+    const musicPlayerPanel = document.querySelector(".music-player-panel");
+    const musicTitle = document.getElementById("musicTitle");
+    const musicDescription = document.getElementById("musicDescription");
+    const musicFileName = document.getElementById("musicFileName");
+    const musicCategoryLabel = document.getElementById("musicCategoryLabel");
+    const musicPlayPause = document.getElementById("musicPlayPause");
+    const musicPrev = document.getElementById("musicPrev");
+    const musicNext = document.getElementById("musicNext");
+    const musicShuffle = document.getElementById("musicShuffle");
+    const musicProgress = document.getElementById("musicProgress");
+    const musicCurrentTime = document.getElementById("musicCurrentTime");
+    const musicDuration = document.getElementById("musicDuration");
+    const musicLoop = document.getElementById("musicLoop");
+    const musicVolume = document.getElementById("musicVolume");
+    const musicTrackList = document.getElementById("musicTrackList");
+    const musicFilters = Array.from(document.querySelectorAll(".music-filter"));
+    const openMusicCredits = document.getElementById("openMusicCredits");
+
+    let currentMusicIndex = 0;
+    let currentMusicFilter = "all";
+    let musicUserHasLoadedTrack = false;
+
+    function getFilteredMusicTracks() {
+      if (currentMusicFilter === "all") return musicTracks;
+
+      return musicTracks.filter((track) => track.category === currentMusicFilter);
+    }
+
+    function getTrackPath(track) {
+      return MUSIC_BASE_PATH + encodeURIComponent(track.file).replace(/%2F/g, "/");
+    }
+
+    function formatMusicTime(seconds) {
+      if (!Number.isFinite(seconds)) return "0:00";
+
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = Math.floor(seconds % 60).toString().padStart(2, "0");
+
+      return `${minutes}:${remainingSeconds}`;
+    }
+
+    function getTrackOriginalIndex(track) {
+      return musicTracks.findIndex((item) => item.file === track.file);
+    }
+
+    function setActiveMusicIndex(index, shouldPlay = false) {
+      const safeIndex = (index + musicTracks.length) % musicTracks.length;
+      currentMusicIndex = safeIndex;
+
+      const track = musicTracks[currentMusicIndex];
+      musicUserHasLoadedTrack = true;
+
+      musicAudio.src = getTrackPath(track);
+      musicAudio.loop = musicLoop.checked;
+      musicAudio.volume = Number(musicVolume.value);
+
+      musicTitle.textContent = track.title;
+      musicDescription.textContent = track.description;
+      musicFileName.textContent = `File: assets/music/${track.file}`;
+      musicCategoryLabel.textContent = track.mood;
+
+      musicProgress.value = 0;
+      musicCurrentTime.textContent = "0:00";
+      musicDuration.textContent = "0:00";
+
+      renderMusicTrackList();
+
+      if (shouldPlay) {
+        playCurrentMusic();
+      } else {
+        musicPlayPause.textContent = "Play";
+        musicPlayerPanel.classList.remove("playing");
+      }
+    }
+
+    function playCurrentMusic() {
+      if (!musicUserHasLoadedTrack) {
+        setActiveMusicIndex(currentMusicIndex, false);
+      }
+
+      const playPromise = musicAudio.play();
+
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {
+          showToast("The browser blocked autoplay. Press Play once more.");
+        });
+      }
+    }
+
+    function pauseCurrentMusic() {
+      musicAudio.pause();
+    }
+
+    function toggleMusicPlay() {
+      if (musicAudio.paused) {
+        playCurrentMusic();
+      } else {
+        pauseCurrentMusic();
+      }
+    }
+
+    function goToNextMusic(shouldPlay = !musicAudio.paused) {
+      const filtered = getFilteredMusicTracks();
+      const currentTrack = musicTracks[currentMusicIndex];
+      const currentFilteredIndex = filtered.findIndex((track) => track.file === currentTrack.file);
+
+      let nextTrack;
+
+      if (currentFilteredIndex === -1) {
+        nextTrack = filtered[0] || musicTracks[0];
+      } else {
+        nextTrack = filtered[(currentFilteredIndex + 1) % filtered.length];
+      }
+
+      setActiveMusicIndex(getTrackOriginalIndex(nextTrack), shouldPlay);
+    }
+
+    function goToPreviousMusic(shouldPlay = !musicAudio.paused) {
+      const filtered = getFilteredMusicTracks();
+      const currentTrack = musicTracks[currentMusicIndex];
+      const currentFilteredIndex = filtered.findIndex((track) => track.file === currentTrack.file);
+
+      let previousTrack;
+
+      if (currentFilteredIndex === -1) {
+        previousTrack = filtered[filtered.length - 1] || musicTracks[musicTracks.length - 1];
+      } else {
+        previousTrack = filtered[(currentFilteredIndex - 1 + filtered.length) % filtered.length];
+      }
+
+      setActiveMusicIndex(getTrackOriginalIndex(previousTrack), shouldPlay);
+    }
+
+    function shuffleMusic() {
+      const filtered = getFilteredMusicTracks();
+      if (!filtered.length) return;
+
+      let nextTrack = filtered[Math.floor(Math.random() * filtered.length)];
+
+      if (filtered.length > 1) {
+        while (nextTrack.file === musicTracks[currentMusicIndex].file) {
+          nextTrack = filtered[Math.floor(Math.random() * filtered.length)];
+        }
+      }
+
+      setActiveMusicIndex(getTrackOriginalIndex(nextTrack), true);
+      showToast("Shuffling something gentle.");
+    }
+
+    function renderMusicTrackList() {
+      const filtered = getFilteredMusicTracks();
+
+      musicTrackList.innerHTML = filtered.map((track) => {
+        const originalIndex = getTrackOriginalIndex(track);
+        const isActive = originalIndex === currentMusicIndex && musicUserHasLoadedTrack;
+
+        return `
+          <button class="music-track-card ${isActive ? "active" : ""}" data-index="${originalIndex}" type="button">
+            <span class="music-track-number">${String(originalIndex + 1).padStart(2, "0")}</span>
+            <span class="music-track-main">
+              <strong>${track.title}</strong>
+              <small>${track.artist} · ${track.description}</small>
+            </span>
+            <span class="music-track-chip">${track.mood}</span>
+          </button>
+        `;
+      }).join("");
+
+      musicTrackList.querySelectorAll(".music-track-card").forEach((button) => {
+        button.addEventListener("click", () => {
+          setActiveMusicIndex(Number(button.dataset.index), true);
+        });
+      });
+    }
+
+    function renderMusicCreditsModal() {
+      const existing = document.getElementById("musicCreditsModal");
+      if (existing) existing.remove();
+
+      const modal = document.createElement("div");
+      modal.id = "musicCreditsModal";
+      modal.className = "modal open";
+      modal.setAttribute("aria-hidden", "false");
+
+      modal.innerHTML = `
+        <div class="modal-card">
+          <div class="tag tag-soft">Audio credits</div>
+          <h2>Music and ambience credits</h2>
+          <p>
+            Audio used in this prototype is credited below. Full copyright records are kept with the project files.
+          </p>
+
+          <ul class="music-credits-list">
+            ${musicTracks.map((track) => `
+              <li>
+                <strong>${track.title}</strong><br />
+                Artist / uploader: ${track.artist}<br />
+                File: <code>assets/music/${track.file}</code><br />
+                ${track.credit}
+              </li>
+            `).join("")}
+          </ul>
+
+          <div class="button-row" style="margin-top: 22px;">
+            <button id="closeMusicCredits" class="pill-button" type="button">Close</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      const closeButton = document.getElementById("closeMusicCredits");
+
+      function closeCredits() {
+        modal.remove();
+      }
+
+      closeButton.addEventListener("click", closeCredits);
+
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          closeCredits();
+        }
+      });
+    }
+
+    musicPlayPause.addEventListener("click", toggleMusicPlay);
+    musicNext.addEventListener("click", () => goToNextMusic());
+    musicPrev.addEventListener("click", () => goToPreviousMusic());
+    musicShuffle.addEventListener("click", shuffleMusic);
+
+    musicAudio.addEventListener("play", () => {
+      musicPlayPause.textContent = "Pause";
+      musicPlayerPanel.classList.add("playing");
+    });
+
+    musicAudio.addEventListener("pause", () => {
+      musicPlayPause.textContent = "Play";
+      musicPlayerPanel.classList.remove("playing");
+    });
+
+    musicAudio.addEventListener("loadedmetadata", () => {
+      musicDuration.textContent = formatMusicTime(musicAudio.duration);
+    });
+
+    musicAudio.addEventListener("timeupdate", () => {
+      if (!Number.isFinite(musicAudio.duration) || musicAudio.duration <= 0) return;
+
+      const progress = (musicAudio.currentTime / musicAudio.duration) * 100;
+      musicProgress.value = progress;
+      musicCurrentTime.textContent = formatMusicTime(musicAudio.currentTime);
+    });
+
+    musicAudio.addEventListener("ended", () => {
+      if (!musicAudio.loop) {
+        goToNextMusic(true);
+      }
+    });
+
+    musicAudio.addEventListener("error", () => {
+      showToast("This audio file could not be loaded. Check the file name and path.");
+    });
+
+    musicProgress.addEventListener("input", () => {
+      if (!Number.isFinite(musicAudio.duration) || musicAudio.duration <= 0) return;
+
+      musicAudio.currentTime = (Number(musicProgress.value) / 100) * musicAudio.duration;
+    });
+
+    musicLoop.addEventListener("change", () => {
+      musicAudio.loop = musicLoop.checked;
+      showToast(musicLoop.checked ? "Loop is on." : "Loop is off.");
+    });
+
+    musicVolume.addEventListener("input", () => {
+      musicAudio.volume = Number(musicVolume.value);
+    });
+
+    musicFilters.forEach((filterButton) => {
+      filterButton.addEventListener("click", () => {
+        currentMusicFilter = filterButton.dataset.filter;
+
+        musicFilters.forEach((button) => {
+          button.classList.toggle("active", button === filterButton);
+        });
+
+        renderMusicTrackList();
+      });
+    });
+
+    openMusicCredits.addEventListener("click", renderMusicCreditsModal);
+
+    renderMusicTrackList();
+  
+
+    // ---------------------------
+    // WATCH BIRDS
+    // ---------------------------
+    const birdHabitats = {
+      city: {
+        name: "City pocket park",
+        caption:
+          "City pocket park: wires, sidewalks, ledges, and pigeons with the confidence of unpaid interns who somehow run the place.",
+        ids: ["rock-pigeon", "mourning-dove", "house-sparrow", "american-crow"]
+      },
+      forest: {
+        name: "Forest edge",
+        caption:
+          "Forest edge: leaf litter, branches, and tiny birds with strong opinions about seeds.",
+        ids: ["black-capped-chickadee", "downy-woodpecker", "northern-cardinal", "wood-thrush"]
+      },
+      wetland: {
+        name: "Creek & wetland",
+        caption:
+          "Creek & wetland: slow water, reeds, mud, and birds who made standing near fish into a whole career.",
+        ids: ["great-egret", "black-crowned-night-heron", "mallard", "belted-kingfisher"]
+      }
+    };
+
+    const realBirdSpecies = {
+      "rock-pigeon": {
+        id: "rock-pigeon",
+        habitat: "city",
+        name: "Rock Pigeon",
+        zh: "原鸽 / 城市鸽",
+        scientific: "Columba livia",
+        shape: "default",
+        motion: "bob",
+        body: "#8995a6",
+        wing: "#596574",
+        tail: "#4d5967",
+        head: "#707b8b",
+        belly: "#c4ccd8",
+        beak: "#3c3832",
+        legs: "#cf8157",
+        eye: "#101314",
+        note:
+          "Professional sidewalk manager. Can look lost and still navigate home better than most calendar apps.",
+        fact:
+          "Often hangs around city streets, parks, ledges, bridges, and other human-made cliffs.",
+        lines: [
+          "The pigeon looks at you like you are both waiting for the same late bus.",
+          "It performs three tiny head-bobs. This is legally a meeting now.",
+          "It has no advice, only crumb-based confidence.",
+          "It coos with the energy of a tiny public announcement."
+        ],
+        spots: [
+          { x: 21, y: 72, scale: 1.02 },
+          { x: 40, y: 70, scale: 0.9 },
+          { x: 67, y: 67, scale: 1.06 },
+          { x: 80, y: 73, scale: 0.94 }
+        ]
+      },
+      "mourning-dove": {
+        id: "mourning-dove",
+        habitat: "city",
+        name: "Mourning Dove",
+        zh: "哀鸽",
+        scientific: "Zenaida macroura",
+        shape: "default",
+        motion: "glide",
+        body: "#bfa28f",
+        wing: "#9b8276",
+        tail: "#8b756d",
+        head: "#c4aa9b",
+        belly: "#e0c9b8",
+        beak: "#34302d",
+        legs: "#c99078",
+        eye: "#181513",
+        note:
+          "Soft coo, dramatic wing-whistle. Looks like it has read one sad poem and decided to be gentle.",
+        fact:
+          "Often perches on wires and forages for seeds on bare ground; its wings can whistle sharply when it takes off.",
+        lines: [
+          "The dove coos as if your unread messages are none of its business.",
+          "It takes off with a small wing-whistle: extremely theatrical, but politely so.",
+          "It blinks. You both agree not everything needs to be solved today.",
+          "It is shaped like a sigh that found a telephone wire."
+        ],
+        spots: [
+          { x: 30, y: 33, scale: 0.92 },
+          { x: 52, y: 37, scale: 0.85 },
+          { x: 74, y: 55, scale: 0.9 },
+          { x: 18, y: 61, scale: 0.86 }
+        ]
+      },
+      "house-sparrow": {
+        id: "house-sparrow",
+        habitat: "city",
+        name: "House Sparrow",
+        zh: "家麻雀",
+        scientific: "Passer domesticus",
+        shape: "default",
+        motion: "hop",
+        body: "#9a724d",
+        wing: "#65462e",
+        tail: "#563d2e",
+        head: "#8b806b",
+        belly: "#d7c1a1",
+        beak: "#4a3323",
+        legs: "#b47b52",
+        eye: "#111111",
+        note:
+          "Tiny crumb auditor. Hop-hop-pecks through human civilization like it owns the lease.",
+        fact:
+          "Closely associated with buildings and urban areas, often hopping on the ground near people.",
+        lines: [
+          "The sparrow hops twice and files a crumb-related incident report.",
+          "It has the energy of someone very small but fully booked.",
+          "It pecks once. The sidewalk has been audited.",
+          "It pauses, considers your vibe, and resumes being extremely busy."
+        ],
+        spots: [
+          { x: 31, y: 74, scale: 0.68 },
+          { x: 57, y: 73, scale: 0.66 },
+          { x: 72, y: 68, scale: 0.7 },
+          { x: 47, y: 61, scale: 0.62 }
+        ]
+      },
+      "american-crow": {
+        id: "american-crow",
+        habitat: "city",
+        name: "American Crow",
+        zh: "美洲鸦",
+        scientific: "Corvus brachyrhynchos",
+        shape: "default",
+        motion: "tilt",
+        body: "#15191d",
+        wing: "#070809",
+        tail: "#050607",
+        head: "#111417",
+        belly: "#20252a",
+        beak: "#0b0d0f",
+        legs: "#111111",
+        eye: "#0c0c0c",
+        note:
+          "Suspiciously competent. If it stares at you, assume it has opened a case file.",
+        fact:
+          "Uses open woods and human-modified places such as city parks, lawns, parking lots, and roadsides.",
+        lines: [
+          "The crow tilts its head. You are being perceived with unsettling accuracy.",
+          "It says 'caw' in a tone that implies a spreadsheet exists.",
+          "It looks at the trash can, then at you. A plan is forming somewhere.",
+          "You have been added to the crow's soft surveillance network."
+        ],
+        spots: [
+          { x: 54, y: 51, scale: 1.03 },
+          { x: 76, y: 66, scale: 1.08 },
+          { x: 28, y: 63, scale: 1 },
+          { x: 61, y: 31, scale: 0.92 }
+        ]
+      },
+      "black-capped-chickadee": {
+        id: "black-capped-chickadee",
+        habitat: "forest",
+        name: "Black-capped Chickadee",
+        zh: "黑顶山雀",
+        scientific: "Poecile atricapillus",
+        shape: "default",
+        motion: "flit",
+        body: "#9aa0a2",
+        wing: "#6f777c",
+        tail: "#535a61",
+        head: "#111418",
+        belly: "#eee2cf",
+        beak: "#1b1b1b",
+        legs: "#6f5f4e",
+        eye: "#050505",
+        note:
+          "Round tiny chaos sphere. Caches snacks and remembers where the tiny emotional support snacks are.",
+        fact:
+          "Moves actively through trees and shrubs, often acrobatically, and is quick to investigate its surroundings.",
+        lines: [
+          "The chickadee appears, says 'dee-dee,' and immediately has somewhere else to be.",
+          "It grabs an invisible seed and leaves like a tiny grocery thief.",
+          "It hangs sideways from a twig. Honestly, good core strength.",
+          "It gives you one bright look and decides you are probably not a suet feeder."
+        ],
+        spots: [
+          { x: 22, y: 39, scale: 0.68 },
+          { x: 35, y: 50, scale: 0.62 },
+          { x: 66, y: 43, scale: 0.7 },
+          { x: 77, y: 58, scale: 0.64 }
+        ]
+      },
+      "downy-woodpecker": {
+        id: "downy-woodpecker",
+        habitat: "forest",
+        name: "Downy Woodpecker",
+        zh: "绒啄木鸟",
+        scientific: "Dryobates pubescens",
+        shape: "woodpecker",
+        motion: "peck",
+        body: "#f4f1e7",
+        wing: "#171a1d",
+        tail: "#151515",
+        head: "#f1efe8",
+        belly: "#fff8ef",
+        beak: "#202020",
+        legs: "#4d4033",
+        eye: "#111111",
+        note:
+          "Pocket-size drummer. Turns tree bark into a very serious percussion instrument.",
+        fact:
+          "Forages on trunks, branches, and stems, using its stiff tail for support while it works over bark.",
+        lines: [
+          "The woodpecker taps the trunk like it is trying to unlock a secret menu.",
+          "Tok tok tok. It has joined the percussion section.",
+          "It pauses dramatically. The tree remains suspicious.",
+          "It pecks once more, because apparently the bark had follow-up questions."
+        ],
+        spots: [
+          { x: 27, y: 49, scale: 0.86 },
+          { x: 64, y: 44, scale: 0.88 },
+          { x: 82, y: 53, scale: 0.82 },
+          { x: 43, y: 55, scale: 0.78 }
+        ]
+      },
+      "northern-cardinal": {
+        id: "northern-cardinal",
+        habitat: "forest",
+        name: "Northern Cardinal",
+        zh: "北美红雀",
+        scientific: "Cardinalis cardinalis",
+        shape: "default",
+        motion: "crest",
+        body: "#cf2f2e",
+        wing: "#9f2325",
+        tail: "#8e1d21",
+        head: "#d63a38",
+        belly: "#f07064",
+        beak: "#e77f43",
+        legs: "#7a4c3f",
+        eye: "#101010",
+        note:
+          "A red notification from the shrubbery. No action required; just admire.",
+        fact:
+          "Likes dense shrubs, forest edges, backyards, and conspicuous perches for singing.",
+        lines: [
+          "The cardinal raises its crest. A tiny red exclamation point has entered the chat.",
+          "It chips once, with the confidence of a bird that knows its color palette works.",
+          "It perches upright and lets the entire forest become more designed.",
+          "It declines to be subtle. Honestly, respect."
+        ],
+        spots: [
+          { x: 18, y: 58, scale: 0.88 },
+          { x: 48, y: 42, scale: 0.86 },
+          { x: 71, y: 55, scale: 0.92 },
+          { x: 36, y: 68, scale: 0.84 }
+        ]
+      },
+      "wood-thrush": {
+        id: "wood-thrush",
+        habitat: "forest",
+        name: "Wood Thrush",
+        zh: "林鸫",
+        scientific: "Hylocichla mustelina",
+        shape: "default",
+        motion: "leaf",
+        body: "#a5653b",
+        wing: "#7b4c32",
+        tail: "#714631",
+        head: "#b46d3e",
+        belly: "#f2e6d8",
+        beak: "#443225",
+        legs: "#8a6040",
+        eye: "#12100f",
+        note:
+          "Forest-floor poet. Tosses leaves like it is looking for a tiny lost receipt.",
+        fact:
+          "Forages quietly on the forest floor, digging through leaf litter for invertebrates.",
+        lines: [
+          "The thrush flips a leaf. Nothing urgent is under it, which is comforting.",
+          "It stands very still, then rustles the floor like a tiny archivist.",
+          "It looks camouflaged and emotionally literate.",
+          "It does not sing right now, but the forest pretends it heard something beautiful."
+        ],
+        spots: [
+          { x: 24, y: 74, scale: 0.8 },
+          { x: 52, y: 73, scale: 0.82 },
+          { x: 69, y: 69, scale: 0.78 },
+          { x: 39, y: 66, scale: 0.75 }
+        ]
+      },
+      "great-egret": {
+        id: "great-egret",
+        habitat: "wetland",
+        name: "Great Egret",
+        zh: "大白鹭",
+        scientific: "Ardea alba",
+        shape: "heron",
+        motion: "wade",
+        body: "#fffdf4",
+        wing: "#f1f3ec",
+        tail: "#f1f3ec",
+        head: "#fffdf4",
+        belly: "#ffffff",
+        beak: "#e7ac35",
+        legs: "#1d2328",
+        eye: "#1a1a1a",
+        note:
+          "Minimalist wetland wizard. Stands still until a fish makes a career-ending mistake.",
+        fact:
+          "Slowly wades or stands motionless in wetlands, striking fish with its long yellow bill.",
+        lines: [
+          "The egret takes one extremely deliberate step. Productivity culture is shaking.",
+          "It freezes. Somewhere, a fish has a bad feeling.",
+          "It looks elegant in a way that feels slightly unfair.",
+          "It demonstrates the ancient technique of doing almost nothing, but with posture."
+        ],
+        spots: [
+          { x: 22, y: 54, scale: 1.06 },
+          { x: 41, y: 59, scale: 1.0 },
+          { x: 67, y: 52, scale: 1.1 },
+          { x: 79, y: 59, scale: 0.98 }
+        ]
+      },
+      "black-crowned-night-heron": {
+        id: "black-crowned-night-heron",
+        habitat: "wetland",
+        name: "Black-crowned Night-Heron",
+        zh: "夜鹭",
+        scientific: "Nycticorax nycticorax",
+        shape: "heron",
+        motion: "hunch",
+        body: "#8e9aa1",
+        wing: "#59636d",
+        tail: "#3f4650",
+        head: "#20262c",
+        belly: "#e6e1d7",
+        beak: "#1f2428",
+        legs: "#d2b35c",
+        eye: "#b8292d",
+        note:
+          "Compact dusk goblin. Looks sleepy, works night shift.",
+        fact:
+          "Often rests hunched by day near water and becomes more active around dusk and night.",
+        lines: [
+          "The night-heron hunches. Same, honestly.",
+          "It squawks in a way that suggests it was not prepared for morning people.",
+          "It looks half-asleep and fully employed.",
+          "It has the energy of a bird who owns one lamp and several secrets."
+        ],
+        spots: [
+          { x: 17, y: 48, scale: 0.93 },
+          { x: 51, y: 48, scale: 0.98 },
+          { x: 71, y: 57, scale: 0.9 },
+          { x: 84, y: 45, scale: 0.88 }
+        ]
+      },
+      "mallard": {
+        id: "mallard",
+        habitat: "wetland",
+        name: "Mallard",
+        zh: "绿头鸭",
+        scientific: "Anas platyrhynchos",
+        shape: "duck",
+        motion: "dabble",
+        body: "#b8aa99",
+        wing: "#5f6670",
+        tail: "#121820",
+        head: "#24513f",
+        belly: "#ece9df",
+        beak: "#e3b83d",
+        legs: "#a87735",
+        eye: "#101418",
+        note:
+          "Pond celebrity. Dabbles professionally, quacks with HR confidence.",
+        fact:
+          "A dabbling duck often found in ponds, lakes, parks, and many natural or artificial wetlands.",
+        lines: [
+          "The mallard tips forward. For a moment, only duck butt and commitment remain.",
+          "It quacks like it has a calendar invite titled 'Bread? Again?'",
+          "It paddles by with the calm authority of a tiny boat manager.",
+          "It dabbles. Honestly, that counts as having a plan."
+        ],
+        spots: [
+          { x: 25, y: 76, scale: 0.93 },
+          { x: 46, y: 78, scale: 0.88 },
+          { x: 66, y: 75, scale: 0.95 },
+          { x: 82, y: 72, scale: 0.86 }
+        ]
+      },
+      "belted-kingfisher": {
+        id: "belted-kingfisher",
+        habitat: "wetland",
+        name: "Belted Kingfisher",
+        zh: "冠鱼狗 / 带鱼狗",
+        scientific: "Megaceryle alcyon",
+        shape: "kingfisher",
+        motion: "dive",
+        body: "#6f879e",
+        wing: "#5f7893",
+        tail: "#5e7894",
+        head: "#617f9a",
+        belly: "#f4f0e8",
+        beak: "#17212a",
+        legs: "#7b5334",
+        eye: "#111820",
+        note:
+          "River patrol gremlin. Hovers, rattles, and enters the water with zero chill.",
+        fact:
+          "Perches along streams and shorelines, then plunges or hovers before diving after fish.",
+        lines: [
+          "The kingfisher rattles like a tiny scooter made of opinions.",
+          "It dives. The water receives a very dramatic complaint.",
+          "It returns to the branch with the attitude of someone who has a territory and a brand.",
+          "It watches the creek like the creek owes it money."
+        ],
+        spots: [
+          { x: 31, y: 37, scale: 0.82 },
+          { x: 50, y: 34, scale: 0.85 },
+          { x: 69, y: 39, scale: 0.8 },
+          { x: 79, y: 48, scale: 0.78 }
+        ]
+      }
+    };
+
+    const habitatEvents = {
+      city: [
+        {
+          id: "sparrow-conference",
+          title: "Emergency sparrow conference",
+          caption: "A group of house sparrows has formed a very serious sidewalk committee.",
+          toast: "Event: tiny sparrow conference.",
+          birds: [
+            { id: "house-sparrow", x: 24, y: 73, scale: "0.60", flip: "1", eventClass: "event-jitter", delay: "-0.1s" },
+            { id: "house-sparrow", x: 31, y: 76, scale: "0.66", flip: "-1", eventClass: "event-jitter", delay: "-0.4s" },
+            { id: "house-sparrow", x: 39, y: 72, scale: "0.62", flip: "1", eventClass: "event-jitter", delay: "-0.7s" },
+            { id: "house-sparrow", x: 48, y: 75, scale: "0.65", flip: "-1", eventClass: "event-jitter", delay: "-0.2s" },
+            { id: "house-sparrow", x: 56, y: 71, scale: "0.59", flip: "1", eventClass: "event-jitter", delay: "-0.5s" }
+          ],
+          focus: {
+            name: "House Sparrow committee · 家麻雀会议",
+            story: "The sparrows have gathered to discuss one crumb, two crumbs, and the troubling disappearance of a third crumb.",
+            quote: "Minutes of meeting: hop, peck, argue, repeat.",
+            meta: "Special event. A tiny flock can appear together when the city habitat refreshes."
+          }
+        },
+        {
+          id: "crow-dispute",
+          title: "Crow argument over something shiny",
+          caption: "Two crows are having a disagreement. The shiny object has declined to comment.",
+          toast: "Event: crow dispute.",
+          birds: [
+            { id: "american-crow", x: 42, y: 63, scale: "1.02", flip: "1", eventClass: "event-dramatic", delay: "-0.1s" },
+            { id: "american-crow", x: 58, y: 61, scale: "1.06", flip: "-1", eventClass: "event-dramatic", delay: "-0.3s" },
+            { id: "house-sparrow", x: 72, y: 73, scale: "0.58", flip: "-1", eventClass: "event-jitter", delay: "-0.6s" }
+          ],
+          focus: {
+            name: "American Crow disagreement · 美洲鸦争执",
+            story: "The crows are loudly debating ownership of a mysterious shiny thing. The sparrow is pretending not to listen.",
+            quote: "Caw. Counterpoint: louder caw.",
+            meta: "Special event. Crows are intelligent, social, and apparently very invested in sidewalk drama."
+          }
+        },
+        {
+          id: "pigeon-parade",
+          title: "Pigeon sidewalk parade",
+          caption: "The pigeons have decided this path belongs to them now.",
+          toast: "Event: pigeon parade.",
+          birds: [
+            { id: "rock-pigeon", x: 24, y: 72, scale: "0.92", flip: "1", eventClass: "event-parade", delay: "-0.2s" },
+            { id: "rock-pigeon", x: 38, y: 73, scale: "0.98", flip: "1", eventClass: "event-parade", delay: "-0.5s" },
+            { id: "rock-pigeon", x: 52, y: 71, scale: "0.94", flip: "1", eventClass: "event-parade", delay: "-0.8s" },
+            { id: "mourning-dove", x: 72, y: 55, scale: "0.82", flip: "-1", eventClass: "event-display", delay: "-0.1s" }
+          ],
+          focus: {
+            name: "Rock Pigeon parade · 城市鸽巡游",
+            story: "The pigeons walk with the quiet confidence of creatures who believe all sidewalks are shared office space.",
+            quote: "No one scheduled the parade. The parade scheduled itself.",
+            meta: "Special event. Urban birds sometimes turn ordinary pavement into community theatre."
+          }
+        }
+      ],
+
+      forest: [
+        {
+          id: "chickadee-flashmob",
+          title: "Chickadee flash mob",
+          caption: "Several chickadees have arrived, inspected the branches, and found your vibes acceptable.",
+          toast: "Event: chickadee flash mob.",
+          birds: [
+            { id: "black-capped-chickadee", x: 21, y: 39, scale: "0.58", flip: "1", eventClass: "event-jitter", delay: "-0.1s" },
+            { id: "black-capped-chickadee", x: 32, y: 47, scale: "0.63", flip: "-1", eventClass: "event-jitter", delay: "-0.4s" },
+            { id: "black-capped-chickadee", x: 52, y: 42, scale: "0.60", flip: "1", eventClass: "event-jitter", delay: "-0.7s" },
+            { id: "black-capped-chickadee", x: 72, y: 53, scale: "0.66", flip: "-1", eventClass: "event-jitter", delay: "-0.2s" }
+          ],
+          focus: {
+            name: "Black-capped Chickadee flash mob · 黑顶山雀快闪",
+            story: "The chickadees are moving like punctuation marks with wings.",
+            quote: "Dee-dee-dee. Translation unavailable due to speed.",
+            meta: "Special event. Small flock energy: chaotic, harmless, and very cute."
+          }
+        },
+        {
+          id: "cardinal-stage",
+          title: "Cardinal takes the stage",
+          caption: "A cardinal has chosen a dramatic perch. The forest is now better designed.",
+          toast: "Event: cardinal stage moment.",
+          birds: [
+            { id: "northern-cardinal", x: 48, y: 42, scale: "1.02", flip: "1", eventClass: "event-display", delay: "-0.2s" },
+            { id: "black-capped-chickadee", x: 27, y: 54, scale: "0.58", flip: "-1", eventClass: "event-jitter", delay: "-0.3s" },
+            { id: "wood-thrush", x: 68, y: 70, scale: "0.75", flip: "-1", eventClass: "event-parade", delay: "-0.6s" }
+          ],
+          focus: {
+            name: "Northern Cardinal stage moment · 北美红雀登场",
+            story: "The cardinal raises its crest like it just received excellent lighting direction.",
+            quote: "A red exclamation point appears in the shrubbery.",
+            meta: "Special event. Some birds do not enter scenes quietly."
+          }
+        },
+        {
+          id: "woodpecker-rhythm",
+          title: "Woodpecker percussion break",
+          caption: "A downy woodpecker has found a trunk with suspicious acoustic potential.",
+          toast: "Event: woodpecker percussion.",
+          birds: [
+            { id: "downy-woodpecker", x: 28, y: 50, scale: "0.86", flip: "1", eventClass: "event-dramatic", delay: "-0.1s" },
+            { id: "black-capped-chickadee", x: 49, y: 45, scale: "0.59", flip: "-1", eventClass: "event-jitter", delay: "-0.5s" },
+            { id: "wood-thrush", x: 57, y: 72, scale: "0.74", flip: "1", eventClass: "event-parade", delay: "-0.3s" }
+          ],
+          focus: {
+            name: "Downy Woodpecker percussion · 绒啄木鸟敲击",
+            story: "Tok tok tok. The tree is being interviewed thoroughly.",
+            quote: "The forest beat drops, but politely.",
+            meta: "Special event. A woodpecker moment gives the forest a tiny soundtrack."
+          }
+        }
+      ],
+
+      wetland: [
+        {
+          id: "mallard-dabble-line",
+          title: "Mallard dabble line",
+          caption: "The mallards have synchronized their snack investigation strategy.",
+          toast: "Event: mallard dabble line.",
+          birds: [
+            { id: "mallard", x: 24, y: 76, scale: "0.86", flip: "1", eventClass: "event-parade", delay: "-0.1s" },
+            { id: "mallard", x: 39, y: 78, scale: "0.92", flip: "1", eventClass: "event-parade", delay: "-0.4s" },
+            { id: "mallard", x: 55, y: 75, scale: "0.88", flip: "1", eventClass: "event-parade", delay: "-0.7s" },
+            { id: "mallard", x: 70, y: 77, scale: "0.90", flip: "1", eventClass: "event-parade", delay: "-0.2s" }
+          ],
+          focus: {
+            name: "Mallard dabble line · 绿头鸭集体觅食",
+            story: "Several mallards paddle by in formation, as if the pond has a slow-moving snack conveyor belt.",
+            quote: "Quack logistics are proceeding on schedule.",
+            meta: "Special event. Ducks make teamwork look like floating around with snacks."
+          }
+        },
+        {
+          id: "night-heron-display",
+          title: "Night-heron awkward courtship energy",
+          caption: "A night-heron is doing something that might be courtship, stretching, or a very private theatre exercise.",
+          toast: "Event: night-heron display.",
+          birds: [
+            { id: "black-crowned-night-heron", x: 45, y: 50, scale: "1.02", flip: "1", eventClass: "event-display", delay: "-0.1s" },
+            { id: "black-crowned-night-heron", x: 61, y: 53, scale: "0.94", flip: "-1", eventClass: "event-display", delay: "-0.5s" },
+            { id: "mallard", x: 78, y: 75, scale: "0.78", flip: "-1", eventClass: "event-parade", delay: "-0.2s" }
+          ],
+          focus: {
+            name: "Night-Heron display · 夜鹭展示",
+            story: "The night-herons hunch, stretch, and stare. Romance may be happening. Or paperwork.",
+            quote: "Squawk? Squawk, but make it formal.",
+            meta: "Special event. Courtship-coded behavior, interpreted with maximum emotional unseriousness."
+          }
+        },
+        {
+          id: "kingfisher-failed-dive",
+          title: "Kingfisher dramatic dive attempt",
+          caption: "A belted kingfisher dives, misses, and immediately acts like that was the plan.",
+          toast: "Event: kingfisher dive attempt.",
+          birds: [
+            { id: "belted-kingfisher", x: 42, y: 37, scale: "0.86", flip: "1", eventClass: "event-dramatic", delay: "-0.1s" },
+            { id: "great-egret", x: 70, y: 56, scale: "0.98", flip: "-1", eventClass: "event-display", delay: "-0.4s" },
+            { id: "mallard", x: 25, y: 76, scale: "0.78", flip: "1", eventClass: "event-parade", delay: "-0.6s" }
+          ],
+          focus: {
+            name: "Belted Kingfisher dive attempt · 冠鱼狗俯冲",
+            story: "The kingfisher launches at the creek with great confidence. The fish remain professionally unavailable.",
+            quote: "Splash. Pause. Pretend that was research.",
+            meta: "Special event. Not every dramatic dive needs measurable success."
+          }
+        }
+      ]
+    };
+
+    const BIRD_STORAGE_KEY = "take-a-break-real-bird-guide-v1";
+    const EVENT_STORAGE_KEY = "take-a-break-habitat-event-guide-v1";
+    const REFRESH_EVENT_PITY_STORAGE_KEY = "take-a-break-refresh-event-pity-by-habitat-v1";
+    const SURPRISE_EVENT_PITY_STORAGE_KEY = "take-a-break-surprise-event-pity-v1";
+
+    try {
+      localStorage.removeItem("take-a-break-event-roll-count-v1");
+    } catch {
+      // ignore storage errors
+    }
+
+    const birdStage = document.getElementById("birdStage");
+    const birdLayer = document.getElementById("birdLayer");
+    const stageCaption = document.getElementById("stageCaption");
+    const habitatTabs = Array.from(document.querySelectorAll(".habitat-tab"));
+    const birdName = document.getElementById("birdName");
+    const birdStory = document.getElementById("birdStory");
+    const birdQuote = document.getElementById("birdQuote");
+    const birdMeta = document.getElementById("birdMeta");
+    const dexGrid = document.getElementById("dexGrid");
+    const eventDexGrid = document.getElementById("eventDexGrid");
+//  const discoveryCount = document.getElementById("discoveryCount");
+    const lastSeen = document.getElementById("lastSeen");
+    const refreshBirdsBtn = document.getElementById("refreshBirds");
+    const randomHabitatBtn = document.getElementById("randomHabitat");
+    const resetBirdGuideBtn = document.getElementById("resetBirdGuide");
+
+    const openBirdGuideBtn = document.getElementById("openBirdGuide");
+    const openEventGuideBtn = document.getElementById("openEventGuide");
+    const birdGuideOverlay = document.getElementById("birdGuideOverlay");
+    const eventGuideOverlay = document.getElementById("eventGuideOverlay");
+    const closeBirdGuideBtn = document.getElementById("closeBirdGuide");
+    const closeEventGuideBtn = document.getElementById("closeEventGuide");
+    const birdDiscoveryCount = document.getElementById("birdDiscoveryCount");
+    const eventDiscoveryCount = document.getElementById("eventDiscoveryCount");
+
+    let currentHabitat = "forest";
+    let birdResetArmed = false;
+    let birdResetTimer = null;
+    let refreshEventPityByHabitat = loadRefreshEventPityByHabitat();
+    let surpriseEventPity = loadEventPityCount(SURPRISE_EVENT_PITY_STORAGE_KEY);
+
+    function getAllHabitatEvents() {
+      return Object.values(habitatEvents).flat();
+    }
+
+    function getAllHabitatEventsWithHabitat() {
+      return Object.entries(habitatEvents).flatMap(([habitat, events]) => {
+        return events.map((eventConfig) => ({
+          ...eventConfig,
+          habitat
+        }));
+      });
+    }
+
+    function getAllHabitatEventIds() {
+      return getAllHabitatEventsWithHabitat().map((eventConfig) => eventConfig.id);
+    }
+
+    function loadBirdDiscoveries() {
+      try {
+        const data = JSON.parse(localStorage.getItem(BIRD_STORAGE_KEY) || "[]");
+        return new Set(Array.isArray(data) ? data.filter((id) => realBirdSpecies[id]) : []);
+      } catch {
+        return new Set();
+      }
+    }
+
+    function loadEventDiscoveries() {
+      const eventIds = new Set(getAllHabitatEventIds());
+
+      try {
+        const data = JSON.parse(localStorage.getItem(EVENT_STORAGE_KEY) || "[]");
+        return new Set(Array.isArray(data) ? data.filter((id) => eventIds.has(id)) : []);
+      } catch {
+        return new Set();
+      }
+    }
+    
+    function loadRefreshEventPityByHabitat() {
+      const fallback = Object.fromEntries(
+        Object.keys(birdHabitats).map((habitat) => [habitat, 0])
+      );
+
+      try {
+        const data = JSON.parse(
+          localStorage.getItem(REFRESH_EVENT_PITY_STORAGE_KEY) || "{}"
+        );
+
+        const safeData = data && typeof data === "object" ? data : {};
+
+        return Object.fromEntries(
+          Object.keys(birdHabitats).map((habitat) => {
+            const value = Number(safeData[habitat] || 0);
+            return [habitat, Number.isFinite(value) ? Math.max(0, value) : 0];
+          })
+        );
+      } catch {
+        return fallback;
+      }
+    }
+
+    function saveRefreshEventPityByHabitat() {
+      try {
+        localStorage.setItem(
+          REFRESH_EVENT_PITY_STORAGE_KEY,
+          JSON.stringify(refreshEventPityByHabitat)
+        );
+      } catch {
+        // ignore storage errors
+      }
+    }
+
+    function loadEventPityCount(storageKey) {
+      try {
+        const value = Number(localStorage.getItem(storageKey) || "0");
+        return Number.isFinite(value) ? Math.max(0, value) : 0;
+      } catch {
+        return 0;
+      }
+    }
+
+    function saveEventPityCount(storageKey, value) {
+      try {
+        localStorage.setItem(storageKey, String(value));
+      } catch {
+        // ignore storage errors
+      }
+    }
+
+    let discoveredBirds = loadBirdDiscoveries();
+    let discoveredEvents = loadEventDiscoveries();
+
+    let birdGuideCompleted = discoveredBirds.size === Object.keys(realBirdSpecies).length;
+    let eventGuideCompleted = discoveredEvents.size === getAllHabitatEventIds().length;
+
+    function saveBirdDiscoveries() {
+      try {
+        localStorage.setItem(BIRD_STORAGE_KEY, JSON.stringify([...discoveredBirds]));
+      } catch {
+        // ignore storage errors
+      }
+    }
+
+    function saveEventDiscoveries() {
+      try {
+        localStorage.setItem(EVENT_STORAGE_KEY, JSON.stringify([...discoveredEvents]));
+      } catch {
+        // ignore storage errors
+      }
+    }
+
+    function chooseRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+    
+    function getUndiscoveredEvents() {
+      return getAllHabitatEventsWithHabitat().filter((eventConfig) => {
+        return !discoveredEvents.has(eventConfig.id);
+      });
+    }
+
+    function getUndiscoveredEventsForHabitat(habitat) {
+      return (habitatEvents[habitat] || []).filter((eventConfig) => {
+        return !discoveredEvents.has(eventConfig.id);
+      });
+    }
+
+    function getHabitatForEvent(eventId) {
+      return getAllHabitatEventsWithHabitat().find((eventConfig) => {
+        return eventConfig.id === eventId;
+      })?.habitat || currentHabitat;
+    }
+
+    function getRefreshPityForHabitat(habitat) {
+      return refreshEventPityByHabitat[habitat] || 0;
+    }
+
+    function increaseRefreshPityForHabitat(habitat) {
+      refreshEventPityByHabitat[habitat] = getRefreshPityForHabitat(habitat) + 1;
+      saveRefreshEventPityByHabitat();
+    }
+
+    function increaseSurprisePity() {
+      surpriseEventPity += 1;
+      saveEventPityCount(SURPRISE_EVENT_PITY_STORAGE_KEY, surpriseEventPity);
+    }
+
+    function getRefreshEventTriggerChance(habitat) {
+      const unseenHere = getUndiscoveredEventsForHabitat(habitat);
+      const pity = getRefreshPityForHabitat(habitat);
+
+      if (!unseenHere.length) {
+        return 0.36;
+      }
+
+      const progressBoost = Math.min(0.38, pity * 0.055);
+      const missingBoost = Math.min(0.14, unseenHere.length * 0.04);
+
+      return Math.min(0.95, 0.42 + progressBoost + missingBoost);
+    }
+
+    function getSurpriseEventTriggerChance() {
+      const unseenAll = getUndiscoveredEvents();
+
+      if (!unseenAll.length) {
+        return 0.38;
+      }
+
+      const progressBoost = Math.min(0.42, surpriseEventPity * 0.018);
+      const missingBoost = Math.min(0.18, unseenAll.length * 0.02);
+
+      return Math.min(0.92, 0.38 + progressBoost + missingBoost);
+    }
+
+    function shouldForceNewRefreshEvent(habitat) {
+      const remainingHere = getUndiscoveredEventsForHabitat(habitat).length;
+
+      if (remainingHere <= 0) return false;
+
+      const pity = getRefreshPityForHabitat(habitat);
+      const rollsLeftIncludingThisOne = Math.max(1, 10 - pity + 1);
+
+      return remainingHere >= rollsLeftIncludingThisOne;
+    }
+
+    function shouldForceNewSurpriseEvent() {
+      const remainingAll = getUndiscoveredEvents().length;
+
+      if (remainingAll <= 0) return false;
+
+      const rollsLeftIncludingThisOne = Math.max(1, 25 - surpriseEventPity + 1);
+
+      return remainingAll >= rollsLeftIncludingThisOne;
+    }
+
+    function chooseRefreshEventForCurrentHabitat() {
+      const eventsHere = habitatEvents[currentHabitat] || [];
+      const unseenHere = getUndiscoveredEventsForHabitat(currentHabitat);
+
+      if (!eventsHere.length) return null;
+
+      increaseRefreshPityForHabitat(currentHabitat);
+
+      const forceNew = shouldForceNewRefreshEvent(currentHabitat);
+      const shouldTrigger =
+        forceNew || Math.random() < getRefreshEventTriggerChance(currentHabitat);
+
+      if (!shouldTrigger) {
+        return null;
+      }
+
+      if (unseenHere.length) {
+        return chooseRandom(unseenHere);
+      }
+
+      return chooseRandom(eventsHere);
+    }
+
+    function chooseSurpriseEvent() {
+      const allEvents = getAllHabitatEventsWithHabitat();
+      const unseenAll = getUndiscoveredEvents();
+
+      if (!allEvents.length) return null;
+
+      increaseSurprisePity();
+
+      const forceNew = shouldForceNewSurpriseEvent();
+      const shouldTrigger =
+        forceNew || Math.random() < getSurpriseEventTriggerChance();
+
+      if (!shouldTrigger) {
+        return null;
+      }
+
+      if (unseenAll.length) {
+        return chooseRandom(unseenAll);
+      }
+
+      return chooseRandom(allEvents);
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function jitter(value, amount, min, max) {
+      const next = value + (Math.random() * 2 - 1) * amount;
+      return Math.min(max, Math.max(min, next));
+    }
+
+    function birdMarkup() {
+      return `
+        <span class="wb-shadow"></span>
+        <span class="wb-tail"></span>
+        <span class="wb-leg a"></span>
+        <span class="wb-leg b"></span>
+        <span class="wb-body"></span>
+        <span class="wb-belly"></span>
+        <span class="wb-wing"></span>
+        <span class="wb-neck"></span>
+        <span class="wb-head"></span>
+        <span class="wb-crest"></span>
+        <span class="wb-mask"></span>
+        <span class="wb-eye"></span>
+        <span class="wb-beak"></span>
+      `;
+    }
+
+    function createBirdElement(species, options = {}) {
+      const spot = options.spot || chooseRandom(species.spots);
+      const button = document.createElement("button");
+      const scale = options.scale || jitter(spot.scale, 0.06, 0.56, 1.18).toFixed(2);
+      const flip = options.flip || (Math.random() < 0.5 ? "1" : "-1");
+
+      button.type = "button";
+      button.className = [
+        "watch-bird",
+        `bird-${species.id}`,
+        `shape-${species.shape}`,
+        `motion-${species.motion}`,
+        options.eventClass || ""
+      ].filter(Boolean).join(" ");
+
+      button.setAttribute("aria-label", species.name);
+
+      const x = options.x ?? jitter(spot.x, 3.8, 7, 93).toFixed(1);
+      const y = options.y ?? jitter(spot.y, 2.2, 15, 86).toFixed(1);
+
+      button.style.left = `${x}%`;
+      button.style.top = `${y}%`;
+      button.style.setProperty("--x", button.style.left);
+      button.style.setProperty("--y", button.style.top);
+      button.style.setProperty("--scale", scale);
+      button.style.setProperty("--flip", flip);
+      button.style.setProperty("--delay", options.delay || `${(-Math.random() * 3).toFixed(2)}s`);
+      button.style.setProperty("--body", species.body);
+      button.style.setProperty("--wing", species.wing);
+      button.style.setProperty("--tail", species.tail);
+      button.style.setProperty("--head", species.head);
+      button.style.setProperty("--belly", species.belly);
+      button.style.setProperty("--beak", species.beak);
+      button.style.setProperty("--legs", species.legs);
+      button.style.setProperty("--eye", species.eye);
+
+      button.innerHTML = birdMarkup();
+
+      button.addEventListener("click", () => {
+        inspectRealBird(species, button);
+      });
+
+      return button;
+    }
+
+    function chooseBirdsForHabitat(habitat) {
+      const ids = birdHabitats[habitat].ids;
+      const count = Math.min(ids.length, 3 + Math.floor(Math.random() * 2));
+      const selected = [];
+
+      const unseenHere = ids.filter((id) => !discoveredBirds.has(id));
+      if (unseenHere.length && Math.random() < 0.75) {
+        selected.push(chooseRandom(unseenHere));
+      }
+
+      shuffleArray(ids).forEach((id) => {
+        if (selected.length < count && !selected.includes(id)) {
+          selected.push(id);
+        }
+      });
+
+      return selected;
+    }
+
+    function updateHabitatScene(habitat) {
+      currentHabitat = habitat;
+      const config = birdHabitats[habitat];
+
+      birdStage.classList.remove("scene-city", "scene-forest", "scene-wetland");
+      birdStage.classList.add(`scene-${habitat}`);
+      birdStage.setAttribute("aria-label", `${config.name} interactive birdwatching scene`);
+      stageCaption.textContent = config.caption;
+      clearHabitatEventLabel();
+
+      habitatTabs.forEach((tab) => {
+        const active = tab.dataset.habitat === habitat;
+        tab.classList.toggle("active", active);
+      });
+    }
+
+    function setHabitat(habitat, options = {}) {
+      updateHabitatScene(habitat);
+
+      spawnBirds(options.onlyBirdId, {
+        mode: options.mode || "normal"
+      });
+    }
+
+    function clearHabitatEventLabel() {
+      const oldLabel = birdStage.querySelector(".habitat-event-label");
+      if (oldLabel) oldLabel.remove();
+    }
+
+    function showHabitatEventLabel(text) {
+      clearHabitatEventLabel();
+
+      const label = document.createElement("div");
+      label.className = "habitat-event-label";
+      label.textContent = text;
+      birdStage.appendChild(label);
+    }
+
+    function applyEventFocus(eventConfig) {
+      if (!eventConfig.focus) return;
+
+      birdName.textContent = eventConfig.focus.name;
+      birdStory.textContent = eventConfig.focus.story;
+      birdQuote.textContent = eventConfig.focus.quote;
+      birdMeta.textContent = eventConfig.focus.meta;
+      lastSeen.textContent = `Last event: ${eventConfig.title}`;
+    }
+
+    function spawnBirds(onlyBirdId, options = {}) {
+      birdLayer.innerHTML = "";
+      clearHabitatEventLabel();
+
+      const mode = options.mode || "normal";
+      let eventConfig = null;
+
+      if (!onlyBirdId) {
+        if (mode === "refresh") {
+          eventConfig = chooseRefreshEventForCurrentHabitat();
+        }
+
+        if (mode === "surprise") {
+          eventConfig = chooseSurpriseEvent();
+        }
+      }
+
+      if (mode === "surprise" && eventConfig) {
+        const eventHabitat = eventConfig.habitat || getHabitatForEvent(eventConfig.id);
+        updateHabitatScene(eventHabitat);
+      }
+
+      if (eventConfig) {
+        const isNewEvent = !discoveredEvents.has(eventConfig.id);
+
+        discoveredEvents.add(eventConfig.id);
+        saveEventDiscoveries();
+
+        eventConfig.birds.forEach((birdConfig) => {
+          const species = realBirdSpecies[birdConfig.id];
+          birdLayer.appendChild(createBirdElement(species, birdConfig));
+        });
+
+        stageCaption.textContent = eventConfig.caption;
+        showHabitatEventLabel(eventConfig.title);
+        applyEventFocus(eventConfig);
+        renderEventDex();
+        renderBirdDex();
+        checkEventGuideCompletion();
+
+        showToast(isNewEvent ? `New event discovered: ${eventConfig.title}` : eventConfig.toast);
+        return;
+      }
+
+      if (mode === "surprise" && !onlyBirdId) {
+        const habitats = Object.keys(birdHabitats);
+        let nextHabitat = currentHabitat;
+
+        while (nextHabitat === currentHabitat && habitats.length > 1) {
+          nextHabitat = chooseRandom(habitats);
+        }
+
+        updateHabitatScene(nextHabitat);
+      }
+
+      const ids = onlyBirdId ? [onlyBirdId] : chooseBirdsForHabitat(currentHabitat);
+
+      ids.forEach((id) => {
+        birdLayer.appendChild(createBirdElement(realBirdSpecies[id]));
+      });
+    }
+
+    function inspectRealBird(species, element) {
+      const isNew = !discoveredBirds.has(species.id);
+      discoveredBirds.add(species.id);
+      saveBirdDiscoveries();
+      renderBirdDex();
+      checkBirdGuideCompletion();
+
+      element.classList.remove("clicked");
+      void element.offsetWidth;
+      element.classList.add("clicked");
+
+      showBirdEffect(element, species.motion);
+
+      setTimeout(() => {
+        element.classList.remove("clicked");
+      }, 920);
+
+      birdName.textContent = `${species.name} · ${species.zh}`;
+      birdStory.textContent = species.note;
+      birdQuote.textContent = chooseRandom(species.lines);
+      birdMeta.textContent = `${species.scientific}. ${species.fact}`;
+      lastSeen.textContent = `Last seen: ${species.name}`;
+
+      if (isNew) {
+        showToast(`${species.name} added to your field guide!`);
+      }
+    }
+
+    function showBirdEffect(element, motion) {
+      const oldEffect = element.querySelector(".bird-effect");
+      if (oldEffect) oldEffect.remove();
+
+      const effect = document.createElement("span");
+      effect.className = `bird-effect effect-${motion}`;
+      effect.setAttribute("aria-hidden", "true");
+      element.appendChild(effect);
+
+      setTimeout(() => {
+        effect.remove();
+      }, 950);
+    }
+
+    function renderBirdDex() {
+      const allIds = Object.keys(realBirdSpecies);
+      const eventIds = getAllHabitatEventIds();
+      
+      birdDiscoveryCount.textContent = `${discoveredBirds.size} / ${allIds.length} birds`;
+      eventDiscoveryCount.textContent = `${discoveredEvents.size} / ${eventIds.length} events`;
+
+      dexGrid.innerHTML = allIds.map((id) => {
+        const bird = realBirdSpecies[id];
+        const seen = discoveredBirds.has(id);
+
+        return `
+          <div class="dex-card ${seen ? "" : "locked"}">
+            <div class="dex-swatch" style="background: ${
+              seen
+                ? `linear-gradient(135deg, ${bird.body}, ${bird.wing})`
+                : "linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06))"
+            }"></div>
+            <div>
+              <strong>${seen ? `${bird.name} · ${bird.zh}` : "Unknown bird"}</strong>
+              <small>${seen ? bird.scientific : "Unmet species"}</small>
+              <p>${seen ? bird.note : "Meet this bird in one of the habitats to unlock its entry."}</p>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderEventDex() {
+      const allEvents = getAllHabitatEventsWithHabitat();
+
+      eventDexGrid.innerHTML = allEvents.map((eventConfig) => {
+        const seen = discoveredEvents.has(eventConfig.id);
+        const habitatName = birdHabitats[eventConfig.habitat]?.name || "Unknown habitat";
+
+        return `
+          <div class="event-dex-card ${seen ? "" : "locked"}">
+            <div class="event-dex-mark">${seen ? "✓" : "?"}</div>
+            <strong>${seen ? eventConfig.title : "Unknown event"}</strong>
+            <small>${seen ? habitatName : `Habitat clue: ${habitatName}`}</small>
+            <p>${
+              seen
+                ? eventConfig.caption
+                : `Something unusual has been reported in ${habitatName}. Keep watching this habitat.`
+            }</p>
+          </div>
+        `;
+      }).join("");
+    }
+
+    habitatTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        setHabitat(tab.dataset.habitat, { mode: "normal" });
+        showToast(`Habitat switched: ${birdHabitats[tab.dataset.habitat].name}`);
+      });
+    });
+
+    refreshBirdsBtn.addEventListener("click", () => {
+      spawnBirds(null, { mode: "refresh" });
+
+      if (!birdStage.querySelector(".habitat-event-label")) {
+        showToast("The birds rearranged themselves with mysterious purpose.");
+      }
+    });
+
+    randomHabitatBtn.addEventListener("click", () => {
+      const beforeHabitat = currentHabitat;
+
+      spawnBirds(null, { mode: "surprise" });
+
+      if (!birdStage.querySelector(".habitat-event-label")) {
+        if (currentHabitat !== beforeHabitat) {
+          showToast(`Random habitat: ${birdHabitats[currentHabitat].name}`);
+        } else {
+          showToast("The habitat surprised itself by staying put.");
+        }
+      }
+    });
+
+    resetBirdGuideBtn.addEventListener("click", () => {
+      if (!birdResetArmed) {
+        birdResetArmed = true;
+        resetBirdGuideBtn.textContent = "Click again to reset";
+        showToast("Click reset again to clear the field guide.");
+
+        clearTimeout(birdResetTimer);
+        birdResetTimer = setTimeout(() => {
+          birdResetArmed = false;
+          resetBirdGuideBtn.textContent = "Reset guides";
+        }, 2600);
+
+        return;
+      }
+
+      birdResetArmed = false;
+      clearTimeout(birdResetTimer);
+      resetBirdGuideBtn.textContent = "Reset guides";
+
+      discoveredBirds = new Set();
+      discoveredEvents = new Set();
+      birdGuideCompleted = false;
+      eventGuideCompleted = false;
+      refreshEventPityByHabitat = Object.fromEntries(
+        Object.keys(birdHabitats).map((habitat) => [habitat, 0])
+      );
+      surpriseEventPity = 0;
+
+      saveRefreshEventPityByHabitat();
+      saveEventPityCount(SURPRISE_EVENT_PITY_STORAGE_KEY, surpriseEventPity);
+
+      saveBirdDiscoveries();
+      saveEventDiscoveries();
+
+      renderBirdDex();
+      renderEventDex();
+      setHabitat(currentHabitat, { mode: "normal" });
+
+      birdName.textContent = "Tap a bird in the habitat";
+      birdStory.textContent =
+        "Different real birds appear in different scenes. Click one to get a tiny story, a small dialogue, and an entry in your collection.";
+      birdQuote.textContent =
+        "Your guides will fill up whenever you meet a species for the first time.";
+      birdMeta.textContent =
+        "Not feeling this habitat? Try another one. Different birds bring different levels of plots.";
+      lastSeen.textContent = "Last seen: none";
+
+      showToast("Guides reset.");
+    });
+
+    function openGuideOverlay(overlay) {
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeGuideOverlay(overlay) {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+
+      const anyOpen = document.querySelector(".guide-overlay.open");
+      if (!anyOpen) {
+        document.body.style.overflow = "";
+      }
+    }
+
+    openBirdGuideBtn.addEventListener("click", () => {
+      renderBirdDex();
+      openGuideOverlay(birdGuideOverlay);
+    });
+
+    openEventGuideBtn.addEventListener("click", () => {
+      renderEventDex();
+      openGuideOverlay(eventGuideOverlay);
+    });
+
+    closeBirdGuideBtn.addEventListener("click", () => {
+      closeGuideOverlay(birdGuideOverlay);
+    });
+
+    closeEventGuideBtn.addEventListener("click", () => {
+      closeGuideOverlay(eventGuideOverlay);
+    });
+
+    birdGuideOverlay.addEventListener("click", (event) => {
+      if (event.target === birdGuideOverlay) {
+        closeGuideOverlay(birdGuideOverlay);
+      }
+    });
+
+    eventGuideOverlay.addEventListener("click", (event) => {
+      if (event.target === eventGuideOverlay) {
+        closeGuideOverlay(eventGuideOverlay);
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+
+      if (birdGuideOverlay?.classList.contains("open")) {
+        closeGuideOverlay(birdGuideOverlay);
+      }
+
+      if (eventGuideOverlay?.classList.contains("open")) {
+        closeGuideOverlay(eventGuideOverlay);
+      }
+    });
+
+    renderBirdDex();
+    renderEventDex();
+    setHabitat(currentHabitat, { mode: "normal" });
+
+    // ---------------------------
+    // MEME QUOTES
+    // ---------------------------
+    const MEME_BASE_PATH = "assets/meme/";
+
+    const memeDeck = [
+      {
+        file: "M1.png",
+        title: "Strategic intelligence",
+        category: "spy logic",
+        line: "Appear calm. Even if the internal situation is mostly chili peppers.",
+        caption: "A deeply advanced lesson in looking composed while absolute nonsense unfolds nearby.",
+        alt: "Spy A and Spy B meme with peppers and Spider-Man"
+      },
+      {
+        file: "M2.png",
+        title: "Oceanic wisdom",
+        category: "animal nonsense",
+        line: "Speak softly. Say meow. Refuse further explanation.",
+        caption: "Not every thought needs to be profound. Some thoughts can simply be a shark saying meow.",
+        alt: "Funny shark meme with the word meow"
+      },
+      {
+        file: "M3.png",
+        title: "Museum ethics",
+        category: "technicality win",
+        line: "Ask politely. If permission is granted, become unstoppable.",
+        caption: "An elegant reminder that wording matters and technicalities are carrying modern civilization.",
+        alt: "Museum meme where someone asks if they can take a picture"
+      },
+      {
+        file: "M4.png",
+        title: "Trigonometric skincare",
+        category: "math crime",
+        line: "Sometimes the tan is not seasonal. Sometimes it is educational.",
+        caption: "The body has become a calculator display. Please moisturize your unit circle.",
+        alt: "Meme about already having a tan showing sin over cos written on skin"
+      },
+      {
+        file: "M5.png",
+        title: "Save file romance",
+        category: "file format drama",
+        line: "Love asks: save me. Anxiety asks: in what format?",
+        caption: "A tragic romance between emotional urgency and export settings.",
+        alt: "Comic panel saying save me and asking JPG or PDF"
+      },
+      {
+        file: "M6.png",
+        title: "Everything is a win",
+        category: "soft philosophy",
+        line: "If the goal is experience, then even confusion counts as progress.",
+        caption: "Peak gentle nonsense. The tiny figure is moving through the wallpaper of existence.",
+        alt: "Meme saying when the goal is to experience everything is a win"
+      },
+      {
+        file: "M7.png",
+        title: "Rock music",
+        category: "literal thinking",
+        line: "Your playlist is valid, even if it is sedimentary.",
+        caption: "Finally, a music recommendation with geological stability.",
+        alt: "Person listening to a rock with headphones"
+      },
+      {
+        file: "M8.png",
+        title: "The Doghot",
+        category: "food innovation",
+        line: "The future is not ready, but the plate has already seen too much.",
+        caption: "A hot dog was dismantled and rebuilt by someone with confidence but no supervision.",
+        alt: "Hot dog meme saying the world is not yet ready for the Doghot"
+      },
+      {
+        file: "M9.jpg",
+        title: "The waiter paradox",
+        category: "existential restaurant",
+        line: "Waiting long enough changes the role you play in the universe.",
+        caption: "A restaurant thought experiment that should not be attempted during peak hunger.",
+        alt: "Meme saying waiting for the waiter makes you the waiter"
+      },
+      {
+        file: "M10.png",
+        title: "Watt is your name",
+        category: "language spiral",
+        line: "Communication is easy until everyone is correct at the same time.",
+        caption: "A long-distance phone call collapses under the weight of homophones.",
+        alt: "Phone conversation meme about Watt, What, Knott, and Not"
+      },
+      {
+        file: "M11.jpg",
+        title: "Noodle language barrier",
+        category: "translation failure",
+        line: "Some languages require fluency. Others require sauce.",
+        caption: "A text conversation bravely admits it does not speak noodles.",
+        alt: "Text message meme saying sorry I don't speak noodles"
+      },
+      {
+        file: "M12.jpg",
+        title: "Drog",
+        category: "animal glitch",
+        line: "Not dog. Not frog. A third, blurrier path.",
+        caption: "Evolution had one extra tab open and accidentally pressed export.",
+        alt: "Blurry dog frog hybrid meme labeled drog"
+      },
+      {
+        file: "M13.png",
+        title: "Weekend betrayal",
+        category: "schedule pain",
+        line: "Same time, different emotional consequences.",
+        caption: "The clock says 7AM. The soul asks why context has betrayed it.",
+        alt: "SpongeBob meme comparing 7AM Monday to Friday and 7AM Saturday"
+      },
+      {
+        file: "M14.png",
+        title: "Beesechurger",
+        category: "food typo",
+        line: "Words are temporary. Beesechurger is forever.",
+        caption: "A burger assembled by someone who remembered all the parts but not the language.",
+        alt: "Burger meme labeled Beesechurger"
+      },
+      {
+        file: "M15.png",
+        title: "Balanced diet",
+        category: "nutrition loophole",
+        line: "If definitions are flexible enough, dinner becomes a thesis.",
+        caption: "Vegetable, fruit, salad: a meal plan powered entirely by technicalities.",
+        alt: "Fries as vegetable ketchup as fruit and fries with ketchup as salad"
+      },
+      {
+        file: "M16.jpg",
+        title: "Guard dog",
+        category: "cat employment",
+        line: "Job title: guard dog. Species: negotiable.",
+        caption: "The cat has accepted the uniform and rejected all further questions.",
+        alt: "Black cat wearing a guard dog vest"
+      },
+      {
+        file: "M17.png",
+        title: "Eel on musk",
+        category: "brain noise",
+        line: "The brain does not need permission to open a cursed pun tab.",
+        caption: "Nothing is funny until your mind constructs an animal-based billionaire.",
+        alt: "Meme saying Eel on musk with eel on musk deer"
+      },
+      {
+        file: "M18.png",
+        title: "Lamb hazard",
+        category: "rural warning",
+        line: "Stay alert. The lambs may enter the plot without foreshadowing.",
+        caption: "A road sign that understands jump scares better than most horror movies.",
+        alt: "Road sign saying lambs jump up from nowhere"
+      },
+      {
+        file: "M19.jpg",
+        title: "Butterflies",
+        category: "literal nature",
+        line: "Nature is beautiful, especially when dairy becomes airborne.",
+        caption: "The language department and the kitchen have briefly merged.",
+        alt: "Meme showing a flying butter block labeled Butterflies"
+      },
+      {
+        file: "M20.png",
+        title: "Batcat promise",
+        category: "tiny protector",
+        line: "You may not be safe, but you are emotionally supervised.",
+        caption: "A tiny masked guardian offers crisis support with questionable mobility.",
+        alt: "Cat in Batman mask saying if something bad happens I will save you"
+      },
+      {
+        file: "M21.png",
+        title: "Minesweeper fieldwork",
+        category: "game logic",
+        line: "Sometimes the safest move is still a guess with a uniform.",
+        caption: "A desktop game has entered the physical world and HR is concerned.",
+        alt: "Soldier using a metal detector on a Minesweeper grid"
+      },
+      {
+        file: "M22.jpg",
+        title: "Stay weird",
+        category: "motivational chaos",
+        line: "Be different. Preferably dolphin-cow different.",
+        caption: "Inspirational poster energy, but with enough confusion to actually work.",
+        alt: "Dolphin and cow jumping from the ocean with text stay weird be different"
+      },
+      {
+        file: "M23.jpg",
+        title: "Ocean boop",
+        category: "underwater situation",
+        line: "Some encounters are not explainable. They are only aquatic.",
+        caption: "A sea creature receives or delivers a deeply unnecessary underwater boop.",
+        alt: "Underwater animal meme with a strange nose-to-body contact"
+      },
+      {
+        file: "M24.png",
+        title: "Wet floor",
+        category: "science joke",
+        line: "The floor is wet because the molecules unionized.",
+        caption: "Chemistry has escaped the classroom and is now a slip hazard.",
+        alt: "Wet floor sign surrounded by water molecule models"
+      },
+      {
+        file: "M25.jpg",
+        title: "Spidercat",
+        category: "superhero animal",
+        line: "With great power comes great carpet behavior.",
+        caption: "A masked cat introduces itself as if the multiverse had no approval process.",
+        alt: "Cat wearing Spider-Man mask with text hi i'm spidercat"
+      },
+      {
+        file: "M26.jpg",
+        title: "Fantastic",
+        category: "visual pun",
+        line: "You are not ordinary. You are carbonated forestry.",
+        caption: "A compliment assembled from orange soda and one stick.",
+        alt: "Meme saying Hey you! You are... with Fanta and a stick"
+      },
+      {
+        file: "M27.png",
+        title: "Tea coffee billing",
+        category: "number language",
+        line: "Say your order clearly, or arithmetic will become expensive.",
+        caption: "The bill is not wrong. The phonetics are simply dangerous.",
+        alt: "Movie subtitle meme about ordering 4 tea and 2 coffee sounding like 42 coffee"
+      },
+      {
+        file: "M28.jpg",
+        title: "Battery scream",
+        category: "pun physics",
+        line: "The smaller the battery, the longer the scream.",
+        caption: "A falling battery discovers that voltage and panic are unrelated but compatible.",
+        alt: "Battery falling down a hole saying AA AAA AAAA"
+      },
+      {
+        file: "M29.png",
+        title: "Square root cat",
+        category: "math animal",
+        line: "Some cats are normal. Some have been simplified incorrectly.",
+        caption: "Mathematics explains nothing and yet somehow this image feels proven.",
+        alt: "Cat compared with square root cat"
+      },
+      {
+        file: "M30.png",
+        title: "Monday Lisa",
+        category: "weekday damage",
+        line: "A masterpiece, but make it under-rested.",
+        caption: "The Mona Lisa has logged into Monday and immediately lost several pixels of hope.",
+        alt: "Mona Lisa with messy hair labeled Monday Lisa"
+      },
+      {
+        file: "M31.jpg",
+        title: "Keys to success",
+        category: "anti-motivation",
+        line: "Success is spelled carefully. This is not that.",
+        caption: "A motivational poster that has failed upward into honesty.",
+        alt: "Keyboard keys S U C E labeled the four keys to success"
+      },
+      {
+        file: "M32.jpg",
+        title: "Mango",
+        category: "word construction",
+        line: "When the man goes, the fruit appears.",
+        caption: "A diagram that explains language with the confidence of a cursed textbook.",
+        alt: "Woman stand woman go man stand mango meme"
+      },
+      {
+        file: "M33.jpg",
+        title: "Cowboy subtraction",
+        category: "western grammar",
+        line: "Remove the boy. Keep the cow. The sunset understands.",
+        caption: "A cowboy becomes a cow through the most literal editing process available.",
+        alt: "Cowboy and cow meme showing cowboy minus boy equals cow"
+      },
+      {
+        file: "M34.jpg",
+        title: "Spring is coming",
+        category: "seasonal warning",
+        line: "Spring is around the corner. It has been waiting there all winter.",
+        caption: "A seasonal announcement delivered by a suspiciously literal metal coil.",
+        alt: "Spring around the corner meme with metal spring by a wall"
+      },
+      {
+        file: "M35.png",
+        title: "Minnesota logic",
+        category: "geography joke",
+        line: "Big burger, mini burger, big soda, and then geography becomes lunch.",
+        caption: "A map joke that works because language has decided to be unserious again.",
+        alt: "Meme with big burger mini burger big soda and Minnesota map"
+      },
+      {
+        file: "M36.png",
+        title: "Cover me",
+        category: "literal support",
+        line: "Ask for cover and someone may choose comfort over tactics.",
+        caption: "The mission continues, but now with improved blanket-based morale.",
+        alt: "Soldier says cover me and another covers him with a blanket"
+      },
+      {
+        file: "M37.png",
+        title: "Backwards DNA",
+        category: "medical pun",
+        line: "When your DNA is backwards, the only correct response is AND?",
+        caption: "A clinical diagnosis delivered directly into the pun dimension.",
+        alt: "Doctor says your DNA is backwards and patient says AND"
+      }
+    ];
+
+    const memeImage = document.getElementById("memeImage");
+    const memeLine = document.getElementById("memeLine");
+    const memeTitle = document.getElementById("memeTitle");
+    const memeCaption = document.getElementById("memeCaption");
+    const memeCounter = document.getElementById("memeCounter");
+    const memeCategory = document.getElementById("memeCategory");
+    const thumbRow = document.getElementById("thumbRow");
+    const prevMeme = document.getElementById("prevMeme");
+    const nextMeme = document.getElementById("nextMeme");
+    const shuffleMeme = document.getElementById("shuffleMeme");
+
+    let memeIndex = 0;
+
+    function getMemePath(meme) {
+      return MEME_BASE_PATH + encodeURIComponent(meme.file).replace(/%2F/g, "/");
+    }
+
+    function renderThumbs() {
+      thumbRow.innerHTML = memeDeck.map((meme, index) => `
+        <button
+          class="thumb ${index === memeIndex ? "active" : ""}"
+          data-index="${index}"
+          type="button"
+          aria-label="Open meme ${index + 1}: ${meme.title}"
+        >
+          <img src="${getMemePath(meme)}" alt="${meme.alt}" loading="lazy">
+          <span class="thumb-number">${index + 1}</span>
+        </button>
+      `).join("");
+
+      thumbRow.querySelectorAll(".thumb").forEach((button) => {
+        button.addEventListener("click", () => {
+          memeIndex = Number(button.dataset.index);
+          renderMeme();
+        });
+      });
+    }
+
+    function renderMeme() {
+      const meme = memeDeck[memeIndex];
+
+      memeImage.src = getMemePath(meme);
+      memeImage.alt = meme.alt;
+      memeTitle.textContent = meme.title;
+      memeLine.textContent = meme.line;
+      memeCaption.textContent = meme.caption;
+
+      if (memeCounter) {
+        memeCounter.textContent = `${memeIndex + 1} / ${memeDeck.length}`;
+      }
+    
+      if (memeCategory) {
+        memeCategory.textContent = meme.category;
+      }
+
+      renderThumbs();
+
+      const activeThumb = thumbRow.querySelector(`.thumb[data-index="${memeIndex}"]`);
+      if (activeThumb) {
+        activeThumb.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest"
+        });
+      }
+    }
+
+    function goToMeme(offset) {
+      memeIndex = (memeIndex + offset + memeDeck.length) % memeDeck.length;
+      renderMeme();
+    }
+
+    function shuffleToNewMeme() {
+      let nextIndex = memeIndex;
+
+      while (nextIndex === memeIndex && memeDeck.length > 1) {
+        nextIndex = Math.floor(Math.random() * memeDeck.length);
+      }
+    
+      memeIndex = nextIndex;
+      renderMeme();
+      showToast("A new piece of fake wisdom has arrived.");
+    }
+
+    prevMeme.addEventListener("click", () => {
+      goToMeme(-1);
+    });
+
+    nextMeme.addEventListener("click", () => {
+      goToMeme(1);
+    });
+
+    shuffleMeme.addEventListener("click", shuffleToNewMeme);
+
+    document.addEventListener("keydown", (event) => {
+      if (getCurrentRoute() !== "quotes") return;
+
+      if (event.key === "ArrowLeft") {
+        goToMeme(-1);
+      }
+
+      if (event.key === "ArrowRight") {
+        goToMeme(1);
+      }
+
+      if (event.key.toLowerCase() === "r") {
+        shuffleToNewMeme();
+      }
+    });
+
+    memeImage.addEventListener("error", () => {
+      showToast("This meme image could not be loaded. Check the file name and path.");
+    });
+
+    renderMeme();
+
+    // ---------------------------
+    // CHATBOX
+    // ---------------------------
+    const chatLog = document.getElementById("chatLog");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+    const quickChips = Array.from(document.querySelectorAll(".quick-chip"));
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function addMessage(role, text) {
+      const wrapper = document.createElement("div");
+      wrapper.className = `message ${role}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.innerHTML = escapeHtml(text).replace(/\n/g, "<br>");
+
+      wrapper.appendChild(bubble);
+      chatLog.appendChild(wrapper);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function generateReply(input) {
+      const text = input.toLowerCase();
+
+      if (/overwhelmed|焦虑|好多|too much|overload/.test(text)) {
+        return [
+          "Okay. Let's make everything smaller for a second.",
+          "Try this:",
+          "1) Name the single thing that feels most urgent.",
+          "2) Ignore the rest for five minutes.",
+          "3) Do only the smallest visible start.",
+          "You do not need to solve the whole mountain today — just find one foothold."
+        ].join("\n");
+      }
+
+      if (/can't get started|can’t get started|start|开始不了|拖延|procrast/.test(text)) {
+        return [
+          "Let's remove the pressure to 'do it properly'.",
+          "Your only job is to begin badly on purpose.",
+          "Tiny next step idea:",
+          "• open the file",
+          "• write one messy sentence",
+          "• stop there if needed",
+          "Momentum often comes after starting, not before."
+        ].join("\n");
+      }
+
+      if (/deadline|ddl|due|截止|late/.test(text)) {
+        return [
+          "Deadlines can make everything feel louder than it is.",
+          "Let's turn it into a short plan:",
+          "• What is due first?",
+          "• What can be submitted in a rough version?",
+          "• Who could you contact if you need clarification or support?",
+          "Right now, choose the task with the biggest consequence and shrink it."
+        ].join("\n");
+      }
+
+      if (/tired|exhausted|累|burnt|burned/.test(text)) {
+        return [
+          "If you're tired, the next step should be gentler, not harsher.",
+          "Choose one of these:",
+          "• drink water and come back in 10 minutes",
+          "• do a 5-minute version of the task",
+          "• switch to the easiest admin task first",
+          "You are allowed to work with your energy level instead of fighting it."
+        ].join("\n");
+      }
+
+      if (/tiny next step|small step|next step|一步/.test(text)) {
+        return [
+          "Here is a tiny next step formula:",
+          "Verb + object + time limit.",
+          "Example:",
+          "• open lecture slides for 5 minutes",
+          "• list 3 bullet points",
+          "• email one person",
+          "If you want, type the task and I can help shrink it further."
+        ].join("\n");
+      }
+
+      return [
+        "I hear you.",
+        "Let's not solve everything at once.",
+        "Try answering these three mini questions:",
+        "1) What feels heaviest right now?",
+        "2) What part of it is actually in your control today?",
+        "3) What is the smallest next action that counts as movement?",
+        "You can type one short sentence and we can work from there."
+      ].join("\n");
+    }
+
+    function sendChat(text) {
+      const clean = text.trim();
+      if (!clean) return;
+
+      addMessage("user", clean);
+
+      setTimeout(() => {
+        addMessage("bot", generateReply(clean));
+      }, 280);
+    }
+
+    chatForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const value = chatInput.value;
+      if (!value.trim()) return;
+      sendChat(value);
+      chatInput.value = "";
+      chatInput.focus();
+    });
+
+    quickChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        sendChat(chip.dataset.prompt || "");
+      });
+    });
+
+    addMessage(
+      "bot",
+      "Hi — I'm the prototype chatbox.\nTell me what feels messy right now, and I'll try to help turn it into one smaller thing."
+    );
+  </script>
+</body>
+</html>
