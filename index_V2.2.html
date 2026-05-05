@@ -3735,8 +3735,8 @@
           <div class="page-kicker">Sort my thoughts with AI chatbox</div>
           <h1>One messy thought at a time is enough.</h1>
           <p>
-            This is a prototype supportive chatbox page. Right now it gives gentle structured replies,
-            so the interaction already feels like part of the final site flow.
+            Chat with a gentle AI thought-sorting assistant that helps you slow down,
+            name what feels messy, and find one tiny next step.
           </p>
         </div>
 
@@ -3751,23 +3751,14 @@
               <button class="quick-chip" data-prompt="I'm really tired.">I'm really tired</button>
               <button class="quick-chip" data-prompt="Help me find one tiny next step.">Give me one tiny next step</button>
             </div>
-
-            <div class="mini-plan">
-              <h3 style="margin-bottom:10px;">Design direction</h3>
-              <ul class="soft-list">
-                <li>Empathetic first response</li>
-                <li>Break big feelings into tiny next actions</li>
-                <li>Low-pressure tone instead of productivity pressure</li>
-                <li>Easy to replace with a real API later</li>
-              </ul>
-            </div>
           </aside>
 
           <section class="panel chat-shell">
             <div class="chat-top">
-              <div class="tag tag-soft">Prototype chatbox</div>
+              <div class="tag tag-soft">AI thought-sorting chatbox</div>
               <p class="muted" style="margin:0;">
-                This is a front-end demo interaction, not a real clinical support tool.
+                This AI chatbox can help you organize thoughts, but it is not a therapist,
+                doctor, or emergency support service.
               </p>
             </div>
 
@@ -3777,6 +3768,7 @@
               <input
                 id="chatInput"
                 type="text"
+                maxlength="800"
                 placeholder="Type what is on your mind..."
                 autocomplete="off"
               />
@@ -6242,15 +6234,67 @@
       ].join("\n");
     }
 
-    function sendChat(text) {
+    let chatHistory = [];
+
+    async function sendChat(text) {
       const clean = text.trim();
+
       if (!clean) return;
 
       addMessage("user", clean);
 
-      setTimeout(() => {
-        addMessage("bot", generateReply(clean));
-      }, 280);
+      chatHistory.push({
+        role: "user",
+        content: clean
+      });
+
+      addMessage("bot", "Thinking softly...");
+
+      const thinkingMessage = chatLog.lastElementChild;
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            messages: chatHistory.slice(-8)
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Chat request failed.");
+        }
+
+        if (thinkingMessage) {
+          thinkingMessage.remove();
+        }
+
+        const reply =
+          data.reply ||
+          "I'm here, but I got a little tangled. Could you try saying that again?";
+
+        addMessage("bot", reply);
+
+        chatHistory.push({
+          role: "assistant",
+          content: reply
+        });
+      } catch (error) {
+        console.error(error);
+
+        if (thinkingMessage) {
+          thinkingMessage.remove();
+        }
+
+        addMessage(
+          "bot",
+          "The AI part is having a small technical wobble. Please try again in a moment."
+       );
+      }
     }
 
     chatForm.addEventListener("submit", (event) => {
