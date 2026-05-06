@@ -106,7 +106,7 @@ app.post("/api/chat", chatLimiter, async (req, res) => {
     if (latestUserMessage && looksLikeCrisis(latestUserMessage.content)) {
       return res.json({
         reply:
-          "I'm really sorry you're feeling this much pain. This chatbox is not emergency support. If you might hurt yourself or are in immediate danger, please call your local emergency number now, or reach out to a trusted person nearby. If you are in the U.S. or Canada, you can call or text 988 for immediate crisis support."
+          "I'm really sorry you're feeling this much pain. This chatbox is not emergency support, yet please remember the developer team care about your life and well-being. If you might hurt yourself or are in immediate danger, please call your local emergency number now, or reach out to a trusted person nearby. If you are in Hong Kong, you can call or text 999 for immediate crisis support."
       });
     }
 
